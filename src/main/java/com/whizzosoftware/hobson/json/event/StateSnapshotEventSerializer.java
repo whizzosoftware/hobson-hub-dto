@@ -40,15 +40,15 @@ public class StateSnapshotEventSerializer implements HobsonEventSerializer {
 
         if (sse.hasHub()) {
             HobsonHub info = sse.getHub();
-            JSONObject hubJson = new JSONObject().
-                put("userId", info.getContext().getUserId()).
-                put("hubId", info.getContext().getHubId()).
-                put("name", info.getName()).
-                put("version", info.getVersion()).
-                put("logLevel", info.getLogLevel()).
-                put("location", info.getLocation() != null ? JSONSerializationHelper.createHubLocationJSON(info.getLocation()) : null).
-                put("email", info.getEmail() != null ? JSONSerializationHelper.createEmailConfigurationJSON(info.getEmail()) : null).
-                put("setupComplete", info.isSetupComplete());
+            JSONObject hubJson = new JSONObject();
+            hubJson.put("userId", info.getContext().getUserId());
+            hubJson.put("hubId", info.getContext().getHubId());
+            hubJson.put("name", info.getName());
+            hubJson.put("version", info.getVersion());
+//            hubJson.put("logLevel", info.getLogLevel());
+//            hubJson.put("location", info.getLocation() != null ? JSONSerializationHelper.createHubLocationJSON(info.getLocation()) : null);
+//            hubJson.put("email", info.getEmail() != null ? JSONSerializationHelper.createEmailConfigurationJSON(info.getEmail()) : null);
+//            hubJson.put("setupComplete", info.isSetupComplete());
             json.put("hub", hubJson);
 
             if (sse.hasPlugins()) {
@@ -104,23 +104,23 @@ public class StateSnapshotEventSerializer implements HobsonEventSerializer {
         StateSnapshotEvent sse = new StateSnapshotEvent(System.currentTimeMillis());
 
         if (json.has("hub")) {
-            JSONObject hijson = json.getJSONObject("hub");
+            JSONObject hijson = (JSONObject)json.get("hub");
             HubContext hubContext = HubContext.create(hijson.getString("userId"), hijson.getString("hubId"));
             sse.setHub(
                 new HobsonHub.Builder(hubContext).
                     name(hijson.getString("name")).
                     version(hijson.getString("version")).
-                    logLevel(hijson.getString("logLevel")).
-                    location(JSONSerializationHelper.createHubLocation(hijson.has("location") ? hijson.getJSONObject("location") : null)).
-                    email(JSONSerializationHelper.createEmailConfiguration(hijson.has("email") ? hijson.getJSONObject("email") : null)).
-                    setupComplete(hijson.getBoolean("setupComplete"))
-                    .build()
+//                    logLevel(hijson.getString("logLevel")).
+//                    location(JSONSerializationHelper.createHubLocation(hijson.has("location") ? (JSONObject) hijson.get("location") : null)).
+//                    email(JSONSerializationHelper.createEmailConfiguration(hijson.has("email") ? (JSONObject) hijson.get("email") : null)).
+//                    setupComplete((Boolean) hijson.get("setupComplete"))
+                    build()
             );
             if (hijson.has("plugins")) {
-                JSONObject jplugins = hijson.getJSONObject("plugins");
+                JSONObject jplugins = (JSONObject)hijson.get("plugins");
                 for (Object opid : jplugins.keySet()) {
                     String pluginId = (String)opid;
-                    JSONObject jplugin = jplugins.getJSONObject(pluginId);
+                    JSONObject jplugin = (JSONObject)jplugins.get(pluginId);
                     PluginContext pluginContext = PluginContext.create(hubContext, pluginId);
                     sse.addPlugin(new HobsonPluginDTO.Builder(pluginContext).
                         setName(jplugin.has("name") ? jplugin.getString("name") : null).
@@ -130,10 +130,10 @@ public class StateSnapshotEventSerializer implements HobsonEventSerializer {
                         build()
                     );
                     if (jplugin.has("devices")) {
-                        JSONObject jdevs = jplugin.getJSONObject("devices");
+                        JSONObject jdevs = (JSONObject)jplugin.get("devices");
                         for (Object odid : jdevs.keySet()) {
                             String deviceId = (String)odid;
-                            JSONObject jdevice = jdevs.getJSONObject(deviceId);
+                            JSONObject jdevice = (JSONObject)jdevs.get(deviceId);
                             DeviceType type = null;
                             if (jdevice.has("type")) {
                                 type = DeviceType.valueOf(jdevice.getString("type"));
@@ -144,11 +144,11 @@ public class StateSnapshotEventSerializer implements HobsonEventSerializer {
                                 build()
                             );
                             if (jdevice.has("variables")) {
-                                JSONObject jvars = jdevice.getJSONObject("variables");
+                                JSONObject jvars = (JSONObject)jdevice.get("variables");
                                 for (Object ovname : jvars.keySet()) {
                                     String varName = (String)ovname;
-                                    JSONObject jvar = jvars.getJSONObject(varName);
-                                    sse.addVariable(new HobsonVariableDTO.Builder(pluginId, deviceId).
+                                    JSONObject jvar = (JSONObject)jvars.get(varName);
+                                    sse.addVariable(new HobsonVariableDTO.Builder(DeviceContext.createLocal(pluginId, deviceId)).
                                         setName(varName).
                                         setValue(jvar.get("value")).
                                         setMask(HobsonVariable.Mask.valueOf(jvar.getString("mask"))).

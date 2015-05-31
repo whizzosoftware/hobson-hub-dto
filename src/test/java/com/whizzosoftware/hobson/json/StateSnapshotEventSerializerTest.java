@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2015 Whizzo Software, LLC.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package com.whizzosoftware.hobson.json;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
@@ -64,7 +71,7 @@ public class StateSnapshotEventSerializerTest {
             setType(DeviceType.LIGHTBULB).
             build()
         );
-        sse.addVariable(new HobsonVariableDTO.Builder("pid", "did").
+        sse.addVariable(new HobsonVariableDTO.Builder(DeviceContext.createLocal("pid", "did")).
             setName("on").
             setValue(true).
             setMask(HobsonVariable.Mask.READ_ONLY).
@@ -77,26 +84,26 @@ public class StateSnapshotEventSerializerTest {
 
         assertEquals(StateSnapshotEvent.ID, json.get("event"));
         assertTrue(json.has("hub"));
-        JSONObject hub = json.getJSONObject("hub");
+        JSONObject hub = (JSONObject)json.get("hub");
         assertEquals("local", hub.getString("hubId"));
         assertTrue(hub.has("plugins"));
-        JSONObject plugins = hub.getJSONObject("plugins");
+        JSONObject plugins = (JSONObject)hub.get("plugins");
         assertTrue(plugins.has("pid"));
-        JSONObject plugin = plugins.getJSONObject("pid");
+        JSONObject plugin = (JSONObject)plugins.get("pid");
         assertEquals("Plugin", plugin.getString("name"));
         assertEquals("PLUGIN", plugin.getString("type"));
         assertEquals("0.0.1", plugin.getString("version"));
         assertTrue(plugin.has("devices"));
-        JSONObject devices = plugin.getJSONObject("devices");
+        JSONObject devices = (JSONObject)plugin.get("devices");
         assertTrue(devices.has("did"));
-        JSONObject device = devices.getJSONObject("did");
+        JSONObject device = (JSONObject)devices.get("did");
         assertEquals("Device", device.getString("name"));
         assertEquals("LIGHTBULB", device.getString("type"));
         assertTrue(device.has("variables"));
-        JSONObject variables = device.getJSONObject("variables");
+        JSONObject variables = (JSONObject)device.get("variables");
         assertTrue(variables.has("on"));
-        JSONObject variable = variables.getJSONObject("on");
-        assertEquals(true, variable.getBoolean("value"));
+        JSONObject variable = (JSONObject)variables.get("on");
+        assertEquals(true, variable.get("value"));
         assertEquals("READ_ONLY", variable.getString("mask"));
         assertEquals(now, variable.getLong("lastUpdate"));
     }

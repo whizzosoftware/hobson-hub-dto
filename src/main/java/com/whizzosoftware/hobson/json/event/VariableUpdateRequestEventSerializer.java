@@ -46,9 +46,9 @@ public class VariableUpdateRequestEventSerializer implements HobsonEventSerializ
     public HobsonEvent unmarshal(JSONObject json) {
         List<VariableUpdate> updates = new ArrayList<>();
         if (json.has("updates")) {
-            JSONArray jups = json.getJSONArray("updates");
+            JSONArray jups = (JSONArray)json.get("updates");
             for (int i=0; i < jups.length(); i++) {
-                JSONObject jup = jups.getJSONObject(i);
+                JSONObject jup = (JSONObject)jups.get(i);
                 // determine if it's a device variable update or a global variable update
                 if (jup.has("device")) {
                     updates.add(new VariableUpdate(DeviceContext.createLocal(jup.getString("plugin"), jup.getString("device")), jup.getString("name"), jup.get("value")));

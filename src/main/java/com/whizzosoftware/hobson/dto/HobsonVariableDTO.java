@@ -7,6 +7,8 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -24,9 +26,13 @@ public class HobsonVariableDTO implements HobsonVariable {
     private Long lastUpdate;
     private String proxyType;
 
-    private HobsonVariableDTO(String pluginId, String deviceId) {
-        this.pluginId = pluginId;
-        this.deviceId = deviceId;
+    private HobsonVariableDTO(DeviceContext ctx) {
+        this.pluginId = ctx.getPluginId();
+        this.deviceId = ctx.getDeviceId();
+    }
+
+    private HobsonVariableDTO(PluginContext ctx) {
+        this.pluginId = ctx.getPluginId();
     }
 
     @Override
@@ -86,12 +92,12 @@ public class HobsonVariableDTO implements HobsonVariable {
     public static class Builder {
         private HobsonVariableDTO dto;
 
-        public Builder(String pluginId, String deviceId) {
-            dto = new HobsonVariableDTO(pluginId, deviceId);
+        public Builder(DeviceContext ctx) {
+            dto = new HobsonVariableDTO(ctx);
         }
 
-        public Builder(String pluginId) {
-            dto = new HobsonVariableDTO(pluginId, null);
+        public Builder(PluginContext ctx) {
+            dto = new HobsonVariableDTO(ctx);
         }
 
         public Builder setName(String name) {
