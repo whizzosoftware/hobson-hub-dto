@@ -29,7 +29,7 @@ public class PropertyContainerDTO extends ThingDTO {
     }
 
     public PropertyContainerDTO(JSONObject json) {
-        containerClass = new PropertyContainerClassDTO(json.getJSONObject("class"));
+        containerClass = new PropertyContainerClassDTO(json.getJSONObject("cclass"));
         if (json.has("values")) {
             propertyValues = new HashMap<>();
             JSONObject jp = json.getJSONObject("values");
@@ -38,6 +38,12 @@ public class PropertyContainerDTO extends ThingDTO {
                 propertyValues.put(key, jp.get(key));
             }
         }
+    }
+
+    public PropertyContainerDTO(String containerId, String containerClassId, Map<String,Object> propertyValues) {
+        setId(containerId);
+        this.containerClass = new PropertyContainerClassDTO(containerClassId);
+        this.propertyValues = propertyValues;
     }
 
     @Override
@@ -69,14 +75,14 @@ public class PropertyContainerDTO extends ThingDTO {
     public JSONObject toJSON(LinkProvider links) {
         JSONObject json = super.toJSON(links);
         if (containerClass != null) {
-            json.put("class", containerClass.toJSON(links));
+            json.put("cclass", containerClass.toJSON(links));
         }
         if (propertyValues != null) {
             JSONObject p = new JSONObject();
             for (String k : propertyValues.keySet()) {
                 p.put(k, propertyValues.get(k));
             }
-            json.put("propertyValue", p);
+            json.put("values", p);
         }
         return json;
     }

@@ -9,10 +9,14 @@ package com.whizzosoftware.hobson.dto;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 abstract public class ThingDTO implements JSONProducer {
     private String id;
     private String name;
     private String description;
+    private Map<String,String> links;
 
     public String getId() {
         return id;
@@ -38,8 +42,15 @@ abstract public class ThingDTO implements JSONProducer {
         this.description = description;
     }
 
+    public void addLink(String rel, String url) {
+        if (links == null) {
+            links = new HashMap<>();
+        }
+        links.put(rel, url);
+    }
+
     @Override
-    public JSONObject toJSON(LinkProvider links) {
+    public JSONObject toJSON(LinkProvider lp) {
         JSONObject json = new JSONObject();
         if (id != null) {
             json.put("@id", id);
@@ -49,6 +60,9 @@ abstract public class ThingDTO implements JSONProducer {
         }
         if (description != null) {
             json.put("description", description);
+        }
+        if (links != null && links.size() > 0) {
+            json.put("links", links);
         }
         return json;
     }

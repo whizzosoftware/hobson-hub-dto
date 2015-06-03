@@ -17,6 +17,7 @@ import com.whizzosoftware.hobson.api.task.TaskContext;
 public interface LinkProvider {
     public static final int ACTION_CONTAINER = 0;
     public static final int CONDITION_CONTAINER = 1;
+    public static final int HUB_CONFIG_CONTAINER = 2;
 
     public HubContext createHubContext(String link);
     public String createTaskLink(TaskContext ctx);
@@ -35,9 +36,13 @@ public interface LinkProvider {
     public String createHubsLink(String userId);
     public String createHubConfigurationClassLink(HubContext context);
     public String createHubConfigurationLink(HubContext context);
-    public String createPropertyContainerLink(PropertyContainer pc);
-    public String createPropertyContainerClassLink(int type, PropertyContainerClass pcc);
+    public String createPropertyContainerLink(HubContext context, int type);
+    public String createPropertyContainerClassLink(int type, PropertyContainerClassContext pccc);
     public String createTasksLink(HubContext context);
     public String createDevicesLink(HubContext context);
     public String createPluginsLink(HubContext context);
+    public String createLocalPluginLink(HubContext context, String pluginId);
+    public String createLocalPluginsLink(HubContext context);
+    public String createRemotePluginLink(HubContext context, String pluginId);
+    public String createRemotePluginsLink(HubContext context);
 }

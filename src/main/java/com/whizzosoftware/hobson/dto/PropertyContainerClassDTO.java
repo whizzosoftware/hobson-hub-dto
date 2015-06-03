@@ -57,7 +57,7 @@ public class PropertyContainerClassDTO extends ThingDTO {
             for (TypedPropertyDTO p : supportedProperties) {
                 array.put(p.toJSON(links));
             }
-            json.put("supportedProperty", array);
+            json.put("supportedProperties", array);
         }
         return json;
     }

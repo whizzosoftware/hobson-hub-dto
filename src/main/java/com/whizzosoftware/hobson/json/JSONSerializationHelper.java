@@ -487,22 +487,22 @@ public class JSONSerializationHelper {
 
                 if (details != null && details) {
                     // determine whether there are current and newer versions of the plugin
-                    String currentVersionString = pd.getCurrentVersionString();
-                    String latestVersionString = pd.getLatestVersionString();
+                    String currentVersionString = pd.getVersionString();
+                    //String latestVersionString = pd.getLatestVersionString();
 
                     boolean hasCurrentVersion = (currentVersionString != null);
-                    boolean hasNewerVersion = (VersionUtil.versionCompare(latestVersionString, currentVersionString) == 1);
+                    //boolean hasNewerVersion = (VersionUtil.versionCompare(latestVersionString, currentVersionString) == 1);
 
                     if (pd.getDescription() != null) {
                         json.put("description", pd.getDescription());
                     }
 
                     if (hasCurrentVersion) {
-                        json.put("currentVersion", currentVersionString);
+                        json.put("version", currentVersionString);
                     }
-                    if (hasNewerVersion) {
-                        json.put("latestVersion", latestVersionString);
-                    }
+//                    if (hasNewerVersion) {
+//                        json.put("latestVersion", latestVersionString);
+//                    }
                 }
 
                 return json;

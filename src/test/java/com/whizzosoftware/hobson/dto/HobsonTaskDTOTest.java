@@ -47,7 +47,7 @@ public class HobsonTaskDTOTest {
 
     @Test
     public void testJSONConstructor() {
-        JSONObject json = new JSONObject(new JSONTokener("{\"name\":\"My Task\",\"conditionSet\":{\"trigger\":{\"class\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/conditionClasses/conditionclass1\"},\"values\":{\"bar\":\"foo\"}}},\"actionSet\":{\"actions\":[{\"class\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1\"},\"values\":{\"foo\":\"bar\"}}]}}"));
+        JSONObject json = new JSONObject(new JSONTokener("{\"name\":\"My Task\",\"conditionSet\":{\"trigger\":{\"cclass\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/conditionClasses/conditionclass1\"},\"values\":{\"bar\":\"foo\"}}},\"actionSet\":{\"actions\":[{\"cclass\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1\"},\"values\":{\"foo\":\"bar\"}}]}}"));
         HobsonTaskDTO dto = new HobsonTaskDTO(json);
         assertEquals("My Task", dto.getName());
 

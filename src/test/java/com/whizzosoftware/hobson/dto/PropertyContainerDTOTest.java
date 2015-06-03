@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class PropertyContainerDTOTest {
     @Test
     public void testJSONConstructor() {
-        JSONObject json = new JSONObject(new JSONTokener("{\"class\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1\"},\"values\":{\"foo\":\"bar\"}}"));
+        JSONObject json = new JSONObject(new JSONTokener("{\"cclass\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1\"},\"values\":{\"foo\":\"bar\"}}"));
         PropertyContainerDTO dto = new PropertyContainerDTO(json);
         assertEquals("/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1", dto.getContainerClass().getId());
         assertTrue(dto.hasPropertyValues());
