@@ -29,7 +29,9 @@ public class PropertyContainerDTO extends ThingDTO {
     }
 
     public PropertyContainerDTO(JSONObject json) {
-        containerClass = new PropertyContainerClassDTO(json.getJSONObject("cclass"));
+        if (json.has("cclass")) {
+            containerClass = new PropertyContainerClassDTO(json.getJSONObject("cclass"));
+        }
         if (json.has("values")) {
             propertyValues = new HashMap<>();
             JSONObject jp = json.getJSONObject("values");
