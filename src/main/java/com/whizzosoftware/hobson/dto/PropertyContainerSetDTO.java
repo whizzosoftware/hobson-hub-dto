@@ -7,8 +7,6 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.property.PropertyContainer;
-import com.whizzosoftware.hobson.api.property.PropertyContainerSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,25 +17,18 @@ public class PropertyContainerSetDTO extends ThingDTO {
     private PropertyContainerDTO primaryContainer;
     private List<PropertyContainerDTO> containers;
 
-    public PropertyContainerSetDTO(PropertyContainerSet pcs) {
-        setId(pcs.getId());
-
-        if (pcs.hasProperties()) {
-            containers = new ArrayList<>();
-            for (PropertyContainer pc : pcs.getProperties()) {
-                containers.add(new PropertyContainerDTO(null, pc));
-            }
-        }
+    public PropertyContainerSetDTO(String id, PropertyContainerDTO primaryContainer, List<PropertyContainerDTO> containers) {
+        super(id);
+        this.primaryContainer = primaryContainer;
+        this.containers = containers;
     }
 
-    public PropertyContainerSetDTO(JSONObject json) {
-        this(json, null, null);
-    }
-
-    public PropertyContainerSetDTO(JSONObject json, String primaryPropertyName, String propertyListName) {
+    public PropertyContainerSetDTO(JSONObject json, PropertyContainerMappingContext context) {
+        String primaryPropertyName = context.getPrimaryContainerName();
         if (primaryPropertyName == null) {
             primaryPropertyName = "primaryContainer";
         }
+        String propertyListName = context.getContainersName();
         if (propertyListName == null) {
             propertyListName = "containers";
         }
@@ -79,5 +70,23 @@ public class PropertyContainerSetDTO extends ThingDTO {
     @Override
     public String getMediaType() {
         return "application/vnd.hobson.propertyContainerSet";
+    }
+
+    public JSONObject toJSON(PropertyContainerMappingContext context) {
+        JSONObject json = super.toJSON(null);
+
+        if (primaryContainer != null) {
+            json.put(context.getPrimaryContainerName(), primaryContainer.toJSON(null));
+        }
+
+        if (containers != null && containers.size() > 0) {
+            JSONArray a = new JSONArray();
+            for (PropertyContainerDTO d : containers) {
+                a.put(d);
+            }
+            json.put(context.getContainersName(), a);
+        }
+
+        return json;
     }
 }

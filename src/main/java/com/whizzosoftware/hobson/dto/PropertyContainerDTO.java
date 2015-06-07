@@ -7,7 +7,6 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.property.PropertyContainer;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -17,15 +16,18 @@ public class PropertyContainerDTO extends ThingDTO {
     private PropertyContainerClassDTO containerClass;
     private Map<String,Object> propertyValues;
 
-    public PropertyContainerDTO(String containerId, PropertyContainer r) {
-        setId(containerId);
-        setName(r.getName());
-        this.containerClass = new PropertyContainerClassDTO("containerclass1");
-        this.propertyValues = r.getPropertyValues();
+    public PropertyContainerDTO(String containerId) {
+        this(containerId, null, null, null);
     }
 
-    public PropertyContainerDTO(String containerId) {
-        setId(containerId);
+    public PropertyContainerDTO(String containerId, String containerClassId, Map<String,Object> propertyValues) {
+        this(containerId, null, new PropertyContainerClassDTO(containerClassId), propertyValues);
+    }
+
+    public PropertyContainerDTO(String containerId, String name, PropertyContainerClassDTO containerClass, Map<String,Object> propertyValues) {
+        super(containerId, name);
+        this.containerClass = containerClass;
+        this.propertyValues = propertyValues;
     }
 
     public PropertyContainerDTO(JSONObject json) {
@@ -40,12 +42,6 @@ public class PropertyContainerDTO extends ThingDTO {
                 propertyValues.put(key, jp.get(key));
             }
         }
-    }
-
-    public PropertyContainerDTO(String containerId, String containerClassId, Map<String,Object> propertyValues) {
-        setId(containerId);
-        this.containerClass = new PropertyContainerClassDTO(containerClassId);
-        this.propertyValues = propertyValues;
     }
 
     @Override

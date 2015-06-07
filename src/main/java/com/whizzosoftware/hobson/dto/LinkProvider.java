@@ -7,10 +7,9 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
-import com.whizzosoftware.hobson.api.property.PropertyContainer;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.task.TaskContext;
 
@@ -30,7 +29,6 @@ public interface LinkProvider {
     public PropertyContainerClassContext createTaskActionClassContext(String link);
     public String createTaskActionSetLink(HubContext ctx, String actionSetId);
     public PluginContext createPluginContext(String link);
-    public String createPluginLink(PluginContext ctx);
     public String createUserLink(String id);
     public String createHubLink(HubContext context);
     public String createHubsLink(String userId);
@@ -40,9 +38,18 @@ public interface LinkProvider {
     public String createPropertyContainerClassLink(int type, PropertyContainerClassContext pccc);
     public String createTasksLink(HubContext context);
     public String createDevicesLink(HubContext context);
-    public String createPluginsLink(HubContext context);
-    public String createLocalPluginLink(HubContext context, String pluginId);
+    public String createLocalPluginLink(PluginContext context);
     public String createLocalPluginsLink(HubContext context);
-    public String createRemotePluginLink(HubContext context, String pluginId);
+    public String createRemotePluginLink(PluginContext context);
     public String createRemotePluginsLink(HubContext context);
+    public String createDeviceLink(DeviceContext context);
+    public String createDeviceVariableLink(DeviceContext context, String preferredVariableName);
+    public String createDeviceConfigurationLink(DeviceContext context);
+    public String createDeviceConfigurationClassLink(DeviceContext context);
+    public String createLocalPluginConfigurationLink(PluginContext pctx);
+    public String createLocalPluginConfigurationClassLink(PluginContext pctx);
+    public String createDeviceVariablesLink(DeviceContext context);
+    public String createRemotePluginInstallLink(PluginContext pctx, String version);
+    public String createTaskActionSetsLink(HubContext hubContext);
+    public DeviceContext createDeviceContext(String deviceId);
 }

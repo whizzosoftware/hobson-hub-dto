@@ -7,21 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.hub.HubContext;
-import org.json.JSONObject;
-
-public class HubContextDTO {
-    private HubContext context;
-
-    public HubContextDTO(JSONObject json, LinkProvider links) {
-        this.context = links.createHubContext(json.getString("@id"));
-    }
-
-    public HubContextDTO(HubContext context) {
-        this.context = context;
-    }
-
-    public HubContext getContext() {
-        return context;
-    }
+public interface PropertyContainerMappingContext {
+    public String getPrimaryContainerName();
+    public String getContainersName();
 }

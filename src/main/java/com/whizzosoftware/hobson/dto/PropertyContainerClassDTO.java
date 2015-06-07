@@ -7,8 +7,6 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
-import com.whizzosoftware.hobson.api.property.TypedProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,22 +17,16 @@ public class PropertyContainerClassDTO extends ThingDTO {
     private List<TypedPropertyDTO> supportedProperties;
 
     public PropertyContainerClassDTO(String id) {
-        setId(id);
-    }
-
-    public PropertyContainerClassDTO(String id, PropertyContainerClass containerClass) {
-        setId(id);
-        setName(containerClass.getName());
-        supportedProperties = new ArrayList<>();
-        if (containerClass.hasSupportedProperties()) {
-            for (TypedProperty p : containerClass.getSupportedProperties()) {
-                supportedProperties.add(new TypedPropertyDTO(p));
-            }
-        }
+        super(id);
     }
 
     public PropertyContainerClassDTO(JSONObject json) {
-        setId(json.getString("@id"));
+        super(json);
+    }
+
+    public PropertyContainerClassDTO(String id, String name, List<TypedPropertyDTO> supportedProperties) {
+        super(id, name);
+        this.supportedProperties = supportedProperties;
     }
 
     @Override
@@ -48,6 +40,13 @@ public class PropertyContainerClassDTO extends ThingDTO {
 
     public void setSupportedProperties(List<TypedPropertyDTO> supportedProperties) {
         this.supportedProperties = supportedProperties;
+    }
+
+    public void addSupportedProperty(TypedPropertyDTO property) {
+        if (supportedProperties == null) {
+            supportedProperties = new ArrayList<>();
+        }
+        supportedProperties.add(property);
     }
 
     public JSONObject toJSON(LinkProvider links) {

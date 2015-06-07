@@ -7,121 +7,74 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.json.JSONObject;
 
-/**
- * An implementation of HobsonVariable for purposes of data transfer.
- *
- * @author Dan Noguerol
- */
-public class HobsonVariableDTO implements HobsonVariable {
-    private String pluginId;
-    private String deviceId;
-    private String name;
-    private Object value;
-    private Mask mask;
+public class HobsonVariableDTO extends ThingDTO {
     private Long lastUpdate;
-    private String proxyType;
+    private HobsonVariable.Mask mask;
+    private Object value;
 
-    private HobsonVariableDTO(DeviceContext ctx) {
-        this.pluginId = ctx.getPluginId();
-        this.deviceId = ctx.getDeviceId();
+    public HobsonVariableDTO(String id) {
+        setId(id);
     }
 
-    private HobsonVariableDTO(PluginContext ctx) {
-        this.pluginId = ctx.getPluginId();
-    }
-
-    @Override
-    public String getPluginId() {
-        return pluginId;
-    }
-
-    @Override
-    public boolean hasProxyType() {
-        return (proxyType != null);
+    public HobsonVariableDTO(String id, HobsonVariable variable) {
+        setId(id);
+        setName(variable.getName());
+        this.lastUpdate = variable.getLastUpdate();
+        this.mask = variable.getMask();
+        this.value = variable.getValue();
     }
 
     @Override
-    public String getProxyType() {
-        return proxyType;
+    public String getMediaType() {
+        return "application/vnd.hobson.variable";
     }
 
-    @Override
-    public String getDeviceId() {
-        return deviceId;
+    public JSONObject toJSON(LinkProvider links) {
+        JSONObject json = super.toJSON(links);
+        if (lastUpdate != null) {
+            json.put("lastUpdate", lastUpdate);
+        }
+        if (mask != null) {
+            json.put("mask", mask.toString());
+        }
+        if (value != null) {
+            json.put("value", value);
+        }
+        return json;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+    static public class Builder {
+        HobsonVariableDTO dto;
 
-    @Override
-    public Object getValue() {
-        return value;
-    }
-
-    @Override
-    public Mask getMask() {
-        return mask;
-    }
-
-    @Override
-    public Long getLastUpdate() {
-        return lastUpdate;
-    }
-
-    @Override
-    public boolean isGlobal() {
-        return (deviceId == null);
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("name", name).
-            append("value", value).
-            append("mask", mask).
-            append("lastUpdate", lastUpdate).
-            toString();
-    }
-
-    public static class Builder {
-        private HobsonVariableDTO dto;
-
-        public Builder(DeviceContext ctx) {
-            dto = new HobsonVariableDTO(ctx);
+        public Builder(String id) {
+            dto = new HobsonVariableDTO(id);
         }
 
-        public Builder(PluginContext ctx) {
-            dto = new HobsonVariableDTO(ctx);
-        }
-
-        public Builder setName(String name) {
-            dto.name = name;
+        public Builder id(String id) {
+            dto.setId(id);
             return this;
         }
 
-        public Builder setValue(Object value) {
-            dto.value = value;
+        public Builder name(String name) {
+            dto.setName(name);
             return this;
         }
 
-        public Builder setMask(Mask mask) {
-            dto.mask = mask;
-            return this;
-        }
-
-        public Builder setLastUpdate(Long lastUpdate) {
+        public Builder lastUpdate(Long lastUpdate) {
             dto.lastUpdate = lastUpdate;
             return this;
         }
 
-        public Builder setProxyType(String proxyType) {
-            dto.proxyType = proxyType;
+        public Builder mask(HobsonVariable.Mask mask) {
+            dto.mask = mask;
+            return this;
+        }
+
+        public Builder value(Object value) {
+            dto.value = value;
             return this;
         }
 

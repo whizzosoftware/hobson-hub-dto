@@ -7,29 +7,27 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.hub.HobsonHub;
-import com.whizzosoftware.hobson.api.hub.HubContext;
 import org.json.JSONObject;
 
 public class HobsonHubDTO extends ThingDTO {
-    private String version;
+    private ItemListDTO actionClasses;
+    private ItemListDTO conditionClasses;
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
-    private ItemListDTO plugins;
     private ItemListDTO devices;
-    private ItemListDTO conditionClasses;
-    private ItemListDTO actionClasses;
+    private HubLogDTO log;
+    private ItemListDTO localPlugins;
+    private ItemListDTO remotePlugins;
     private ItemListDTO tasks;
+    private String version;
 
-    public HobsonHubDTO(HobsonHub hub, LinkProvider links) {
-        setId(links.createHubLink(hub.getContext()));
-        setName(hub.getName());
-        this.version = hub.getVersion();
+    public HobsonHubDTO(String id) {
+        setId(id);
     }
 
-    public HobsonHubDTO(HubContext context, String name, LinkProvider links) {
-        setId(links.createHubLink(context));
-        setName(name);
+    public HobsonHubDTO(String id, String name, String version) {
+        super(id, name);
+        this.version = version;
     }
 
     public PropertyContainerClassDTO getConfigurationClass() {
@@ -40,12 +38,20 @@ public class HobsonHubDTO extends ThingDTO {
         this.configurationClass = configurationClass;
     }
 
-    public ItemListDTO getPlugins() {
-        return plugins;
+    public ItemListDTO getLocalPlugins() {
+        return localPlugins;
     }
 
-    public void setPlugins(ItemListDTO plugins) {
-        this.plugins = plugins;
+    public void setLocalPlugins(ItemListDTO localPlugins) {
+        this.localPlugins = localPlugins;
+    }
+
+    public ItemListDTO getRemotePlugins() {
+        return remotePlugins;
+    }
+
+    public void setRemotePlugins(ItemListDTO remotePlugins) {
+        this.remotePlugins = remotePlugins;
     }
 
     public ItemListDTO getDevices() {
@@ -92,10 +98,21 @@ public class HobsonHubDTO extends ThingDTO {
         return "application/vnd.hobson.v1.hub";
     }
 
+    public HubLogDTO getLog() {
+        return log;
+    }
+
+    public void setLog(HubLogDTO log) {
+        this.log = log;
+    }
+
     public JSONObject toJSON(LinkProvider links) {
         JSONObject json = super.toJSON(links);
-        if (version != null) {
-            json.put("version", version);
+        if (actionClasses != null) {
+            json.put("actionClasses", actionClasses.toJSON(links));
+        }
+        if (conditionClasses != null) {
+            json.put("conditionClasses", conditionClasses.toJSON(links));
         }
         if (configurationClass != null) {
             json.put("configurationClass", configurationClass.toJSON(links));
@@ -103,20 +120,23 @@ public class HobsonHubDTO extends ThingDTO {
         if (configuration != null) {
             json.put("configuration", configuration.toJSON(links));
         }
-        if (plugins != null) {
-            json.put("plugins", plugins.toJSON(links));
-        }
         if (devices != null) {
             json.put("devices", devices.toJSON(links));
         }
-        if (conditionClasses != null) {
-            json.put("conditionClasses", conditionClasses.toJSON(links));
+        if (log != null) {
+            json.put("log", log.toJSON(links));
         }
-        if (actionClasses != null) {
-            json.put("actionClasses", actionClasses.toJSON(links));
+        if (localPlugins != null) {
+            json.put("localPlugins", localPlugins.toJSON(links));
+        }
+        if (remotePlugins != null) {
+            json.put("remotePlugins", remotePlugins.toJSON(links));
         }
         if (tasks != null) {
             json.put("tasks", tasks.toJSON(links));
+        }
+        if (version != null) {
+            json.put("version", version);
         }
         return json;
     }

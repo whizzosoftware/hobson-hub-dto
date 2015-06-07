@@ -7,40 +7,34 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.plugin.PluginContext;
-import com.whizzosoftware.hobson.api.plugin.PluginDescriptor;
 import org.json.JSONObject;
 
-public class PluginDTO extends ThingDTO {
-    private String version;
+public class ImageDTO extends ThingDTO {
+    private String base64Data;
 
-    public PluginDTO(JSONObject json) {
-        setId(json.getString("@id"));
+    public ImageDTO(String id) {
+        super(id);
     }
 
-    public PluginDTO(String id) {
-        setId(id);
+    public String getBase64Data() {
+        return base64Data;
     }
 
-    public PluginDTO(String id, PluginContext context) {
-        setId(id);
-    }
-
-    public PluginDTO(String id, PluginDescriptor pd) {
-        setId(id);
-        setName(pd.getName());
-        setDescription(pd.getDescription());
-        this.version = pd.getVersionString();
+    public void setBase64Data(String base64Data) {
+        this.base64Data = base64Data;
     }
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.plugin";
+        return "application/vnd.hobson.image";
     }
 
+    @Override
     public JSONObject toJSON(LinkProvider links) {
         JSONObject json = super.toJSON(links);
-        json.put("version", version != null ? version : null);
+        if (base64Data != null) {
+            json.put("data", base64Data);
+        }
         return json;
     }
 }

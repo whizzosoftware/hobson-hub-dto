@@ -12,11 +12,31 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Base class for all other data transfer objects.
+ *
+ * @author Dan Noguerol
+ */
 abstract public class ThingDTO implements JSONProducer {
     private String id;
     private String name;
     private String description;
     private Map<String,String> links;
+
+    public ThingDTO() {}
+
+    public ThingDTO(JSONObject json) {
+        this(json.getString("@id"), json.has("name") ? json.getString("name") : null);
+    }
+
+    public ThingDTO(String id) {
+        this(id, null);
+    }
+
+    public ThingDTO(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public String getId() {
         return id;

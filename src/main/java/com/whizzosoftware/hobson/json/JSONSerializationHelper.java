@@ -12,8 +12,6 @@ import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.HobsonRuntimeException;
 import com.whizzosoftware.hobson.api.activity.ActivityLogEntry;
 import com.whizzosoftware.hobson.api.config.*;
-import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
@@ -27,7 +25,6 @@ import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.api.task.TaskManager;
 import com.whizzosoftware.hobson.api.telemetry.TemporalValue;
 import com.whizzosoftware.hobson.api.user.HobsonUser;
-import com.whizzosoftware.hobson.api.util.VersionUtil;
 import com.whizzosoftware.hobson.api.variable.*;
 import com.whizzosoftware.hobson.dto.*;
 import org.json.JSONArray;
@@ -93,77 +90,68 @@ public class JSONSerializationHelper {
 //        return json;
 //    }
 
-    static public Configuration createConfiguration(JSONObject json) {
-        try {
-            Configuration config = new Configuration();
-            JSONObject jsonProps = (JSONObject)json.get("properties");
-            for (Object o : jsonProps.keySet()) {
-                String configKey = o.toString();
-                JSONObject configJson = (JSONObject)jsonProps.get(configKey);
-                config.addProperty(new ConfigurationProperty(new ConfigurationPropertyMetaData(configKey), configJson.get("value")));
-            }
-            return config;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    static public Configuration createConfiguration(JSONObject json) {
+//        try {
+//            Configuration config = new Configuration();
+//            JSONObject jsonProps = (JSONObject)json.get("properties");
+//            for (Object o : jsonProps.keySet()) {
+//                String configKey = o.toString();
+//                JSONObject configJson = (JSONObject)jsonProps.get(configKey);
+//                config.addProperty(new ConfigurationProperty(new TypedProperty(configKey), configJson.get("value")));
+//            }
+//            return config;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
-    static public JSONObject createConfigurationJSON(Configuration config) {
-        try {
-            JSONObject json = new JSONObject();
-            JSONObject configProps = new JSONObject();
-            json.put("properties", configProps);
-            for (ConfigurationProperty pcp : config.getProperties()) {
-                JSONObject j = createConfigurationPropertyJSON(pcp);
-                configProps.put(pcp.getId(), j);
-            }
-            return json;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    static public JSONObject createConfigurationJSON(Configuration config) {
+//        try {
+//            JSONObject json = new JSONObject();
+//            JSONObject configProps = new JSONObject();
+//            json.put("properties", configProps);
+//            for (ConfigurationProperty pcp : config.getProperties()) {
+//                JSONObject j = createConfigurationPropertyJSON(pcp);
+//                configProps.put(pcp.getId(), j);
+//            }
+//            return json;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
-    public static JSONObject createConfigurationPropertyJSON(ConfigurationProperty cp) {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("name", cp.getName());
-            json.put("description", cp.getDescription());
-            json.put("type", cp.getType());
-            if (cp.hasEnumValues()) {
-                JSONObject vals = new JSONObject();
-                for (ConfigurationEnumValue cev : cp.getEnumValues()) {
-                    JSONObject jcev = new JSONObject();
-                    jcev.put("name", cev.getName());
-                    vals.put(cev.getId(), jcev);
-                }
-                json.put("enumValues", vals);
-            }
-            if (cp.hasValue()) {
-                json.put("value", cp.getValue());
-            }
-            return json;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    public static JSONObject createConfigurationPropertyJSON(ConfigurationProperty cp) {
+//        try {
+//            JSONObject json = new JSONObject();
+//            json.put("name", cp.getName());
+//            json.put("description", cp.getDescription());
+//            json.put("type", cp.getType());
+//            if (cp.hasValue()) {
+//                json.put("value", cp.getValue());
+//            }
+//            return json;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
-    public static Map<String,Object> createPropertyMap(HubContext ctx, Map<String, TypedProperty> propMap, JSONObject json) {
-        try {
-            Map<String,Object> results = new HashMap<>();
-            for (Object o : json.keySet()) {
-                String id = o.toString();
-                JSONObject vo = (JSONObject)json.get(id);
-                if (propMap.containsKey(id)) {
-                    results.put(id, TypedPropertyValueSerializer.createValueObject(ctx, propMap.get(id).getType(), vo.get("value")));
-                } else {
-                    throw new HobsonInvalidRequestException("Invalid property key: " + id);
-                }
-            }
-            return results;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    public static Map<String,Object> createPropertyMap(HubContext ctx, Map<String, TypedProperty> propMap, JSONObject json) {
+//        try {
+//            Map<String,Object> results = new HashMap<>();
+//            for (Object o : json.keySet()) {
+//                String id = o.toString();
+//                JSONObject vo = (JSONObject)json.get(id);
+//                if (propMap.containsKey(id)) {
+//                    results.put(id, TypedPropertyValueSerializer.createValueObject(ctx, propMap.get(id).getType(), vo.get("value")));
+//                } else {
+//                    throw new HobsonInvalidRequestException("Invalid property key: " + id);
+//                }
+//            }
+//            return results;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
     public static JSONObject createCurrentVersionJSON(String currentVersion) {
         try {
@@ -235,29 +223,29 @@ public class JSONSerializationHelper {
         }
     }
 
-    public static HobsonDevice createDeviceDTO(HubContext ctx, JSONObject json) {
-        try {
-            HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(DeviceContext.create(ctx, json.getString("pluginId"), json.getString("id"))).
-                setName(json.getString("name")).
-                setType(DeviceType.valueOf(json.getString("type"))).
-                build();
-            return dto;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    public static HobsonDevice createDeviceDTO(HubContext ctx, JSONObject json) {
+//        try {
+//            HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(DeviceContext.create(ctx, json.getString("pluginId"), json.getString("id"))).
+//                name(json.getString("name")).
+//                type(DeviceType.valueOf(json.getString("type"))).
+//                build();
+//            return dto;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
-    public static JSONObject createDeviceConfigurationJSON(Configuration config) {
-        try {
-            JSONObject json = new JSONObject();
-            for (ConfigurationProperty cp : config.getProperties()) {
-                json.put(cp.getId(), createConfigurationPropertyJSON(cp));
-            }
-            return json;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    public static JSONObject createDeviceConfigurationJSON(Configuration config) {
+//        try {
+//            JSONObject json = new JSONObject();
+//            for (ConfigurationProperty cp : config.getProperties()) {
+//                json.put(cp.getId(), createConfigurationPropertyJSON(cp));
+//            }
+//            return json;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
     public static JSONObject createDeviceVariableJSON(String pluginId, String deviceId, HobsonVariable v, boolean details) {
         try {
@@ -304,21 +292,21 @@ public class JSONSerializationHelper {
         }
     }
 
-    public static JSONObject createEmailConfigurationJSON(EmailConfiguration email) {
-        try {
-            JSONObject json = null;
-            if (email != null && email.getServer() != null) {
-                json = new JSONObject();
-                json.put("server", email.getServer());
-                json.put("secure", email.isSecure());
-                json.put("senderAddress", email.getSenderAddress());
-                json.put("username", email.getUsername());
-            }
-            return json;
-        } catch (JSONException e) {
-            throw new HobsonInvalidRequestException(e.getMessage());
-        }
-    }
+//    public static JSONObject createEmailConfigurationJSON(EmailConfiguration email) {
+//        try {
+//            JSONObject json = null;
+//            if (email != null && email.getServer() != null) {
+//                json = new JSONObject();
+//                json.put("server", email.getServer());
+//                json.put("secure", email.isSecure());
+//                json.put("senderAddress", email.getSenderAddress());
+//                json.put("username", email.getUsername());
+//            }
+//            return json;
+//        } catch (JSONException e) {
+//            throw new HobsonInvalidRequestException(e.getMessage());
+//        }
+//    }
 
     public static JSONObject createErrorJSON(Throwable t) {
         return createErrorJSON(getErrorCode(t), t.getLocalizedMessage());

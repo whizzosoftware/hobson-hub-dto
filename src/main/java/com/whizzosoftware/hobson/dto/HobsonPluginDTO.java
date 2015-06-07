@@ -7,117 +7,99 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.config.ConfigurationPropertyMetaData;
 import com.whizzosoftware.hobson.api.plugin.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-/**
- * An implementation of HobsonPlugin for purposes of data transfer.
- *
- * @author Dan Noguerol
- */
-public class HobsonPluginDTO implements HobsonPlugin {
-    private PluginContext ctx;
-    private String name;
+public class HobsonPluginDTO extends ThingDTO {
     private String version;
     private PluginType type;
     private PluginStatus status;
-    private boolean configurable = false;
-    private Collection<ConfigurationPropertyMetaData> metaData = new ArrayList<>();
+    private Boolean configurable;
+    private PropertyContainerClassDTO configurationClass;
+    private PropertyContainerDTO configuration;
+    private ImageDTO image;
 
-    private HobsonPluginDTO(PluginContext ctx) {
-        this.ctx = ctx;
+    private HobsonPluginDTO(String id) {
+        super(id, null);
     }
 
     @Override
-    public PluginContext getContext() {
-        return ctx;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getVersion() {
-        return version;
-    }
-
-    @Override
-    public PluginType getType() {
-        return type;
-    }
-
-    @Override
-    public PluginStatus getStatus() {
-        return status;
-    }
-
-    @Override
-    public boolean isConfigurable() {
-        return configurable;
-    }
-
-    @Override
-    public Collection<ConfigurationPropertyMetaData> getConfigurationPropertyMetaData() {
-        return metaData;
-    }
-
-    @Override
-    public HobsonPluginRuntime getRuntime() {
+    public String getMediaType() {
         return null;
     }
 
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("userId", ctx.getUserId()).
-            append("hubId", ctx.getHubId()).
-            append("pluginId", ctx.getPluginId()).
-            append("name", name).
-            append("version", version).
-            append("type", type).
-            append("status", status.getStatus()).
-            toString();
+    @Override
+    public JSONObject toJSON(LinkProvider links) {
+        JSONObject json = super.toJSON(links);
+        json.put("version", version != null ? version : null);
+        json.put("type", type != null ? type.toString() : null);
+        json.put("configurable", configurable != null ? configurable : null);
+        json.put("configurationClass", configurationClass != null ? configurationClass.toJSON(links) : null);
+        json.put("configuration", configuration != null ? configuration.toJSON(links) : null);
+        json.put("image", image != null ? image.toJSON(links) : null);
+        if (status != null) {
+            JSONObject psjson = new JSONObject();
+            psjson.put("status", status.getStatus().toString());
+            psjson.put("message", status.getMessage());
+            json.put("status", psjson);
+        }
+        return json;
     }
 
     public static class Builder {
         private HobsonPluginDTO dto;
 
-        public Builder(PluginContext ctx) {
-            dto = new HobsonPluginDTO(ctx);
+        public Builder(String id) {
+            dto = new HobsonPluginDTO(id);
         }
 
-        public Builder setName(String name) {
-            dto.name = name;
+        public Builder name(String name) {
+            dto.setName(name);
             return this;
         }
 
-        public Builder setVersion(String version) {
+        public Builder description(String description) {
+            dto.setDescription(description);
+            return this;
+        }
+
+        public Builder version(String version) {
             dto.version = version;
             return this;
         }
 
-        public Builder setType(PluginType type) {
+        public Builder type(PluginType type) {
             dto.type = type;
             return this;
         }
 
-        public Builder setStatus(PluginStatus status) {
+        public Builder status(PluginStatus status) {
             dto.status = status;
             return this;
         }
 
-        public Builder setConfigurable(boolean configurable) {
+        public Builder configurable(boolean configurable) {
             dto.configurable = configurable;
             return this;
         }
 
-        public Builder setConfigurationPropertyMetaData(Collection<ConfigurationPropertyMetaData> metaData) {
-            dto.metaData = metaData;
+        public Builder configuration(PropertyContainerDTO configuration) {
+            dto.configuration = configuration;
+            return this;
+        }
+
+        public Builder configurationClass(PropertyContainerClassDTO configurationClass) {
+            dto.configurationClass = configurationClass;
+            return this;
+        }
+
+        public Builder image(ImageDTO image) {
+            dto.image = image;
+            return this;
+        }
+
+        public Builder addLink(String rel, String url) {
+            dto.addLink(rel, url);
             return this;
         }
 

@@ -7,121 +7,108 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.config.ConfigurationPropertyMetaData;
-import com.whizzosoftware.hobson.api.device.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.whizzosoftware.hobson.api.device.DeviceType;
+import org.json.JSONObject;
 
-import java.util.Collection;
-
-/**
- * An implementation of HobsonDevice for purposes of data transfer.
- *
- * @author Dan Noguerol
- */
-public class HobsonDeviceDTO implements HobsonDevice {
-    private DeviceContext ctx;
-    private String name;
+public class HobsonDeviceDTO extends ThingDTO {
     private DeviceType type;
-    private DeviceError error;
-    private String preferredVariableName;
-    private Collection<ConfigurationPropertyMetaData> metaData;
-    private boolean telemetryCapable = false;
+    private HobsonVariableDTO preferredVariable;
+    private ItemListDTO variables;
+    private PropertyContainerClassDTO configurationClass;
+    private PropertyContainerDTO configuration;
 
-    private HobsonDeviceDTO(DeviceContext ctx) {
-        this.ctx = ctx;
+    public HobsonDeviceDTO(String id) {
+        this(id, null);
+    }
+
+    public HobsonDeviceDTO(String id, String name) {
+        setId(id);
+        setName(name);
+    }
+
+    public HobsonDeviceDTO setType(DeviceType type) {
+        this.type = type;
+        return this;
+    }
+
+    public HobsonDeviceDTO setPreferredVariable(HobsonVariableDTO preferredVariable) {
+        this.preferredVariable = preferredVariable;
+        return this;
+    }
+
+    public void setVariables(ItemListDTO variables) {
+        this.variables = variables;
+    }
+
+    public HobsonDeviceDTO setConfigurationClass(PropertyContainerClassDTO configurationClass) {
+        this.configurationClass = configurationClass;
+        return this;
+    }
+
+    public HobsonDeviceDTO setConfiguration(PropertyContainerDTO configuration) {
+        this.configuration = configuration;
+        return this;
     }
 
     @Override
-    public DeviceContext getContext() {
-        return ctx;
+    public String getMediaType() {
+        return "application/vnd.hobson.device";
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public JSONObject toJSON(LinkProvider links) {
+        JSONObject json = super.toJSON(links);
+        if (type != null) {
+            json.put("type", type.toString());
+        }
+        if (configuration != null) {
+            json.put("configuration", configuration.toJSON(links));
+        }
+        if (configurationClass != null) {
+            json.put("configurationClass", configurationClass.toJSON(links));
+        }
+        if (preferredVariable != null) {
+            json.put("preferredVariable", preferredVariable.toJSON(links));
+        }
+        if (variables != null) {
+            json.put("variables", variables.toJSON(links));
+        }
+        return json;
     }
 
-    @Override
-    public DeviceType getType() {
-        return type;
-    }
-
-    @Override
-    public boolean hasError() {
-        return (error != null);
-    }
-
-    @Override
-    public DeviceError getError() {
-        return error;
-    }
-
-    @Override
-    public String getPreferredVariableName() {
-        return preferredVariableName;
-    }
-
-    @Override
-    public Collection<ConfigurationPropertyMetaData> getConfigurationPropertyMetaData() {
-        return metaData;
-    }
-
-    @Override
-    public boolean isTelemetryCapable() {
-        return telemetryCapable;
-    }
-
-    @Override
-    public HobsonDeviceRuntime getRuntime() {
-        return null;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("ctx", ctx).
-            append("name", name).
-            append("type", type).
-            append("preferredVariableName", preferredVariableName).
-            append("telemetryCapable", telemetryCapable).
-            append("metaData", metaData).
-            append("error", error).
-            toString();
-    }
-
-    public static class Builder {
+    static public class Builder {
         private HobsonDeviceDTO dto;
 
-        public Builder(DeviceContext ctx) {
-            dto = new HobsonDeviceDTO(ctx);
+        public Builder(String id) {
+            dto = new HobsonDeviceDTO(id);
         }
 
-        public Builder setName(String name) {
-            dto.name = name;
+        public Builder name(String name) {
+            dto.setName(name);
             return this;
         }
 
-        public Builder setType(DeviceType type) {
+        public Builder type(DeviceType type) {
             dto.type = type;
             return this;
         }
 
-        public Builder setPreferredVariableName(String preferredVariableName) {
-            dto.preferredVariableName = preferredVariableName;
+        public Builder preferredVariable(HobsonVariableDTO preferredVariable) {
+            dto.preferredVariable = preferredVariable;
             return this;
         }
 
-        public Builder setConfigurationPropertyMetaData(Collection<ConfigurationPropertyMetaData> metaData) {
-            dto.metaData = metaData;
+        public Builder variables(ItemListDTO variables) {
+            dto.variables = variables;
             return this;
         }
 
-        public Builder setTelemetryCapable(boolean telemetryCapable) {
-            dto.telemetryCapable = telemetryCapable;
+        public Builder configurationClass(PropertyContainerClassDTO configurationClass) {
+            dto.configurationClass = configurationClass;
             return this;
         }
 
-        public Builder setError(DeviceError error) {
-            dto.error = error;
+        public Builder configuration(PropertyContainerDTO configuration) {
+            dto.configuration = configuration;
             return this;
         }
 
