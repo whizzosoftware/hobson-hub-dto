@@ -26,6 +26,10 @@ public class HobsonTaskDTO extends ThingDTO {
             setName(json.getString("name"));
         }
 
+        if (json.has("description")) {
+            setDescription(json.getString("description"));
+        }
+
         if (json.has("conditionSet")) {
             this.conditionSet = new PropertyContainerSetDTO(json.getJSONObject("conditionSet"), new PropertyContainerMappingContext() {
                 @Override
@@ -125,6 +129,11 @@ public class HobsonTaskDTO extends ThingDTO {
 
         public Builder name(String name) {
             dto.setName(name);
+            return this;
+        }
+
+        public Builder description(String description) {
+            dto.setDescription(description);
             return this;
         }
 
