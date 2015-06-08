@@ -16,15 +16,17 @@ public class HobsonVariableDTO extends ThingDTO {
     private Object value;
 
     public HobsonVariableDTO(String id) {
-        setId(id);
+        this(id, null);
     }
 
     public HobsonVariableDTO(String id, HobsonVariable variable) {
         setId(id);
-        setName(variable.getName());
-        this.lastUpdate = variable.getLastUpdate();
-        this.mask = variable.getMask();
-        this.value = variable.getValue();
+        if (variable != null) {
+            setName(variable.getName());
+            this.lastUpdate = variable.getLastUpdate();
+            this.mask = variable.getMask();
+            this.value = variable.getValue();
+        }
     }
 
     @Override
