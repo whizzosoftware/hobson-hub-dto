@@ -16,6 +16,7 @@ public class HobsonDeviceDTO extends ThingDTO {
     private ItemListDTO variables;
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
+    private DeviceTelemetryDTO telemetry;
 
     public HobsonDeviceDTO(String id) {
         this(id, null);
@@ -26,33 +27,33 @@ public class HobsonDeviceDTO extends ThingDTO {
         setName(name);
     }
 
-    public HobsonDeviceDTO setType(DeviceType type) {
-        this.type = type;
-        return this;
-    }
-
-    public HobsonDeviceDTO setPreferredVariable(HobsonVariableDTO preferredVariable) {
-        this.preferredVariable = preferredVariable;
-        return this;
-    }
-
-    public void setVariables(ItemListDTO variables) {
-        this.variables = variables;
-    }
-
-    public HobsonDeviceDTO setConfigurationClass(PropertyContainerClassDTO configurationClass) {
-        this.configurationClass = configurationClass;
-        return this;
-    }
-
-    public HobsonDeviceDTO setConfiguration(PropertyContainerDTO configuration) {
-        this.configuration = configuration;
-        return this;
-    }
-
     @Override
     public String getMediaType() {
         return "application/vnd.hobson.device";
+    }
+
+    public DeviceType getType() {
+        return type;
+    }
+
+    public HobsonVariableDTO getPreferredVariable() {
+        return preferredVariable;
+    }
+
+    public ItemListDTO getVariables() {
+        return variables;
+    }
+
+    public PropertyContainerClassDTO getConfigurationClass() {
+        return configurationClass;
+    }
+
+    public PropertyContainerDTO getConfiguration() {
+        return configuration;
+    }
+
+    public DeviceTelemetryDTO getTelemetry() {
+        return telemetry;
     }
 
     public JSONObject toJSON(LinkProvider links) {
@@ -71,6 +72,9 @@ public class HobsonDeviceDTO extends ThingDTO {
         }
         if (variables != null) {
             json.put("variables", variables.toJSON(links));
+        }
+        if (telemetry != null) {
+            json.put("telemetry", telemetry.toJSON(links));
         }
         return json;
     }
@@ -109,6 +113,11 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder configuration(PropertyContainerDTO configuration) {
             dto.configuration = configuration;
+            return this;
+        }
+
+        public Builder telemetry(DeviceTelemetryDTO telemetry) {
+            dto.telemetry = telemetry;
             return this;
         }
 
