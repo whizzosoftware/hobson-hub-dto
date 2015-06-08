@@ -290,41 +290,6 @@ public class JSONSerializationHelper {
         }
     }
 
-    public static JSONObject createTelemetryJSON(boolean telemetryCapable, boolean telemetryEnabled, Map<String,Collection<TemporalValue>> telemetry) {
-        JSONObject json = new JSONObject();
-
-        json.put("capable", telemetryCapable);
-        json.put("enabled", telemetryEnabled);
-
-        if (telemetry != null) {
-            JSONObject data = new JSONObject();
-            boolean hasData = false;
-
-            for (String varName : telemetry.keySet()) {
-                Collection<TemporalValue> varTm = telemetry.get(varName);
-
-                if (varTm.size() > 0) {
-                    hasData = true;
-                    JSONObject seriesJSON = new JSONObject();
-                    data.put(varName, seriesJSON);
-
-                    for (TemporalValue value : varTm) {
-                        Double d = (Double) value.getValue();
-                        if (d != null && !d.equals(Double.NaN)) {
-                            seriesJSON.put(Long.toString(value.getTime()), d);
-                        }
-                    }
-                }
-            }
-
-            if (hasData) {
-                json.put("data", data);
-            }
-        }
-
-        return json;
-    }
-
     public static JSONObject createVariableUpdateJSON(VariableUpdate update) {
         try {
             JSONObject json = new JSONObject();
