@@ -5,9 +5,8 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.property;
 
-import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;

@@ -5,12 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.task;
 
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
-import com.whizzosoftware.hobson.dto.task.HobsonTaskDTO;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;
@@ -26,16 +25,16 @@ public class HobsonTaskDTOTest {
             .name("My Task")
             .description("Task Desc")
             .conditionSet(new PropertyContainerSetDTO.Builder("conditionClassLink")
-                .primaryContainer(
-                    new PropertyContainerDTO.Builder("conditionclass1")
-                        .containerClass(new PropertyContainerClassDTO.Builder("conditionClassLink").build())
-                        .values(Collections.singletonMap("foo", (Object)"bar"))
-                        .build()
-                )
-                .build()
+                            .primaryContainer(
+                                    new PropertyContainerDTO.Builder("conditionclass1")
+                                            .containerClass(new PropertyContainerClassDTO.Builder("conditionClassLink").build())
+                                            .values(Collections.singletonMap("foo", (Object) "bar"))
+                                            .build()
+                            )
+                            .build()
             )
             .actionSet(new PropertyContainerSetDTO.Builder("actionSetLink")
-                .build()
+                            .build()
             )
             .build();
 

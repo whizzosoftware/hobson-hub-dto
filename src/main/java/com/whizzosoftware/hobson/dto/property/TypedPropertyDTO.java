@@ -15,13 +15,10 @@ public class TypedPropertyDTO extends ThingDTO {
     public String id;
     public String name;
     public String description;
-    public String type;
+    public TypedProperty.Type type;
 
-    public TypedPropertyDTO(TypedProperty p) {
-        this.id = p.getId();
-        this.name = p.getName();
-        this.description = p.getDescription();
-        this.type = p.getType().toString();
+    private TypedPropertyDTO(String id) {
+        super(id);
     }
 
     @Override
@@ -41,8 +38,35 @@ public class TypedPropertyDTO extends ThingDTO {
             json.put("description", description);
         }
         if (type != null) {
-            json.put("type", type);
+            json.put("type", type.toString());
         }
         return json;
+    }
+
+    public static class Builder {
+        private TypedPropertyDTO dto;
+
+        public Builder(String id) {
+            dto = new TypedPropertyDTO(id);
+        }
+
+        public Builder description(String description) {
+            dto.setDescription(description);
+            return this;
+        }
+
+        public Builder name(String name) {
+            dto.setName(name);
+            return this;
+        }
+
+        public Builder type(TypedProperty.Type type) {
+            dto.type = type;
+            return this;
+        }
+
+        public TypedPropertyDTO build() {
+            return dto;
+        }
     }
 }
