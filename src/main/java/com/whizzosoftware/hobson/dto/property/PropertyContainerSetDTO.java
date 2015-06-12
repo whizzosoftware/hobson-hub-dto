@@ -5,8 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14,16 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyContainerSetDTO extends ThingDTO {
-    private PropertyContainerDTO primaryContainer;
     private List<PropertyContainerDTO> containers;
+    private PropertyContainerDTO primaryContainer;
 
-    public PropertyContainerSetDTO(String id, PropertyContainerDTO primaryContainer, List<PropertyContainerDTO> containers) {
+    private PropertyContainerSetDTO(String id) {
         super(id);
-        this.primaryContainer = primaryContainer;
-        this.containers = containers;
     }
 
-    public PropertyContainerSetDTO(JSONObject json, PropertyContainerMappingContext context) {
+    private PropertyContainerSetDTO(JSONObject json, PropertyContainerMappingContext context) {
         String primaryPropertyName = context.getPrimaryContainerName();
         if (primaryPropertyName == null) {
             primaryPropertyName = "primaryContainer";
@@ -64,19 +63,16 @@ public class PropertyContainerSetDTO extends ThingDTO {
         return containers;
     }
 
-    public void validate() {
-    }
-
     @Override
     public String getMediaType() {
         return "application/vnd.hobson.propertyContainerSet";
     }
 
     public JSONObject toJSON(PropertyContainerMappingContext context) {
-        JSONObject json = super.toJSON(null);
+        JSONObject json = super.toJSON();
 
         if (primaryContainer != null) {
-            json.put(context.getPrimaryContainerName(), primaryContainer.toJSON(null));
+            json.put(context.getPrimaryContainerName(), primaryContainer.toJSON());
         }
 
         if (containers != null && containers.size() > 0) {
@@ -88,5 +84,31 @@ public class PropertyContainerSetDTO extends ThingDTO {
         }
 
         return json;
+    }
+
+    public static class Builder {
+        public PropertyContainerSetDTO dto;
+
+        public Builder(String id) {
+            dto = new PropertyContainerSetDTO(id);
+        }
+
+        public Builder(JSONObject json, PropertyContainerMappingContext ctx) {
+            dto = new PropertyContainerSetDTO(json, ctx);
+        }
+
+        public Builder containers(List<PropertyContainerDTO> containers) {
+            dto.containers = containers;
+            return this;
+        }
+
+        public Builder primaryContainer(PropertyContainerDTO primaryContainer) {
+            dto.primaryContainer = primaryContainer;
+            return this;
+        }
+
+        public PropertyContainerSetDTO build() {
+            return dto;
+        }
     }
 }

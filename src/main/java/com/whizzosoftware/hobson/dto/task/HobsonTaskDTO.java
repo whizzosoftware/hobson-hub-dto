@@ -5,9 +5,12 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.task;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
+import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerMappingContext;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -31,7 +34,7 @@ public class HobsonTaskDTO extends ThingDTO {
         }
 
         if (json.has("conditionSet")) {
-            this.conditionSet = new PropertyContainerSetDTO(json.getJSONObject("conditionSet"), new PropertyContainerMappingContext() {
+            this.conditionSet = new PropertyContainerSetDTO.Builder(json.getJSONObject("conditionSet"), new PropertyContainerMappingContext() {
                 @Override
                 public String getPrimaryContainerName() {
                     return "trigger";
@@ -41,11 +44,11 @@ public class HobsonTaskDTO extends ThingDTO {
                 public String getContainersName() {
                     return "conditions";
                 }
-            });
+            }).build();
         }
 
         if (json.has("actionSet")) {
-            this.actionSet = new PropertyContainerSetDTO(json.getJSONObject("actionSet"), new PropertyContainerMappingContext() {
+            this.actionSet = new PropertyContainerSetDTO.Builder(json.getJSONObject("actionSet"), new PropertyContainerMappingContext() {
                 @Override
                 public String getPrimaryContainerName() {
                     return null;
@@ -55,7 +58,7 @@ public class HobsonTaskDTO extends ThingDTO {
                 public String getContainersName() {
                     return "actions";
                 }
-            });
+            }).build();
         }
     }
 
@@ -80,20 +83,16 @@ public class HobsonTaskDTO extends ThingDTO {
         if (getName() == null) {
             throw new HobsonInvalidRequestException("Name is required");
         }
-        if (conditionSet != null) {
-            conditionSet.validate();
-        } else {
+        if (conditionSet == null) {
             throw new HobsonInvalidRequestException("Condition set is required");
         }
-        if (actionSet != null) {
-            actionSet.validate();
-        } else {
+        if (actionSet == null) {
             throw new HobsonInvalidRequestException("Action set is required");
         }
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
 
         if (conditionSet != null) {
             json.put("conditionSet", conditionSet.toJSON(new PropertyContainerMappingContext() {
@@ -110,7 +109,7 @@ public class HobsonTaskDTO extends ThingDTO {
         }
 
         if (actionSet != null) {
-            json.put("actionSet", actionSet.toJSON(links));
+            json.put("actionSet", actionSet.toJSON());
         }
 
         return json;

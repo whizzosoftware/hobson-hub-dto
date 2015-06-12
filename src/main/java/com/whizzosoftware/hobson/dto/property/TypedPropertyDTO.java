@@ -5,9 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.TypedProperty;
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
 public class TypedPropertyDTO extends ThingDTO {
@@ -28,8 +29,8 @@ public class TypedPropertyDTO extends ThingDTO {
         return "application/vnd.hobson.property";
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (id != null) {
             json.put("id", id);
         }

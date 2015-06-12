@@ -7,7 +7,6 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.user.HobsonUser;
 import org.json.JSONObject;
 
 public class PersonDTO extends ThingDTO {
@@ -15,18 +14,8 @@ public class PersonDTO extends ThingDTO {
     private String familyName;
     private ItemListDTO hubs;
 
-    public PersonDTO(HobsonUser user, LinkProvider links) {
-        this.givenName = user.getFirstName();
-        this.familyName = user.getLastName();
-
-        setId(links.createUserLink(user.getId()));
-        setName(this.givenName + " " + this.familyName);
-
-        hubs = new ItemListDTO(links.createHubsLink(user.getId()));
-    }
-
-    public PersonDTO(String id, LinkProvider links) {
-        setId(links.createUserLink(id));
+    private PersonDTO(String id) {
+        super(id);
     }
 
     public String getMediaType() {
@@ -49,15 +38,48 @@ public class PersonDTO extends ThingDTO {
         this.hubs = hubs;
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (givenName != null && familyName != null) {
             json.put("givenName", getGivenName());
             json.put("familyName", getFamilyName());
         }
         if (hubs != null) {
-            json.put("hubs", hubs.toJSON(links));
+            json.put("hubs", hubs.toJSON());
         }
         return json;
+    }
+
+    static public class Builder {
+        private PersonDTO dto;
+
+        public Builder(String id) {
+            this.dto = new PersonDTO(id);
+        }
+
+        public Builder givenName(String givenName) {
+            dto.givenName = givenName;
+            if (dto.givenName != null && dto.familyName != null) {
+                dto.setName(dto.givenName + " " + dto.familyName);
+            }
+            return this;
+        }
+
+        public Builder familyName(String familyName) {
+            dto.familyName = familyName;
+            if (dto.givenName != null && dto.familyName != null) {
+                dto.setName(dto.givenName + " " + dto.familyName);
+            }
+            return this;
+        }
+
+        public Builder hubs(ItemListDTO hubs) {
+            dto.hubs = hubs;
+            return this;
+        }
+
+        public PersonDTO build() {
+            return dto;
+        }
     }
 }

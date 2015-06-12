@@ -5,11 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.json;
 
 import org.json.JSONObject;
 
 public interface JSONProducer {
     public String getMediaType();
-    public JSONObject toJSON(LinkProvider links);
+    public JSONObject toJSON();
 }

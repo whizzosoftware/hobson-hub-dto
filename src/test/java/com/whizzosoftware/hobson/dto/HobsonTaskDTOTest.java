@@ -7,42 +7,56 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.api.task.TaskContext;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
+import com.whizzosoftware.hobson.dto.task.HobsonTaskDTO;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.util.Collections;
+
+import static org.junit.Assert.*;
 
 public class HobsonTaskDTOTest {
     @Test
     public void testToJSON() {
-        TaskContext tc = TaskContext.createLocal("plugin1", "task1");
-//        TaskConditionSet tcs = new TaskConditionSet(new TaskCondition(TaskConditionClassContext.createLocal("plugin1", "conditionclass1"), Collections.singletonMap("foo", (Object)"bar"), null), null);
-//        TaskActionSet tas = new TaskActionSet(HubContext.createLocal(), "actionset1", null);
-//        HobsonTask task = new HobsonTask(tc, "My Task", "Task Desc", null, tcs, tas);
-//        HobsonTaskDTO dto = new HobsonTaskDTO(task, links);
+        HobsonTaskDTO dto = new HobsonTaskDTO.Builder("taskLink")
+            .name("My Task")
+            .description("Task Desc")
+            .conditionSet(new PropertyContainerSetDTO.Builder("conditionClassLink")
+                .primaryContainer(
+                    new PropertyContainerDTO.Builder("conditionclass1")
+                        .containerClass(new PropertyContainerClassDTO.Builder("conditionClassLink").build())
+                        .values(Collections.singletonMap("foo", (Object)"bar"))
+                        .build()
+                )
+                .build()
+            )
+            .actionSet(new PropertyContainerSetDTO.Builder("actionSetLink")
+                .build()
+            )
+            .build();
 
-//        JSONObject json = dto.toJSON(links);
-//        assertEquals("taskLink", json.getString("@id"));
-//        assertEquals("My Task", json.getString("name"));
-//        assertTrue(json.has("plugin"));
+        JSONObject json = dto.toJSON();
+        assertEquals("taskLink", json.getString("@id"));
+        assertEquals("My Task", json.getString("name"));
 
-//        assertTrue(json.has("conditionSet"));
-//        JSONObject jcs = json.getJSONObject("conditionSet");
-//        assertTrue(jcs.has("trigger"));
-//        assertFalse(jcs.has("conditions"));
-//        JSONObject jct = jcs.getJSONObject("trigger");
-//        assertTrue(jct.has("conditionClass"));
-//        assertEquals("conditionClassLink", jct.getJSONObject("conditionClass").getString("@id"));
-//        assertTrue(jct.has("properties"));
+        assertTrue(json.has("conditionSet"));
+        JSONObject jcs = json.getJSONObject("conditionSet");
+        assertTrue(jcs.has("trigger"));
+        assertFalse(jcs.has("conditions"));
+        JSONObject jct = jcs.getJSONObject("trigger");
+        assertTrue(jct.has("cclass"));
+        assertEquals("conditionClassLink", jct.getJSONObject("cclass").getString("@id"));
+        assertTrue(jct.has("values"));
 
-//        assertTrue(json.has("actionSet"));
-//        JSONObject jas = json.getJSONObject("actionSet");
-//        assertFalse(jas.has("actions"));
-//        assertTrue(jas.has("@id"));
-//        assertEquals("actionSetLink", jas.getString("@id"));
+        assertTrue(json.has("actionSet"));
+        JSONObject jas = json.getJSONObject("actionSet");
+        assertFalse(jas.has("actions"));
+        assertTrue(jas.has("@id"));
+        assertEquals("actionSetLink", jas.getString("@id"));
     }
 
     @Test

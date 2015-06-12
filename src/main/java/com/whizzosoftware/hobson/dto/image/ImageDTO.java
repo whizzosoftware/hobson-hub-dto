@@ -5,14 +5,15 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.image;
 
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
 public class ImageDTO extends ThingDTO {
     private String base64Data;
 
-    public ImageDTO(String id) {
+    private ImageDTO(String id) {
         super(id);
     }
 
@@ -30,11 +31,28 @@ public class ImageDTO extends ThingDTO {
     }
 
     @Override
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (base64Data != null) {
             json.put("data", base64Data);
         }
         return json;
+    }
+
+    public static class Builder {
+        private ImageDTO dto;
+
+        public Builder(String id) {
+            dto = new ImageDTO(id);
+        }
+
+        public Builder base64Data(String base64Data) {
+            dto.base64Data = base64Data;
+            return this;
+        }
+
+        public ImageDTO build() {
+            return dto;
+        }
     }
 }

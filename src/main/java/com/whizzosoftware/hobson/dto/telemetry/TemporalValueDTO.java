@@ -5,8 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.telemetry;
 
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
 public class TemporalValueDTO extends ThingDTO {
@@ -25,8 +26,8 @@ public class TemporalValueDTO extends ThingDTO {
     }
 
     @Override
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (time != null) {
             json.put("time", time);
         }

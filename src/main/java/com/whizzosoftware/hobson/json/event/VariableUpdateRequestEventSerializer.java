@@ -7,12 +7,13 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.json.event;
 
+import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.event.HobsonEvent;
 import com.whizzosoftware.hobson.api.event.VariableUpdateRequestEvent;
 import com.whizzosoftware.hobson.api.variable.VariableUpdate;
-import com.whizzosoftware.hobson.json.JSONSerializationHelper;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class VariableUpdateRequestEventSerializer implements HobsonEventSerializ
         json.put(PROP_EVENT, vure.getEventId());
         JSONArray updates = new JSONArray();
         for (VariableUpdate update : vure.getUpdates()) {
-            updates.put(JSONSerializationHelper.createVariableUpdateJSON(update));
+            updates.put(createVariableUpdateJSON(update));
         }
         json.put("updates", updates);
         return json;
@@ -58,5 +59,21 @@ public class VariableUpdateRequestEventSerializer implements HobsonEventSerializ
             }
         }
         return new VariableUpdateRequestEvent(System.currentTimeMillis(), updates);
+    }
+
+    private JSONObject createVariableUpdateJSON(VariableUpdate update) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("plugin", update.getPluginId());
+            if (update.getDeviceId() != null) {
+                json.put("device", update.getDeviceId());
+            }
+            json.put("name", update.getName());
+            json.put("value", update.getValue());
+            json.put("timestamp", update.getTimestamp());
+            return json;
+        } catch (JSONException e) {
+            throw new HobsonInvalidRequestException(e.getMessage());
+        }
     }
 }

@@ -7,11 +7,11 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.json.event;
 
-import com.whizzosoftware.hobson.api.event.HobsonEvent;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.whizzosoftware.hobson.api.event.HobsonEvent;
 
 /**
  * A class that provides a way to marshal/unmarshal HobsonEvent objects. This is currently a manual process due to
@@ -26,7 +26,6 @@ public class HobsonEventSerializationFactory {
     public HobsonEventSerializationFactory() {
         serializers.add(new VariableUpdateNotificationEventSerializer());
         serializers.add(new VariableUpdateRequestEventSerializer());
-        serializers.add(new StateSnapshotEventSerializer());
     }
 
     /**

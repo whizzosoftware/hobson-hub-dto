@@ -7,29 +7,30 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.HobsonRuntimeException;
 import org.json.JSONObject;
 
-public class AuthResultDTO {
-    private String token;
-    private PersonDTO user;
+public class ErrorDTO {
+    private Integer code;
+    private String message;
 
-    public AuthResultDTO(String token, PersonDTO user) {
-        this.token = token;
-        this.user = user;
+    public ErrorDTO(Integer code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public String getMediaType() {
-        return "application/vnd.hobson.authResult";
-    }
-
-    public PersonDTO getUser() {
-        return user;
+    public ErrorDTO(Throwable t) {
+        if (t instanceof HobsonRuntimeException) {
+            this.code = ((HobsonRuntimeException)t).getCode();
+        } else {
+            this.code = HobsonRuntimeException.CODE_INTERNAL_ERROR;
+        }
     }
 
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
-        json.put("token", token);
-        json.put("user", user.toJSON());
+        json.put("code", code);
+        json.put("message", message);
         return json;
     }
 }

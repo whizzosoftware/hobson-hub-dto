@@ -5,8 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.telemetry;
 
+import com.whizzosoftware.hobson.dto.ItemListDTO;
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
 public class DeviceTelemetryDTO extends ThingDTO {
@@ -15,7 +17,7 @@ public class DeviceTelemetryDTO extends ThingDTO {
     private ItemListDTO datasets;
 
     private DeviceTelemetryDTO(String id) {
-        setId(id);
+        super(id);
     }
 
     @Override
@@ -36,12 +38,12 @@ public class DeviceTelemetryDTO extends ThingDTO {
     }
 
     @Override
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         json.put("capable", capable);
         json.put("enabled", enabled);
         if (datasets != null) {
-            json.put("datasets", datasets.toJSON(links));
+            json.put("datasets", datasets.toJSON());
         }
         return json;
     }

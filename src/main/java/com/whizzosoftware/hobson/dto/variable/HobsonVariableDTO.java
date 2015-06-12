@@ -5,9 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
 public class HobsonVariableDTO extends ThingDTO {
@@ -15,18 +16,8 @@ public class HobsonVariableDTO extends ThingDTO {
     private HobsonVariable.Mask mask;
     private Object value;
 
-    public HobsonVariableDTO(String id) {
-        this(id, null);
-    }
-
-    public HobsonVariableDTO(String id, HobsonVariable variable) {
-        setId(id);
-        if (variable != null) {
-            setName(variable.getName());
-            this.lastUpdate = variable.getLastUpdate();
-            this.mask = variable.getMask();
-            this.value = variable.getValue();
-        }
+    private HobsonVariableDTO(String id) {
+        super(id);
     }
 
     @Override
@@ -34,8 +25,8 @@ public class HobsonVariableDTO extends ThingDTO {
         return "application/vnd.hobson.variable";
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (lastUpdate != null) {
             json.put("lastUpdate", lastUpdate);
         }

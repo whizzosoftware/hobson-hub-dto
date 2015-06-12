@@ -10,11 +10,7 @@ package com.whizzosoftware.hobson.json;
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.hub.HubContext;
-import com.whizzosoftware.hobson.api.plugin.PluginContext;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
-import com.whizzosoftware.hobson.api.task.TaskContext;
-import com.whizzosoftware.hobson.dto.LinkProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -103,9 +99,14 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in a valid JSON object succeeds
         JSONObject json = new JSONObject(new JSONTokener("{\"@id\":\"device1\"}"));
-        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICE, json, new MockLinkProvider());
+        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICE, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
+            @Override
+            public DeviceContext createDeviceContext(String id) {
+                return DeviceContext.createLocal("pid", id);
+            }
+        });
         assertTrue(o instanceof DeviceContext);
-        assertEquals("plugin1", ((DeviceContext)o).getPluginId());
+        assertEquals("pid", ((DeviceContext)o).getPluginId());
         assertEquals("device1", ((DeviceContext)o).getDeviceId());
     }
 
@@ -120,21 +121,36 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in an array of arrays fails
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]]")), new MockLinkProvider());
+            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
+                @Override
+                public DeviceContext createDeviceContext(String id) {
+                    return DeviceContext.createLocal("pid", "did");
+                }
+            });
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in an array containing objects with invalid properties fails
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[{\"d\":\"device1\"}]")), new MockLinkProvider());
+            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[{\"d\":\"device1\"}]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
+                @Override
+                public DeviceContext createDeviceContext(String id) {
+                    return DeviceContext.createLocal("pid", "did");
+                }
+            });
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in a JSON array succeeds
         JSONArray json = new JSONArray(new JSONTokener("[{\"@id\":\"device1\"},{\"@id\":\"device2\"}]"));
-        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, json, new MockLinkProvider());
+        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
+            @Override
+            public DeviceContext createDeviceContext(String id) {
+                return DeviceContext.createLocal("plugin1", id);
+            }
+        });
         assertTrue(o instanceof List);
         assertEquals(2, ((List)o).size());
 
@@ -145,178 +161,5 @@ public class TypedPropertyValueSerializerTest {
         ctx = (DeviceContext)((List)o).get(1);
         assertEquals("plugin1", ctx.getPluginId());
         assertEquals("device2", ctx.getDeviceId());
-    }
-
-    public class MockLinkProvider implements LinkProvider {
-
-        @Override
-        public HubContext createHubContext(String link) {
-            return null;
-        }
-
-        @Override
-        public String createTaskLink(TaskContext ctx) {
-            return null;
-        }
-
-        @Override
-        public TaskContext createTaskContext(String link) {
-            return null;
-        }
-
-        @Override
-        public String createTaskConditionClassesLink(HubContext ctx) {
-            return null;
-        }
-
-        @Override
-        public String createTaskConditionClassLink(PropertyContainerClassContext ctx) {
-            return null;
-        }
-
-        @Override
-        public PropertyContainerClassContext createTaskConditionClassContext(String link) {
-            return null;
-        }
-
-        @Override
-        public String createTaskActionClassesLink(HubContext ctx) {
-            return null;
-        }
-
-        @Override
-        public String createTaskActionClassLink(PropertyContainerClassContext ctx) {
-            return null;
-        }
-
-        @Override
-        public PropertyContainerClassContext createTaskActionClassContext(String link) {
-            return null;
-        }
-
-        @Override
-        public String createTaskActionSetLink(HubContext ctx, String actionSetId) {
-            return null;
-        }
-
-        @Override
-        public PluginContext createPluginContext(String link) {
-            return null;
-        }
-
-        @Override
-        public String createUserLink(String id) {
-            return null;
-        }
-
-        @Override
-        public String createHubLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createHubsLink(String userId) {
-            return null;
-        }
-
-        @Override
-        public String createHubConfigurationClassLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createHubConfigurationLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createPropertyContainerLink(HubContext context, int type) {
-            return null;
-        }
-
-        @Override
-        public String createPropertyContainerClassLink(int type, PropertyContainerClassContext pccc) {
-            return null;
-        }
-
-        @Override
-        public String createTasksLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createDevicesLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createLocalPluginLink(PluginContext context) {
-            return null;
-        }
-
-        @Override
-        public String createLocalPluginsLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createRemotePluginLink(PluginContext context) {
-            return null;
-        }
-
-        @Override
-        public String createRemotePluginsLink(HubContext context) {
-            return null;
-        }
-
-        @Override
-        public String createDeviceLink(DeviceContext context) {
-            return null;
-        }
-
-        @Override
-        public String createDeviceVariableLink(DeviceContext context, String preferredVariableName) {
-            return null;
-        }
-
-        @Override
-        public String createDeviceConfigurationLink(DeviceContext context) {
-            return null;
-        }
-
-        @Override
-        public String createDeviceConfigurationClassLink(DeviceContext context) {
-            return null;
-        }
-
-        @Override
-        public String createLocalPluginConfigurationLink(PluginContext pctx) {
-            return null;
-        }
-
-        @Override
-        public String createLocalPluginConfigurationClassLink(PluginContext pctx) {
-            return null;
-        }
-
-        @Override
-        public String createDeviceVariablesLink(DeviceContext context) {
-            return null;
-        }
-
-        @Override
-        public String createRemotePluginInstallLink(PluginContext pctx, String version) {
-            return null;
-        }
-
-        @Override
-        public String createTaskActionSetsLink(HubContext hubContext) {
-            return null;
-        }
-
-        @Override
-        public DeviceContext createDeviceContext(String deviceId) {
-            return DeviceContext.createLocal("plugin1", deviceId);
-        }
     }
 }

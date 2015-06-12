@@ -5,9 +5,14 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.DeviceType;
+import com.whizzosoftware.hobson.dto.*;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
+import com.whizzosoftware.hobson.dto.telemetry.DeviceTelemetryDTO;
+import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
 import org.json.JSONObject;
 
 public class HobsonDeviceDTO extends ThingDTO {
@@ -18,13 +23,8 @@ public class HobsonDeviceDTO extends ThingDTO {
     private PropertyContainerDTO configuration;
     private DeviceTelemetryDTO telemetry;
 
-    public HobsonDeviceDTO(String id) {
-        this(id, null);
-    }
-
-    public HobsonDeviceDTO(String id, String name) {
-        setId(id);
-        setName(name);
+    private HobsonDeviceDTO(String id) {
+        super(id);
     }
 
     @Override
@@ -56,25 +56,25 @@ public class HobsonDeviceDTO extends ThingDTO {
         return telemetry;
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (type != null) {
             json.put("type", type.toString());
         }
         if (configuration != null) {
-            json.put("configuration", configuration.toJSON(links));
+            json.put("configuration", configuration.toJSON());
         }
         if (configurationClass != null) {
-            json.put("configurationClass", configurationClass.toJSON(links));
+            json.put("configurationClass", configurationClass.toJSON());
         }
         if (preferredVariable != null) {
-            json.put("preferredVariable", preferredVariable.toJSON(links));
+            json.put("preferredVariable", preferredVariable.toJSON());
         }
         if (variables != null) {
-            json.put("variables", variables.toJSON(links));
+            json.put("variables", variables.toJSON());
         }
         if (telemetry != null) {
-            json.put("telemetry", telemetry.toJSON(links));
+            json.put("telemetry", telemetry.toJSON());
         }
         return json;
     }

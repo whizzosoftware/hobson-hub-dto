@@ -38,10 +38,10 @@ public class ListItemDTO extends ThingDTO {
         return "application/vnd.hobson.listItem";
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (item != null) {
-            json.put("item", item.toJSON(links));
+            json.put("item", item.toJSON());
         }
         if (position != null) {
             json.put("position", position);

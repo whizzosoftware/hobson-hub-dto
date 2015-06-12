@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class PropertyContainerDTOTest {
         PropertyContainerDTO dto = new PropertyContainerDTO(json);
         assertEquals("/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1", dto.getContainerClass().getId());
         assertTrue(dto.hasPropertyValues());
-        assertEquals(1, dto.getPropertyValues().size());
-        assertEquals("bar", dto.getPropertyValues().get("foo"));
+        assertEquals(1, dto.getValues().size());
+        assertEquals("bar", dto.getValues().get("foo"));
     }
 }

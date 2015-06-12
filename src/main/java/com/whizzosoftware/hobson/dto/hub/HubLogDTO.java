@@ -5,9 +5,17 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.hub;
 
-public interface PropertyContainerMappingContext {
-    public String getPrimaryContainerName();
-    public String getContainersName();
+import com.whizzosoftware.hobson.dto.ThingDTO;
+
+public class HubLogDTO extends ThingDTO {
+    public HubLogDTO(String id) {
+        super(id);
+    }
+
+    @Override
+    public String getMediaType() {
+        return "application/vnd.hobson.log";
+    }
 }

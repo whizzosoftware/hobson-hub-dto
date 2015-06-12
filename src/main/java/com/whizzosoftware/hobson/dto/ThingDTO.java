@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -70,7 +71,7 @@ abstract public class ThingDTO implements JSONProducer {
     }
 
     @Override
-    public JSONObject toJSON(LinkProvider lp) {
+    public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         if (id != null) {
             json.put("@id", id);

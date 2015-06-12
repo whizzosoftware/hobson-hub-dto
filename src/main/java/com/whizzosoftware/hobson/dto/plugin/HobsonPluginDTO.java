@@ -5,9 +5,13 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto;
+package com.whizzosoftware.hobson.dto.plugin;
 
 import com.whizzosoftware.hobson.api.plugin.*;
+import com.whizzosoftware.hobson.dto.image.ImageDTO;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
+import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
+import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
 public class HobsonPluginDTO extends ThingDTO {
@@ -29,17 +33,17 @@ public class HobsonPluginDTO extends ThingDTO {
     }
 
     @Override
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         json.put("version", version != null ? version : null);
         json.put("type", type != null ? type.toString() : null);
         json.put("configurable", configurable != null ? configurable : null);
-        json.put("configurationClass", configurationClass != null ? configurationClass.toJSON(links) : null);
-        json.put("configuration", configuration != null ? configuration.toJSON(links) : null);
-        json.put("image", image != null ? image.toJSON(links) : null);
+        json.put("configurationClass", configurationClass != null ? configurationClass.toJSON() : null);
+        json.put("configuration", configuration != null ? configuration.toJSON() : null);
+        json.put("image", image != null ? image.toJSON() : null);
         if (status != null) {
             JSONObject psjson = new JSONObject();
-            psjson.put("status", status.getStatus().toString());
+            psjson.put("code", status.getCode().toString());
             psjson.put("message", status.getMessage());
             json.put("status", psjson);
         }

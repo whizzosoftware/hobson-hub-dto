@@ -18,7 +18,7 @@ public class ItemListDTO extends ThingDTO {
     private Integer numberOfItems;
 
     public ItemListDTO(String id) {
-        setId(id);
+        super(id);
     }
 
     public List<ListItemDTO> getItemListElement() {
@@ -50,15 +50,15 @@ public class ItemListDTO extends ThingDTO {
         return "application/vnd.hobson.itemList";
     }
 
-    public JSONObject toJSON(LinkProvider links) {
-        JSONObject json = super.toJSON(links);
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
         if (numberOfItems != null) {
             json.put("numberOfItems", numberOfItems);
         }
         if (itemListElement != null) {
             JSONArray array = new JSONArray();
             for (ListItemDTO li : itemListElement) {
-                array.put(li.toJSON(links));
+                array.put(li.toJSON());
             }
             json.put("itemListElement", array);
         }
