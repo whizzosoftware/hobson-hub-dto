@@ -7,6 +7,22 @@
     <packaging>bundle</packaging>
     <name>Hobson Hub DTOs</name>
     <description>DTOs and serializers for Hobson API interfaces.</description>
+    <url>https://github.com/whizzosoftware/hobson-hub-dto</url>
+    <licenses>
+        <license>
+            <name>Eclise Public License, Version 1.0</name>
+            <url>https://www.eclipse.org/legal/epl-v10.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Dan Noguerol</name>
+            <email>oss@whizzosoftware.com</email>
+            <organization>Whizzo Software LLC</organization>
+            <organizationUrl>http://www.whizzosoftware.com</organizationUrl>
+        </developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -107,6 +123,28 @@
                     <licenseLocation>${clover.license}</licenseLocation>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.2.201409121644</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <repositories>
@@ -126,14 +164,19 @@
         </repository>
     </repositories>
     <scm>
-        <connection>scm:git:ssh://git@github.com/whizzosoftware/hobson-hub-api-dto.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/whizzosoftware/hobson-hub-api-dto.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/whizzosoftware/hobson-hub-dto.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/whizzosoftware/hobson-hub-dto.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
+        <snapshotRepository>
+            <id>oss-jfrog-artifactory</id>
+            <name>oss-jfrog-artifactory-snapshots</name>
+            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+        </snapshotRepository>
         <repository>
             <id>bintray</id>
-            <url>https://api.bintray.com/maven/whizzosoftware/maven/hobson-hub-api-dto</url>
+            <url>https://api.bintray.com/maven/whizzosoftware/maven/hobson-hub-dto</url>
         </repository>
     </distributionManagement>
 </project>
