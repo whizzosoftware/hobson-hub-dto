@@ -15,4 +15,4 @@ To find out more and download ready-to-run installers, please visit the
 The DTO plugin provides data transfer objects and JSON serializers for various API classes.
 
 [![Build Status](https://api.travis-ci.org/whizzosoftware/hobson-hub-dto.png)](https://api.travis-ci.org/whizzosoftware/hobson-hub-dto.png)
-[![Coverage Status](https://coveralls.io/repos/whizzosoftware/hobson-hub-dto/badge.svg)](https://coveralls.io/r/whizzosoftware/hobson-hub-dto)
+[![Coverage Status](https://coveralls.io/repos/whizzosoftware/hobson-hub-dto/badge.svg?branch=master)](https://coveralls.io/r/whizzosoftware/hobson-hub-dto?branch=master)
