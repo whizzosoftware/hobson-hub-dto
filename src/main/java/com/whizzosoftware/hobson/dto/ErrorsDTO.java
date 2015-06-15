@@ -26,7 +26,7 @@ public class ErrorsDTO implements JSONProducer {
         JSONObject json = new JSONObject();
         JSONArray a = new JSONArray();
         for (ErrorDTO error : errors) {
-            a.put(error);
+            a.put(error.toJSON());
         }
         json.put("errors", a);
         return json;
