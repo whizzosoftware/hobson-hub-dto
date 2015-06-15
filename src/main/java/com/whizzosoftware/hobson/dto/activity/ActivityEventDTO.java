@@ -8,13 +8,13 @@
 package com.whizzosoftware.hobson.dto.activity;
 
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import org.json.JSONObject;
 
 public class ActivityEventDTO extends ThingDTO {
-    private String name;
     private Long timestamp;
 
     public ActivityEventDTO(String name, Long timestamp) {
-        this.name = name;
+        setName(name);
         this.timestamp = timestamp;
     }
 
@@ -23,11 +23,16 @@ public class ActivityEventDTO extends ThingDTO {
         return "application/hobson.vnd.event";
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Long getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
+        if (timestamp != null) {
+            json.put("timestamp", timestamp);
+        }
+        return json;
     }
 }
