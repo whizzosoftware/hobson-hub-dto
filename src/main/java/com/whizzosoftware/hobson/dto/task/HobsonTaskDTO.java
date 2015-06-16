@@ -112,6 +112,10 @@ public class HobsonTaskDTO extends ThingDTO {
             json.put("actionSet", actionSet.toJSON());
         }
 
+        if (properties != null) {
+            json.put("properties", properties);
+        }
+
         return json;
     }
 
