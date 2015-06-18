@@ -17,7 +17,7 @@ public class ItemListDTOTest {
     public void testToJsonWithNoItems() {
         ItemListDTO dto = new ItemListDTO("listLink");
         JSONObject json = dto.toJSON();
-        assertEquals(0, json.getDouble("numberOfItems"), 0);
+        assertFalse(json.has("numberOfItems"));
     }
 
     @Test

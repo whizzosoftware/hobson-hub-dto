@@ -19,7 +19,6 @@ public class ItemListDTO extends ThingDTO {
 
     public ItemListDTO(String id) {
         super(id);
-        updateNumberOfItems();
     }
 
     public List<ListItemDTO> getItemListElement() {
@@ -30,7 +29,7 @@ public class ItemListDTO extends ThingDTO {
         return numberOfItems;
     }
 
-    private void updateNumberOfItems() {
+    public void updateNumberOfItems() {
         numberOfItems = (itemListElement != null) ? itemListElement.size() : 0;
     }
 
