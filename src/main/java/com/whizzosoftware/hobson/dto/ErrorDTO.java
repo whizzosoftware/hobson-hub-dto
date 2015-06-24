@@ -8,9 +8,10 @@
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.HobsonRuntimeException;
+import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
-public class ErrorDTO {
+public class ErrorDTO implements JSONProducer {
     private Integer code;
     private String message;
 
@@ -25,6 +26,11 @@ public class ErrorDTO {
         } else {
             this.code = HobsonRuntimeException.CODE_INTERNAL_ERROR;
         }
+    }
+
+    @Override
+    public String getMediaType() {
+        return MediaTypes.ERROR;
     }
 
     public JSONObject toJSON() {

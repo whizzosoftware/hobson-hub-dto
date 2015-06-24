@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.TypedProperty;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
@@ -23,7 +24,7 @@ public class TypedPropertyDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.property";
+        return MediaTypes.PROPERTY;
     }
 
     public JSONObject toJSON() {

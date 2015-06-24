@@ -47,7 +47,7 @@ public class ItemListDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.itemList";
+        return MediaTypes.ITEM_LIST;
     }
 
     public JSONObject toJSON() {

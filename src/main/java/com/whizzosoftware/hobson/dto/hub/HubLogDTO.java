@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.hub;
 
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 
 public class HubLogDTO extends ThingDTO {
@@ -16,6 +17,6 @@ public class HubLogDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.log";
+        return MediaTypes.LOG;
     }
 }

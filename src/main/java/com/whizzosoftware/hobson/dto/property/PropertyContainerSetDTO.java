@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,7 +66,7 @@ public class PropertyContainerSetDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.propertyContainerSet";
+        return MediaTypes.PROPERTY_CONTAINER_SET;
     }
 
     public JSONObject toJSON(PropertyContainerMappingContext context) {

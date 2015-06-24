@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.telemetry;
 
 import com.whizzosoftware.hobson.dto.ItemListDTO;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
@@ -22,7 +23,7 @@ public class DeviceTelemetryDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.deviceTelemetry";
+        return MediaTypes.TELEMETRY;
     }
 
     public Boolean getCapable() {

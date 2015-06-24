@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
@@ -22,7 +23,7 @@ public class HobsonVariableDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.variable";
+        return MediaTypes.VARIABLE;
     }
 
     public JSONObject toJSON() {

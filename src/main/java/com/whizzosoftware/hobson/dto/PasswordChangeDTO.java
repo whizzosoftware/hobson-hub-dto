@@ -7,9 +7,10 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
-public class PasswordChangeDTO {
+public class PasswordChangeDTO implements JSONProducer {
     private String currentPassword;
     private String newPassword;
 
@@ -29,6 +30,11 @@ public class PasswordChangeDTO {
 
     public String getNewPassword() {
         return newPassword;
+    }
+
+    @Override
+    public String getMediaType() {
+        return MediaTypes.PASSWORD_CHANGE;
     }
 
     public JSONObject toJSON() {

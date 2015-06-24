@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.task;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerMappingContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
@@ -76,7 +77,7 @@ public class HobsonTaskDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.task";
+        return MediaTypes.TASK;
     }
 
     public void validate() {

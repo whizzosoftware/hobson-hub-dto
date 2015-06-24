@@ -29,7 +29,7 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.device";
+        return MediaTypes.DEVICE;
     }
 
     public DeviceType getType() {

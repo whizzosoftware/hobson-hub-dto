@@ -19,7 +19,7 @@ public class ErrorsDTO implements JSONProducer {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.errorList";
+        return MediaTypes.ERRORS;
     }
 
     public JSONObject toJSON() {

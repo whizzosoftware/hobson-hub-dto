@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.plugin;
 
 import com.whizzosoftware.hobson.api.plugin.*;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.image.ImageDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -29,7 +30,7 @@ public class HobsonPluginDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return null;
+        return MediaTypes.PLUGIN;
     }
 
     @Override

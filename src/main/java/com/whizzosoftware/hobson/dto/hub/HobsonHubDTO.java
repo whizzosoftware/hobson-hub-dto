@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.hub;
 
 import com.whizzosoftware.hobson.dto.ItemListDTO;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.ThingDTO;
@@ -35,7 +36,7 @@ public class HobsonHubDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/vnd.hobson.v1.hub";
+        return MediaTypes.HUB;
     }
 
     public ItemListDTO getActionClasses() {

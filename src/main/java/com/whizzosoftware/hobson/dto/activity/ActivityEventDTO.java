@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.activity;
 
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
@@ -20,7 +21,7 @@ public class ActivityEventDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return "application/hobson.vnd.event";
+        return MediaTypes.EVENT;
     }
 
     public Long getTimestamp() {

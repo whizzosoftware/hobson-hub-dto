@@ -19,7 +19,7 @@ public class PersonDTO extends ThingDTO {
     }
 
     public String getMediaType() {
-        return "application/vnd.hobson.person";
+        return MediaTypes.PERSON;
     }
 
     public String getGivenName() {
