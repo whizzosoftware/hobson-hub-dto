@@ -10,6 +10,7 @@ package com.whizzosoftware.hobson.dto.variable;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonVariableDTO extends ThingDTO {
@@ -29,13 +30,13 @@ public class HobsonVariableDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (lastUpdate != null) {
-            json.put("lastUpdate", lastUpdate);
+            json.put(JSONAttributes.LAST_UPDATE, lastUpdate);
         }
         if (mask != null) {
-            json.put("mask", mask.toString());
+            json.put(JSONAttributes.MASK, mask.toString());
         }
         if (value != null) {
-            json.put("value", value);
+            json.put(JSONAttributes.VALUE, value);
         }
         return json;
     }

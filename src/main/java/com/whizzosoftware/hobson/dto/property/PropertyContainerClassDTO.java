@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ public class PropertyContainerClassDTO extends ThingDTO {
             for (TypedPropertyDTO p : supportedProperties) {
                 array.put(p.toJSON());
             }
-            json.put("supportedProperties", array);
+            json.put(JSONAttributes.SUPPORTED_PROPERTIES, array);
         }
         return json;
     }

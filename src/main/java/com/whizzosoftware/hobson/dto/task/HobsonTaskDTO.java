@@ -12,6 +12,7 @@ import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerMappingContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -26,30 +27,30 @@ public class HobsonTaskDTO extends ThingDTO {
     }
 
     private HobsonTaskDTO(JSONObject json) {
-        if (json.has("name")) {
-            setName(json.getString("name"));
+        if (json.has(JSONAttributes.NAME)) {
+            setName(json.getString(JSONAttributes.NAME));
         }
 
-        if (json.has("description")) {
-            setDescription(json.getString("description"));
+        if (json.has(JSONAttributes.DESCRIPTION)) {
+            setDescription(json.getString(JSONAttributes.DESCRIPTION));
         }
 
-        if (json.has("conditionSet")) {
-            this.conditionSet = new PropertyContainerSetDTO.Builder(json.getJSONObject("conditionSet"), new PropertyContainerMappingContext() {
+        if (json.has(JSONAttributes.CONDITION_SET)) {
+            this.conditionSet = new PropertyContainerSetDTO.Builder(json.getJSONObject(JSONAttributes.CONDITION_SET), new PropertyContainerMappingContext() {
                 @Override
                 public String getPrimaryContainerName() {
-                    return "trigger";
+                    return JSONAttributes.TRIGGER;
                 }
 
                 @Override
                 public String getContainersName() {
-                    return "conditions";
+                    return JSONAttributes.CONDITIONS;
                 }
             }).build();
         }
 
-        if (json.has("actionSet")) {
-            this.actionSet = new PropertyContainerSetDTO.Builder(json.getJSONObject("actionSet"), new PropertyContainerMappingContext() {
+        if (json.has(JSONAttributes.ACTION_SET)) {
+            this.actionSet = new PropertyContainerSetDTO.Builder(json.getJSONObject(JSONAttributes.ACTION_SET), new PropertyContainerMappingContext() {
                 @Override
                 public String getPrimaryContainerName() {
                     return null;
@@ -57,7 +58,7 @@ public class HobsonTaskDTO extends ThingDTO {
 
                 @Override
                 public String getContainersName() {
-                    return "actions";
+                    return JSONAttributes.ACTIONS;
                 }
             }).build();
         }
@@ -96,25 +97,25 @@ public class HobsonTaskDTO extends ThingDTO {
         JSONObject json = super.toJSON();
 
         if (conditionSet != null) {
-            json.put("conditionSet", conditionSet.toJSON(new PropertyContainerMappingContext() {
+            json.put(JSONAttributes.CONDITION_SET, conditionSet.toJSON(new PropertyContainerMappingContext() {
                 @Override
                 public String getPrimaryContainerName() {
-                    return "trigger";
+                    return JSONAttributes.TRIGGER;
                 }
 
                 @Override
                 public String getContainersName() {
-                    return "conditions";
+                    return JSONAttributes.CONDITIONS;
                 }
             }));
         }
 
         if (actionSet != null) {
-            json.put("actionSet", actionSet.toJSON());
+            json.put(JSONAttributes.ACTION_SET, actionSet.toJSON());
         }
 
         if (properties != null) {
-            json.put("properties", properties);
+            json.put(JSONAttributes.PROPERTIES, properties);
         }
 
         return json;

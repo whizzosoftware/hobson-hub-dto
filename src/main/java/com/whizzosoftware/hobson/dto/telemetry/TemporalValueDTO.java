@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.telemetry;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class TemporalValueDTO extends ThingDTO {
@@ -30,10 +31,10 @@ public class TemporalValueDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (time != null) {
-            json.put("time", time);
+            json.put(JSONAttributes.TIME, time);
         }
         if (value != null) {
-            json.put("value", value);
+            json.put(JSONAttributes.VALUE, value);
         }
         return json;
     }

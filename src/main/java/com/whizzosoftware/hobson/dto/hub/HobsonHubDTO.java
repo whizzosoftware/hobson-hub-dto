@@ -12,6 +12,7 @@ import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonHubDTO extends ThingDTO {
@@ -78,34 +79,34 @@ public class HobsonHubDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (actionClasses != null) {
-            json.put("actionClasses", actionClasses.toJSON());
+            json.put(JSONAttributes.ACTION_CLASSES, actionClasses.toJSON());
         }
         if (conditionClasses != null) {
-            json.put("conditionClasses", conditionClasses.toJSON());
+            json.put(JSONAttributes.CONDITION_CLASSES, conditionClasses.toJSON());
         }
         if (configurationClass != null) {
-            json.put("configurationClass", configurationClass.toJSON());
+            json.put(JSONAttributes.CONFIGURATION_CLASS, configurationClass.toJSON());
         }
         if (configuration != null) {
-            json.put("configuration", configuration.toJSON());
+            json.put(JSONAttributes.CONFIGURATION, configuration.toJSON());
         }
         if (devices != null) {
-            json.put("devices", devices.toJSON());
+            json.put(JSONAttributes.DEVICES, devices.toJSON());
         }
         if (log != null) {
-            json.put("log", log.toJSON());
+            json.put(JSONAttributes.LOG, log.toJSON());
         }
         if (localPlugins != null) {
-            json.put("localPlugins", localPlugins.toJSON());
+            json.put(JSONAttributes.LOCAL_PLUGINS, localPlugins.toJSON());
         }
         if (remotePlugins != null) {
-            json.put("remotePlugins", remotePlugins.toJSON());
+            json.put(JSONAttributes.REMOTE_PLUGINS, remotePlugins.toJSON());
         }
         if (tasks != null) {
-            json.put("tasks", tasks.toJSON());
+            json.put(JSONAttributes.TASKS, tasks.toJSON());
         }
         if (version != null) {
-            json.put("version", version);
+            json.put(JSONAttributes.VERSION, version);
         }
         return json;
     }

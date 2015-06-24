@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -26,15 +27,15 @@ public class PropertyContainerSetDTO extends ThingDTO {
     private PropertyContainerSetDTO(JSONObject json, PropertyContainerMappingContext context) {
         String primaryPropertyName = context.getPrimaryContainerName();
         if (primaryPropertyName == null) {
-            primaryPropertyName = "primaryContainer";
+            primaryPropertyName = JSONAttributes.PRIMARY_CONTAINER;
         }
         String propertyListName = context.getContainersName();
         if (propertyListName == null) {
-            propertyListName = "containers";
+            propertyListName = JSONAttributes.CONTAINERS;
         }
 
-        if (json.has("@id")) {
-            setId(json.getString("@id"));
+        if (json.has(JSONAttributes.AID)) {
+            setId(json.getString(JSONAttributes.AID));
         }
         if (json.has(primaryPropertyName)) {
             primaryContainer = new PropertyContainerDTO(json.getJSONObject(primaryPropertyName));

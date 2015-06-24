@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.image;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class ImageDTO extends ThingDTO {
@@ -35,7 +36,7 @@ public class ImageDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (base64Data != null) {
-            json.put("data", base64Data);
+            json.put(JSONAttributes.DATA, base64Data);
         }
         return json;
     }

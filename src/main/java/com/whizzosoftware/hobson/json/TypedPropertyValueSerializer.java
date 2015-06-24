@@ -9,7 +9,6 @@ package com.whizzosoftware.hobson.json;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class TypedPropertyValueSerializer {
 
-    static public Object createValueObject(HubContext ctx, TypedProperty.Type type, Object jsonValue, DeviceContextProvider dcp) {
+    static public Object createValueObject(TypedProperty.Type type, Object jsonValue, DeviceContextProvider dcp) {
         switch (type) {
             case NUMBER:
                 if (jsonValue instanceof Double || jsonValue instanceof Integer) {
@@ -37,13 +36,13 @@ public class TypedPropertyValueSerializer {
                 }
             case DEVICE:
                 if (jsonValue instanceof JSONObject) {
-                    return createDeviceValueObject(ctx, (JSONObject)jsonValue, dcp);
+                    return createDeviceValueObject((JSONObject)jsonValue, dcp);
                 } else {
                     throw new HobsonInvalidRequestException("Device property is not a JSON object: " + jsonValue);
                 }
             case DEVICES:
                 if (jsonValue instanceof JSONArray) {
-                    return createDevicesValueObject(ctx, (JSONArray)jsonValue, dcp);
+                    return createDevicesValueObject((JSONArray)jsonValue, dcp);
                 } else {
                     throw new HobsonInvalidRequestException("Devices property is not a JSON array: " + jsonValue);
                 }
@@ -52,15 +51,15 @@ public class TypedPropertyValueSerializer {
         }
     }
 
-    static public Object createDevicesValueObject(HubContext ctx, JSONArray a, DeviceContextProvider dcp) {
+    static public Object createDevicesValueObject(JSONArray a, DeviceContextProvider dcp) {
         List<DeviceContext> results = new ArrayList<>();
         for (int i=0; i < a.length(); i++) {
             Object o = a.get(i);
             if (o instanceof JSONObject) {
                 JSONObject json = (JSONObject)o;
-                if (json.has("@id")) {
+                if (json.has(JSONAttributes.AID)) {
                     if (dcp != null) {
-                        results.add(dcp.createDeviceContext(json.getString("@id")));
+                        results.add(dcp.createDeviceContext(json.getString(JSONAttributes.AID)));
                     }
                 } else {
                     throw new HobsonInvalidRequestException("Device list object must contain @id attribute");
@@ -72,12 +71,12 @@ public class TypedPropertyValueSerializer {
         return results;
     }
 
-    static public Object createDeviceValueObject(HubContext ctx, JSONObject json, DeviceContextProvider dcp) {
-        if (json.has("@id")) {
+    static public Object createDeviceValueObject(JSONObject json, DeviceContextProvider dcp) {
+        if (json.has(JSONAttributes.AID)) {
             if (dcp != null) {
-                return dcp.createDeviceContext(json.getString("@id"));
+                return dcp.createDeviceContext(json.getString(JSONAttributes.AID));
             } else {
-                return json.getString("@id");
+                return json.getString(JSONAttributes.AID);
             }
         } else {
             throw new HobsonInvalidRequestException("Device object must contain @id attribute");

@@ -13,6 +13,7 @@ import com.whizzosoftware.hobson.dto.image.ImageDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonPluginDTO extends ThingDTO {
@@ -36,17 +37,17 @@ public class HobsonPluginDTO extends ThingDTO {
     @Override
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        json.put("version", version != null ? version : null);
-        json.put("type", type != null ? type.toString() : null);
-        json.put("configurable", configurable != null ? configurable : null);
-        json.put("configurationClass", configurationClass != null ? configurationClass.toJSON() : null);
-        json.put("configuration", configuration != null ? configuration.toJSON() : null);
-        json.put("image", image != null ? image.toJSON() : null);
+        json.put(JSONAttributes.VERSION, version != null ? version : null);
+        json.put(JSONAttributes.TYPE, type != null ? type.toString() : null);
+        json.put(JSONAttributes.CONFIGURABLE, configurable != null ? configurable : null);
+        json.put(JSONAttributes.CONFIGURATION_CLASS, configurationClass != null ? configurationClass.toJSON() : null);
+        json.put(JSONAttributes.CONFIGURATION, configuration != null ? configuration.toJSON() : null);
+        json.put(JSONAttributes.IMAGE, image != null ? image.toJSON() : null);
         if (status != null) {
             JSONObject psjson = new JSONObject();
-            psjson.put("code", status.getCode().toString());
-            psjson.put("message", status.getMessage());
-            json.put("status", psjson);
+            psjson.put(JSONAttributes.CODE, status.getCode().toString());
+            psjson.put(JSONAttributes.MESSAGE, status.getMessage());
+            json.put(JSONAttributes.STATUS, psjson);
         }
         return json;
     }

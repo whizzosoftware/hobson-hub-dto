@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.presence;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class PresenceEntityDTO extends ThingDTO {
@@ -36,10 +37,10 @@ public class PresenceEntityDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (location != null) {
-            json.put("location", location);
+            json.put(JSONAttributes.LOCATION, location);
         }
         if (lastUpdate != null) {
-            json.put("lastUpdate", lastUpdate);
+            json.put(JSONAttributes.LAST_UPDATE, lastUpdate);
         }
         return json;
     }

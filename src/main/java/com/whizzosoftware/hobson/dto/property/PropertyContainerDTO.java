@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -23,12 +24,12 @@ public class PropertyContainerDTO extends ThingDTO {
     }
 
     public PropertyContainerDTO(JSONObject json) {
-        if (json.has("cclass")) {
-            containerClass = new PropertyContainerClassDTO.Builder(json.getJSONObject("cclass")).build();
+        if (json.has(JSONAttributes.CCLASS)) {
+            containerClass = new PropertyContainerClassDTO.Builder(json.getJSONObject(JSONAttributes.CCLASS)).build();
         }
-        if (json.has("values")) {
+        if (json.has(JSONAttributes.VALUES)) {
             values = new HashMap<>();
-            JSONObject jp = json.getJSONObject("values");
+            JSONObject jp = json.getJSONObject(JSONAttributes.VALUES);
             for (Object o : jp.keySet()) {
                 String key = o.toString();
                 values.put(key, jp.get(key));
@@ -57,14 +58,14 @@ public class PropertyContainerDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (containerClass != null) {
-            json.put("cclass", containerClass.toJSON());
+            json.put(JSONAttributes.CCLASS, containerClass.toJSON());
         }
         if (values != null) {
             JSONObject p = new JSONObject();
             for (String k : values.keySet()) {
                 p.put(k, values.get(k));
             }
-            json.put("values", p);
+            json.put(JSONAttributes.VALUES, p);
         }
         return json;
     }

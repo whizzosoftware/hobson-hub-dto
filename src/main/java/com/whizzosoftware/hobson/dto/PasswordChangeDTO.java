@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
@@ -20,8 +21,8 @@ public class PasswordChangeDTO implements JSONProducer {
     }
 
     public PasswordChangeDTO(JSONObject json) {
-        this.currentPassword = json.getString("currentPassword");
-        this.newPassword = json.getString("newPassword");
+        this.currentPassword = json.getString(JSONAttributes.CURRENT_PASSWORD);
+        this.newPassword = json.getString(JSONAttributes.NEW_PASSWORD);
     }
 
     public String getCurrentPassword() {
@@ -39,8 +40,8 @@ public class PasswordChangeDTO implements JSONProducer {
 
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
-        json.put("currentPassword", currentPassword);
-        json.put("newPassword", newPassword);
+        json.put(JSONAttributes.CURRENT_PASSWORD, currentPassword);
+        json.put(JSONAttributes.NEW_PASSWORD, newPassword);
         return json;
     }
 }

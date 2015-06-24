@@ -10,6 +10,7 @@ package com.whizzosoftware.hobson.dto.property;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class TypedPropertyDTO extends ThingDTO {
@@ -30,16 +31,16 @@ public class TypedPropertyDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (id != null) {
-            json.put("id", id);
+            json.put(JSONAttributes.ID, id);
         }
         if (name != null) {
-            json.put("name", name);
+            json.put(JSONAttributes.NAME, name);
         }
         if (description != null) {
-            json.put("description", description);
+            json.put(JSONAttributes.DESCRIPTION, description);
         }
         if (type != null) {
-            json.put("type", type.toString());
+            json.put(JSONAttributes.TYPE, type.toString());
         }
         return json;
     }

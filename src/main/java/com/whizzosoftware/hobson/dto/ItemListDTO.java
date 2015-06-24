@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -53,14 +54,14 @@ public class ItemListDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (numberOfItems != null) {
-            json.put("numberOfItems", numberOfItems);
+            json.put(JSONAttributes.NUMBER_OF_ITEMS, numberOfItems);
         }
         if (itemListElement != null) {
             JSONArray array = new JSONArray();
             for (ListItemDTO li : itemListElement) {
                 array.put(li.toJSON());
             }
-            json.put("itemListElement", array);
+            json.put(JSONAttributes.ITEM_LIST_ELEMENT, array);
         }
         return json;
     }

@@ -10,6 +10,7 @@ package com.whizzosoftware.hobson.dto.telemetry;
 import com.whizzosoftware.hobson.dto.ItemListDTO;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class TelemetryDatasetDTO extends ThingDTO {
@@ -32,7 +33,7 @@ public class TelemetryDatasetDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (data != null) {
-            json.put("data", data.toJSON());
+            json.put(JSONAttributes.DATA, data.toJSON());
         }
         return json;
     }

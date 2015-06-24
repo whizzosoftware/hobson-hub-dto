@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.HobsonRuntimeException;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
@@ -35,8 +36,8 @@ public class ErrorDTO implements JSONProducer {
 
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
-        json.put("code", code);
-        json.put("message", message);
+        json.put(JSONAttributes.CODE, code);
+        json.put(JSONAttributes.MESSAGE, message);
         return json;
     }
 }

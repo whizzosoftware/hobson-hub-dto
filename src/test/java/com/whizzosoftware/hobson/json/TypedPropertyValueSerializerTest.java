@@ -9,7 +9,6 @@ package com.whizzosoftware.hobson.json;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,29 +25,29 @@ public class TypedPropertyValueSerializerTest {
     public void testCreateNumberObject() {
         // test that passing in a JSON array will fail
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.NUMBER, new JSONArray(new JSONTokener("[]")), null);
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.NUMBER, new JSONArray(new JSONTokener("[]")), null);
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in a JSON string will fail
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = new JSONObject(new JSONTokener("{\"value\": \"test\"}"));
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.NUMBER, json.get("value"), null);
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.NUMBER, json.get("value"), null);
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in a JSON integer number will succeed
         json = new JSONObject(new JSONTokener("{\"value\": 21}"));
-        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.NUMBER, json.get("value"), null);
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.NUMBER, json.get("value"), null);
         assertTrue(o instanceof Integer);
         assertEquals(21, o);
 
         // test that passing in a JSON double number will succeed
         json = new JSONObject(new JSONTokener("{\"value\": 21.5}"));
-        o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.NUMBER, json.get("value"), null);
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.NUMBER, json.get("value"), null);
         assertTrue(o instanceof Double);
         assertEquals(21.5, o);
     }
@@ -57,26 +56,26 @@ public class TypedPropertyValueSerializerTest {
     public void testCreateStringObject() {
         // test that passing in a JSON array will fail
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.STRING, new JSONArray(new JSONTokener("[]")), null);
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.STRING, new JSONArray(new JSONTokener("[]")), null);
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in a JSON string will succeed
         JSONObject json = new JSONObject(new JSONTokener("{\"value\": \"test\"}"));
-        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.STRING, json.get("value"), null);
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.STRING, json.get("value"), null);
         assertTrue(o instanceof String);
         assertEquals("test", o);
 
         // test that passing in a JSON number will succeed
         json = new JSONObject(new JSONTokener("{\"value\": 21}"));
-        o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.STRING, json.get("value"), null);
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.STRING, json.get("value"), null);
         assertTrue(o instanceof String);
         assertEquals("21", o);
 
         // test that passing in a JSON boolean will succeed
         json = new JSONObject(new JSONTokener("{\"value\": true}"));
-        o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.STRING, json.get("value"), null);
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.STRING, json.get("value"), null);
         assertTrue(o instanceof String);
         assertEquals("true", o);
     }
@@ -85,21 +84,21 @@ public class TypedPropertyValueSerializerTest {
     public void testCreateDeviceObject() {
         // test that passing in a JSON array will fail
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICE, new JSONArray(new JSONTokener("[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]")), null);
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICE, new JSONArray(new JSONTokener("[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]")), null);
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in an object containing invalid properties fails
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICE, new JSONObject(new JSONTokener("{\"d\":\"device1\"}")), null);
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICE, new JSONObject(new JSONTokener("{\"d\":\"device1\"}")), null);
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in a valid JSON object succeeds
         JSONObject json = new JSONObject(new JSONTokener("{\"@id\":\"device1\"}"));
-        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICE, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICE, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
             @Override
             public DeviceContext createDeviceContext(String id) {
                 return DeviceContext.createLocal("pid", id);
@@ -114,14 +113,14 @@ public class TypedPropertyValueSerializerTest {
     public void testCreateDevicesObject() {
         // test that passing in a regular JSON object will fail
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONObject(new JSONTokener("{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}")), null);
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONObject(new JSONTokener("{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}")), null);
             fail("Should have thrown an exception");
         } catch (HobsonInvalidRequestException ignored) {
         }
 
         // test that passing in an array of arrays fails
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
                 @Override
                 public DeviceContext createDeviceContext(String id) {
                     return DeviceContext.createLocal("pid", "did");
@@ -133,7 +132,7 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in an array containing objects with invalid properties fails
         try {
-            TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[{\"d\":\"device1\"}]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[{\"d\":\"device1\"}]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
                 @Override
                 public DeviceContext createDeviceContext(String id) {
                     return DeviceContext.createLocal("pid", "did");
@@ -145,7 +144,7 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in a JSON array succeeds
         JSONArray json = new JSONArray(new JSONTokener("[{\"@id\":\"device1\"},{\"@id\":\"device2\"}]"));
-        Object o = TypedPropertyValueSerializer.createValueObject(HubContext.createLocal(), TypedProperty.Type.DEVICES, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
             @Override
             public DeviceContext createDeviceContext(String id) {
                 return DeviceContext.createLocal("plugin1", id);

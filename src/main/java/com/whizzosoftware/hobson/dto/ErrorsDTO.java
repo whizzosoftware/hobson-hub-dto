@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,7 +29,7 @@ public class ErrorsDTO implements JSONProducer {
         for (ErrorDTO error : errors) {
             a.put(error.toJSON());
         }
-        json.put("errors", a);
+        json.put(JSONAttributes.ERRORS, a);
         return json;
     }
 

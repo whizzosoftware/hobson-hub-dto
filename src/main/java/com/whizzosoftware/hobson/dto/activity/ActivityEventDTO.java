@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.activity;
 
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class ActivityEventDTO extends ThingDTO {
@@ -32,7 +33,7 @@ public class ActivityEventDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (timestamp != null) {
-            json.put("timestamp", timestamp);
+            json.put(JSONAttributes.TIMESTAMP, timestamp);
         }
         return json;
     }

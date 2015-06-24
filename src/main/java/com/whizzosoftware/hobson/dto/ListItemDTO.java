@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class ListItemDTO extends ThingDTO {
@@ -41,10 +42,10 @@ public class ListItemDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (item != null) {
-            json.put("item", item.toJSON());
+            json.put(JSONAttributes.ITEM, item.toJSON());
         }
         if (position != null) {
-            json.put("position", position);
+            json.put(JSONAttributes.POSITION, position);
         }
         return json;
     }

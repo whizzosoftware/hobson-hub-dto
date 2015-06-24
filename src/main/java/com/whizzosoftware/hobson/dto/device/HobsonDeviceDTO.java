@@ -13,6 +13,7 @@ import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.telemetry.DeviceTelemetryDTO;
 import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonDeviceDTO extends ThingDTO {
@@ -59,22 +60,22 @@ public class HobsonDeviceDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (type != null) {
-            json.put("type", type.toString());
+            json.put(JSONAttributes.TYPE, type.toString());
         }
         if (configuration != null) {
-            json.put("configuration", configuration.toJSON());
+            json.put(JSONAttributes.CONFIGURATION, configuration.toJSON());
         }
         if (configurationClass != null) {
-            json.put("configurationClass", configurationClass.toJSON());
+            json.put(JSONAttributes.CONFIGURATION_CLASS, configurationClass.toJSON());
         }
         if (preferredVariable != null) {
-            json.put("preferredVariable", preferredVariable.toJSON());
+            json.put(JSONAttributes.PREFERRED_VARIABLE, preferredVariable.toJSON());
         }
         if (variables != null) {
-            json.put("variables", variables.toJSON());
+            json.put(JSONAttributes.VARIABLES, variables.toJSON());
         }
         if (telemetry != null) {
-            json.put("telemetry", telemetry.toJSON());
+            json.put(JSONAttributes.TELEMETRY, telemetry.toJSON());
         }
         return json;
     }
