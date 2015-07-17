@@ -8,16 +8,20 @@
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.TypedProperty;
+import com.whizzosoftware.hobson.api.property.TypedPropertyConstraint;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class TypedPropertyDTO extends ThingDTO {
     public String id;
     public String name;
     public String description;
     public TypedProperty.Type type;
+    public Map<TypedPropertyConstraint,String> constraints;
 
     private TypedPropertyDTO(String id) {
         super(id);
@@ -42,6 +46,9 @@ public class TypedPropertyDTO extends ThingDTO {
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
         }
+        if (constraints != null) {
+            json.put(JSONAttributes.CONSTRAINTS, constraints);
+        }
         return json;
     }
 
@@ -64,6 +71,11 @@ public class TypedPropertyDTO extends ThingDTO {
 
         public Builder type(TypedProperty.Type type) {
             dto.type = type;
+            return this;
+        }
+
+        public Builder constraints(Map<TypedPropertyConstraint,String> constraints) {
+            dto.constraints = constraints;
             return this;
         }
 

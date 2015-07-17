@@ -26,6 +26,7 @@ public class JSONAttributes {
     public static final String CONFIGURABLE = "configurable";
     public static final String CONFIGURATION = "configuration";
     public static final String CONFIGURATION_CLASS = "configurationClass";
+    public static final String CONSTRAINTS = "constraints";
     public static final String CONTAINERS = "containers";
     public static final String CURRENT_PASSWORD = "currentPassword";
     public static final String DATA = "data";
