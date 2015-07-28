@@ -23,6 +23,12 @@ public class TypedPropertyValueSerializer {
             case NUMBER:
                 if (jsonValue instanceof Double || jsonValue instanceof Integer) {
                     return jsonValue;
+                } else if (jsonValue instanceof String) {
+                    try {
+                        return Double.parseDouble((String)jsonValue);
+                    } catch (NumberFormatException e) {
+                        throw new HobsonInvalidRequestException("Number property is not a valid number: " + jsonValue);
+                    }
                 } else {
                     throw new HobsonInvalidRequestException("Number property is not a valid JSON number: " + jsonValue);
                 }
