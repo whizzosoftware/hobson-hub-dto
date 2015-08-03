@@ -30,6 +30,7 @@ public class MediaTypes {
     public static final String PROPERTY_CONTAINER = "application/vnd.hobson.propertyContainer";
     public static final String PROPERTY_CONTAINER_CLASS = "application/vnd.hobson.propertyContainerClass";
     public static final String PROPERTY_CONTAINER_SET = "application/vnd.hobson.propertyContainerSet";
+    public static final String REPOSITORY = "application/vnd.hobson.repository";
     public static final String TASK = "application/vnd.hobson.task";
     public static final String TELEMETRY = "application/vnd.hobson.telemetry";
     public static final String TELEMETRY_DATASET = "application/vnd.hobson.telemetryDataset";

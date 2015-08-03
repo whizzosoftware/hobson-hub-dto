@@ -61,6 +61,7 @@ public class JSONAttributes {
     public static final String TIMESTAMP = "timestamp";
     public static final String TRIGGER = "trigger";
     public static final String TYPE = "type";
+    public static final String URI = "uri";
     public static final String VALUE = "value";
     public static final String VALUES = "values";
     public static final String VARIABLES = "variables";
