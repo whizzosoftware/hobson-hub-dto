@@ -17,6 +17,7 @@ import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonPluginDTO extends ThingDTO {
+    private String pluginId;
     private String version;
     private PluginType type;
     private PluginStatus status;
@@ -37,6 +38,7 @@ public class HobsonPluginDTO extends ThingDTO {
     @Override
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
+        json.put(JSONAttributes.PLUGIN_ID, pluginId);
         json.put(JSONAttributes.VERSION, version != null ? version : null);
         json.put(JSONAttributes.TYPE, type != null ? type.toString() : null);
         json.put(JSONAttributes.CONFIGURABLE, configurable != null ? configurable : null);
@@ -57,6 +59,11 @@ public class HobsonPluginDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new HobsonPluginDTO(id);
+        }
+
+        public Builder pluginId(String pluginId) {
+            dto.pluginId = pluginId;
+            return this;
         }
 
         public Builder name(String name) {

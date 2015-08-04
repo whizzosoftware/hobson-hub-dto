@@ -48,6 +48,7 @@ public class JSONAttributes {
     public static final String NAME = "name";
     public static final String NEW_PASSWORD = "newPassword";
     public static final String NUMBER_OF_ITEMS = "numberOfItems";
+    public static final String PLUGIN_ID = "pluginId";
     public static final String POSITION = "position";
     public static final String PREFERRED_VARIABLE = "preferredVariable";
     public static final String PRIMARY_CONTAINER = "primaryContainer";
