@@ -17,13 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyContainerClassDTO extends ThingDTO {
+    private String descriptionTemplate;
     private List<TypedPropertyDTO> supportedProperties;
 
-    private PropertyContainerClassDTO(String id) {
+    protected PropertyContainerClassDTO(String id) {
         super(id);
     }
 
-    private PropertyContainerClassDTO(JSONObject json) {
+    protected PropertyContainerClassDTO(JSONObject json) {
         super(json);
     }
 
@@ -32,12 +33,17 @@ public class PropertyContainerClassDTO extends ThingDTO {
         return MediaTypes.PROPERTY_CONTAINER_CLASS;
     }
 
+    public String getDescriptionTemplate() {
+        return descriptionTemplate;
+    }
+
     public List<TypedPropertyDTO> getSupportedProperties() {
         return supportedProperties;
     }
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
+        json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
         if (supportedProperties != null) {
             JSONArray array = new JSONArray();
             for (TypedPropertyDTO p : supportedProperties) {
@@ -49,7 +55,7 @@ public class PropertyContainerClassDTO extends ThingDTO {
     }
 
     public static class Builder {
-        PropertyContainerClassDTO dto;
+        private PropertyContainerClassDTO dto;
 
         public Builder(String id) {
             dto = new PropertyContainerClassDTO(id);
@@ -59,26 +65,35 @@ public class PropertyContainerClassDTO extends ThingDTO {
             dto = new PropertyContainerClassDTO(json);
         }
 
+        protected PropertyContainerClassDTO getDto() {
+            return dto;
+        }
+
         public Builder name(String name) {
-            dto.setName(name);
+            getDto().setName(name);
+            return this;
+        }
+
+        public Builder descriptionTemplate(String descriptionTemplate) {
+            getDto().descriptionTemplate = descriptionTemplate;
             return this;
         }
 
         public Builder supportedProperties(List<TypedPropertyDTO> supportedProperties) {
-            dto.supportedProperties = supportedProperties;
+            getDto().supportedProperties = supportedProperties;
             return this;
         }
 
         public Builder supportedProperty(TypedPropertyDTO supportedProperty) {
-            if (dto.supportedProperties == null) {
-                dto.supportedProperties = new ArrayList<>();
+            if (getDto().supportedProperties == null) {
+                getDto().supportedProperties = new ArrayList<>();
             }
-            dto.supportedProperties.add(supportedProperty);
+            getDto().supportedProperties.add(supportedProperty);
             return this;
         }
 
         public PropertyContainerClassDTO build() {
-            return dto;
+            return getDto();
         }
     }
 }

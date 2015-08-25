@@ -8,6 +8,5 @@
 package com.whizzosoftware.hobson.dto.property;
 
 public interface PropertyContainerMappingContext {
-    public String getPrimaryContainerName();
-    public String getContainersName();
+    String getContainersName();
 }

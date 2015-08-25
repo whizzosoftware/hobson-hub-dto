@@ -18,17 +18,12 @@ import java.util.List;
 
 public class PropertyContainerSetDTO extends ThingDTO {
     private List<PropertyContainerDTO> containers;
-    private PropertyContainerDTO primaryContainer;
 
     private PropertyContainerSetDTO(String id) {
         super(id);
     }
 
     private PropertyContainerSetDTO(JSONObject json, PropertyContainerMappingContext context) {
-        String primaryPropertyName = context.getPrimaryContainerName();
-        if (primaryPropertyName == null) {
-            primaryPropertyName = JSONAttributes.PRIMARY_CONTAINER;
-        }
         String propertyListName = context.getContainersName();
         if (propertyListName == null) {
             propertyListName = JSONAttributes.CONTAINERS;
@@ -37,9 +32,6 @@ public class PropertyContainerSetDTO extends ThingDTO {
         if (json.has(JSONAttributes.AID)) {
             setId(json.getString(JSONAttributes.AID));
         }
-        if (json.has(primaryPropertyName)) {
-            primaryContainer = new PropertyContainerDTO(json.getJSONObject(primaryPropertyName));
-        }
         if (json.has(propertyListName)) {
             containers = new ArrayList<>();
             JSONArray ja = json.getJSONArray(propertyListName);
@@ -47,14 +39,6 @@ public class PropertyContainerSetDTO extends ThingDTO {
                 containers.add(new PropertyContainerDTO(ja.getJSONObject(i)));
             }
         }
-    }
-
-    public boolean hasPrimaryContainer() {
-        return (primaryContainer != null);
-    }
-
-    public PropertyContainerDTO getPrimaryContainer() {
-        return primaryContainer;
     }
 
     public boolean hasContainers() {
@@ -72,10 +56,6 @@ public class PropertyContainerSetDTO extends ThingDTO {
 
     public JSONObject toJSON(PropertyContainerMappingContext context) {
         JSONObject json = super.toJSON();
-
-        if (primaryContainer != null) {
-            json.put(context.getPrimaryContainerName(), primaryContainer.toJSON());
-        }
 
         if (containers != null && containers.size() > 0) {
             JSONArray a = new JSONArray();
@@ -101,11 +81,6 @@ public class PropertyContainerSetDTO extends ThingDTO {
 
         public Builder containers(List<PropertyContainerDTO> containers) {
             dto.containers = containers;
-            return this;
-        }
-
-        public Builder primaryContainer(PropertyContainerDTO primaryContainer) {
-            dto.primaryContainer = primaryContainer;
             return this;
         }
 
