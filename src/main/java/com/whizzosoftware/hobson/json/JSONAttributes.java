@@ -54,6 +54,7 @@ public class JSONAttributes {
     public static final String PREFERRED_VARIABLE = "preferredVariable";
     public static final String PRIMARY_CONTAINER = "primaryContainer";
     public static final String PROPERTIES = "properties";
+    public static final String LAST_CHECK_IN = "lastCheckIn";
     public static final String REMOTE_PLUGINS = "remotePlugins";
     public static final String STATUS = "status";
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
