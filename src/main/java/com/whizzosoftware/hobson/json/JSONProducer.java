@@ -10,6 +10,6 @@ package com.whizzosoftware.hobson.json;
 import org.json.JSONObject;
 
 public interface JSONProducer {
-    public String getMediaType();
-    public JSONObject toJSON();
+    String getMediaType();
+    JSONObject toJSON();
 }
