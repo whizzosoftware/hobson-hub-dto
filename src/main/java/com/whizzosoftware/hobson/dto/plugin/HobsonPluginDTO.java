@@ -35,6 +35,42 @@ public class HobsonPluginDTO extends ThingDTO {
         return MediaTypes.PLUGIN;
     }
 
+    public String getPluginId() {
+        return pluginId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public PluginType getType() {
+        return type;
+    }
+
+    public PluginStatus getStatus() {
+        return status;
+    }
+
+    public Boolean getConfigurable() {
+        return configurable;
+    }
+
+    public PropertyContainerClassDTO getConfigurationClass() {
+        return configurationClass;
+    }
+
+    public PropertyContainerDTO getConfiguration() {
+        return configuration;
+    }
+
+    public ImageDTO getImage() {
+        return image;
+    }
+
+    public Boolean isConfigurable() {
+        return configurable;
+    }
+
     @Override
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
