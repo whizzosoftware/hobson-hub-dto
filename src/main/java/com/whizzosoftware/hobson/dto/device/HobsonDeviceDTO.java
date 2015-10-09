@@ -19,7 +19,7 @@ import org.json.JSONObject;
 public class HobsonDeviceDTO extends ThingDTO {
     private DeviceType type;
     private Long checkInTime;
-    private boolean available;
+    private Boolean available;
     private HobsonVariableDTO preferredVariable;
     private ItemListDTO variables;
     private PropertyContainerClassDTO configurationClass;
@@ -40,7 +40,7 @@ public class HobsonDeviceDTO extends ThingDTO {
     }
 
     public boolean isAvailable() {
-        return available;
+        return (available != null && available);
     }
 
     public Long getCheckInTime() {
@@ -69,7 +69,9 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        json.put(JSONAttributes.AVAILABLE, available);
+        if (available != null) {
+            json.put(JSONAttributes.AVAILABLE, available);
+        }
         if (checkInTime != null) {
             json.put(JSONAttributes.LAST_CHECK_IN, checkInTime);
         }

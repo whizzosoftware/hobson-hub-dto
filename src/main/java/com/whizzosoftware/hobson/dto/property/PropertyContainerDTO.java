@@ -10,6 +10,7 @@ package com.whizzosoftware.hobson.dto.property;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
+import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -63,7 +64,12 @@ public class PropertyContainerDTO extends ThingDTO {
         if (values != null) {
             JSONObject p = new JSONObject();
             for (String k : values.keySet()) {
-                p.put(k, values.get(k));
+                Object v = values.get(k);
+                if (v instanceof JSONProducer) {
+                    p.put(k, ((JSONProducer)v).toJSON());
+                } else {
+                    p.put(k, v);
+                }
             }
             json.put(JSONAttributes.VALUES, p);
         }
