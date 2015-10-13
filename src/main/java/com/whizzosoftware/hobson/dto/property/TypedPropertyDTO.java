@@ -14,14 +14,14 @@ import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
-import java.util.Map;
+import java.util.Collection;
 
 public class TypedPropertyDTO extends ThingDTO {
     public String id;
     public String name;
     public String description;
     public TypedProperty.Type type;
-    public Map<TypedPropertyConstraint,String> constraints;
+    public Collection<TypedPropertyConstraint> constraints;
 
     private TypedPropertyDTO(String id) {
         super(id);
@@ -47,7 +47,11 @@ public class TypedPropertyDTO extends ThingDTO {
             json.put(JSONAttributes.TYPE, type.toString());
         }
         if (constraints != null) {
-            json.put(JSONAttributes.CONSTRAINTS, constraints);
+            JSONObject o = new JSONObject();
+            for (TypedPropertyConstraint tpc : constraints) {
+                o.put(tpc.getType().toString(), tpc.getArgument());
+            }
+            json.put(JSONAttributes.CONSTRAINTS, o);
         }
         return json;
     }
@@ -74,7 +78,7 @@ public class TypedPropertyDTO extends ThingDTO {
             return this;
         }
 
-        public Builder constraints(Map<TypedPropertyConstraint,String> constraints) {
+        public Builder constraints(Collection<TypedPropertyConstraint> constraints) {
             dto.constraints = constraints;
             return this;
         }
