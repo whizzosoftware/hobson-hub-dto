@@ -27,7 +27,7 @@ abstract public class ThingDTO implements JSONProducer {
     public ThingDTO() {}
 
     public ThingDTO(JSONObject json) {
-        this(json.getString("@id"), json.has("name") ? json.getString("name") : null);
+        this(json.has("@id") ? json.getString("@id") : null, json.has("name") ? json.getString("name") : null);
     }
 
     public ThingDTO(String id) {

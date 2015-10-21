@@ -13,6 +13,14 @@ import static org.junit.Assert.*;
 
 public class HobsonHubDTOTest {
     @Test
+    public void testJSONConstructor() {
+        JSONObject json = new JSONObject();
+        json.put("name", "Test Hub");
+        HobsonHubDTO dto = new HobsonHubDTO.Builder(json).build();
+        assertEquals("Test Hub", dto.getName());
+    }
+
+    @Test
     public void testToJSON() {
         HobsonHubDTO dto = new HobsonHubDTO.Builder("hubLink").name("hubName").version("hubVersion").build();
         JSONObject json = dto.toJSON();

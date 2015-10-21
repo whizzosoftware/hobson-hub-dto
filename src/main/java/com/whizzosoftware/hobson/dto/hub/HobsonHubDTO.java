@@ -32,7 +32,7 @@ public class HobsonHubDTO extends ThingDTO {
     }
 
     private HobsonHubDTO(JSONObject json) {
-
+        super(json);
     }
 
     @Override
@@ -174,6 +174,11 @@ public class HobsonHubDTO extends ThingDTO {
 
         public Builder version(String version) {
             dto.version = version;
+            return this;
+        }
+
+        public Builder link(String rel, String url) {
+            dto.addLink(rel, url);
             return this;
         }
 
