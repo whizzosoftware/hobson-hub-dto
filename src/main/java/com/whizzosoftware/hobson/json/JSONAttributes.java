@@ -17,6 +17,7 @@ public class JSONAttributes {
     public static final String ACTION_SET = "actionSet";
     public static final String ACTIONS = "actions";
     public static final String AID = "@id";
+    public static final String API_KEY = "apiKey";
     public static final String AVAILABLE = "available";
     public static final String CAPABLE = "capable";
     public static final String CCLASS = "cclass";

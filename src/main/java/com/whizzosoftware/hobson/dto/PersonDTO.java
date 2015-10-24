@@ -13,6 +13,7 @@ public class PersonDTO extends ThingDTO {
     private String givenName;
     private String familyName;
     private ItemListDTO hubs;
+    private UserAccountDTO account;
 
     private PersonDTO(String id) {
         super(id);
@@ -47,6 +48,9 @@ public class PersonDTO extends ThingDTO {
         if (hubs != null) {
             json.put("hubs", hubs.toJSON());
         }
+        if (account != null) {
+            json.put("account", account.toJSON());
+        }
         return json;
     }
 
@@ -75,6 +79,11 @@ public class PersonDTO extends ThingDTO {
 
         public Builder hubs(ItemListDTO hubs) {
             dto.hubs = hubs;
+            return this;
+        }
+
+        public Builder account(UserAccountDTO account) {
+            dto.account = account;
             return this;
         }
 

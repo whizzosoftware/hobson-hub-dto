@@ -26,6 +26,7 @@ public class HobsonHubDTO extends ThingDTO {
     private ItemListDTO remotePlugins;
     private ItemListDTO tasks;
     private String version;
+    private String apiKey;
 
     private HobsonHubDTO(String id) {
         super(id);
@@ -108,6 +109,9 @@ public class HobsonHubDTO extends ThingDTO {
         if (version != null) {
             json.put(JSONAttributes.VERSION, version);
         }
+        if (apiKey != null) {
+            json.put(JSONAttributes.API_KEY, apiKey);
+        }
         return json;
     }
 
@@ -174,6 +178,11 @@ public class HobsonHubDTO extends ThingDTO {
 
         public Builder version(String version) {
             dto.version = version;
+            return this;
+        }
+
+        public Builder apiKey(String apiKey) {
+            dto.apiKey = apiKey;
             return this;
         }
 
