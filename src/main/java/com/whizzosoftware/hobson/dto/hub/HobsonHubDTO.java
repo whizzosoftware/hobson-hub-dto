@@ -25,6 +25,7 @@ public class HobsonHubDTO extends ThingDTO {
     private HubLogDTO log;
     private ItemListDTO remotePlugins;
     private ItemListDTO tasks;
+    private ItemListDTO presenceEntities;
     private String version;
     private String apiKey;
 
@@ -77,6 +78,10 @@ public class HobsonHubDTO extends ThingDTO {
         return tasks;
     }
 
+    public ItemListDTO getPresenceEntities() {
+        return presenceEntities;
+    }
+
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (actionClasses != null) {
@@ -105,6 +110,9 @@ public class HobsonHubDTO extends ThingDTO {
         }
         if (tasks != null) {
             json.put(JSONAttributes.TASKS, tasks.toJSON());
+        }
+        if (presenceEntities != null) {
+            json.put(JSONAttributes.PRESENCE_ENTITIES, presenceEntities.toJSON());
         }
         if (version != null) {
             json.put(JSONAttributes.VERSION, version);
@@ -173,6 +181,11 @@ public class HobsonHubDTO extends ThingDTO {
 
         public Builder tasks(ItemListDTO tasks) {
             dto.tasks = tasks;
+            return this;
+        }
+
+        public Builder presenceEntities(ItemListDTO presenceEntities) {
+            dto.presenceEntities = presenceEntities;
             return this;
         }
 

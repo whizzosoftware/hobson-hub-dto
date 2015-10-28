@@ -13,7 +13,7 @@ import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class PresenceEntityDTO extends ThingDTO {
-    private String location;
+    private PresenceLocationDTO location;
     private Long lastUpdate;
 
     private PresenceEntityDTO(String id) {
@@ -25,7 +25,7 @@ public class PresenceEntityDTO extends ThingDTO {
         return MediaTypes.PRESENCE_ENTITY;
     }
 
-    public String getLocation() {
+    public PresenceLocationDTO getLocation() {
         return location;
     }
 
@@ -37,7 +37,7 @@ public class PresenceEntityDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (location != null) {
-            json.put(JSONAttributes.LOCATION, location);
+            json.put(JSONAttributes.LOCATION, location.toJSON());
         }
         if (lastUpdate != null) {
             json.put(JSONAttributes.LAST_UPDATE, lastUpdate);
@@ -57,8 +57,8 @@ public class PresenceEntityDTO extends ThingDTO {
             return this;
         }
 
-        public Builder location(String location) {
-            dto.location = location;
+        public Builder location(PresenceLocationDTO pldto) {
+            dto.location = pldto;
             return this;
         }
 

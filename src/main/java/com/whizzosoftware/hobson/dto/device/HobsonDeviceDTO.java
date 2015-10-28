@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.DeviceType;
+import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -25,9 +26,18 @@ public class HobsonDeviceDTO extends ThingDTO {
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
     private DeviceTelemetryDTO telemetry;
+    private Long lastVariableUpdate;
 
     private HobsonDeviceDTO(String id) {
         super(id);
+    }
+
+    private HobsonDeviceDTO(String id, HobsonDevice device) {
+        super(id);
+        setName(device.getName());
+        this.type = device.getType();
+        this.checkInTime = device.getLastCheckIn();
+        this.available = device.isAvailable();
     }
 
     @Override
@@ -45,6 +55,10 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     public Long getCheckInTime() {
         return checkInTime;
+    }
+
+    public Long getLastVariableUpdate() {
+        return lastVariableUpdate;
     }
 
     public HobsonVariableDTO getPreferredVariable() {
@@ -75,6 +89,9 @@ public class HobsonDeviceDTO extends ThingDTO {
         if (checkInTime != null) {
             json.put(JSONAttributes.LAST_CHECK_IN, checkInTime);
         }
+        if (lastVariableUpdate != null) {
+            json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
+        }
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
         }
@@ -103,6 +120,10 @@ public class HobsonDeviceDTO extends ThingDTO {
             dto = new HobsonDeviceDTO(id);
         }
 
+        public Builder(String id, HobsonDevice device) {
+            dto = new HobsonDeviceDTO(id, device);
+        }
+
         public Builder name(String name) {
             dto.setName(name);
             return this;
@@ -120,6 +141,11 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder checkInTime(Long checkInTime) {
             dto.checkInTime = checkInTime;
+            return this;
+        }
+
+        public Builder lastUpdate(Long lastUpdate) {
+            dto.lastVariableUpdate = lastUpdate;
             return this;
         }
 

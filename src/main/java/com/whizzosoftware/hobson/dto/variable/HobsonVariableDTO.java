@@ -22,6 +22,14 @@ public class HobsonVariableDTO extends ThingDTO {
         super(id);
     }
 
+    private HobsonVariableDTO(String id, HobsonVariable var) {
+        super(id);
+        setName(var.getName());
+        this.mask = var.getMask();
+        this.value = var.getValue();
+        this.lastUpdate = var.getLastUpdate();
+    }
+
     @Override
     public String getMediaType() {
         return MediaTypes.VARIABLE;
@@ -48,9 +56,8 @@ public class HobsonVariableDTO extends ThingDTO {
             dto = new HobsonVariableDTO(id);
         }
 
-        public Builder id(String id) {
-            dto.setId(id);
-            return this;
+        public Builder(String id, HobsonVariable var) {
+            dto = new HobsonVariableDTO(id, var);
         }
 
         public Builder name(String name) {

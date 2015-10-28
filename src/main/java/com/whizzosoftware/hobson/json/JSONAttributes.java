@@ -19,6 +19,8 @@ public class JSONAttributes {
     public static final String AID = "@id";
     public static final String API_KEY = "apiKey";
     public static final String AVAILABLE = "available";
+    public static final String BEACON_MAJOR = "beaconMajor";
+    public static final String BEACON_MINOR = "beaconMinor";
     public static final String CAPABLE = "capable";
     public static final String CCLASS = "cclass";
     public static final String CODE = "code";
@@ -43,9 +45,11 @@ public class JSONAttributes {
     public static final String ITEM = "item";
     public static final String ITEM_LIST_ELEMENT = "itemListElement";
     public static final String LAST_UPDATE = "lastUpdate";
+    public static final String LATITUDE = "latitude";
     public static final String LOCAL_PLUGINS = "localPlugins";
     public static final String LOCATION = "location";
     public static final String LOG = "log";
+    public static final String LONGITUDE = "longitude";
     public static final String MASK = "mask";
     public static final String MESSAGE = "message";
     public static final String NAME = "name";
@@ -54,9 +58,11 @@ public class JSONAttributes {
     public static final String PLUGIN_ID = "pluginId";
     public static final String POSITION = "position";
     public static final String PREFERRED_VARIABLE = "preferredVariable";
+    public static final String PRESENCE_ENTITIES = "presenceEntities";
     public static final String PRIMARY_CONTAINER = "primaryContainer";
     public static final String PROPERTIES = "properties";
     public static final String LAST_CHECK_IN = "lastCheckIn";
+    public static final String RADIUS = "radius";
     public static final String REMOTE_PLUGINS = "remotePlugins";
     public static final String STATUS = "status";
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
