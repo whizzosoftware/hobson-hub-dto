@@ -57,7 +57,7 @@ public class PresenceEntityDTO extends ThingDTO {
             if (showDetails) {
                 dto.setName(entity.getName());
                 dto.lastUpdate = entity.getLastUpdate();
-                dto.location = new PresenceLocationDTO.Builder(manager.getEntityLocation(entity.getContext()), idProvider, expansions.has(JSONAttributes.LOCATION)).build();
+                dto.location = new PresenceLocationDTO.Builder(manager.getPresenceEntityLocation(entity.getContext()), idProvider, expansions.has(JSONAttributes.LOCATION)).build();
             }
         }
 

@@ -38,8 +38,8 @@ public class PresenceEntityDTOTest {
         PresenceEntityContext ctx = PresenceEntityContext.createLocal("id1");
 
         MockPresenceManager presenceManager = new MockPresenceManager();
-        PresenceLocationContext ctx2 = presenceManager.addLocation(HubContext.createLocal(), "location1", 1.0, 2.0, 3.0, null, null);
-        presenceManager.updateEntityLocation(ctx, ctx2);
+        PresenceLocationContext ctx2 = presenceManager.addPresenceLocation(HubContext.createLocal(), "location1", 1.0, 2.0, 3.0, null, null);
+        presenceManager.updatePresenceEntityLocation(ctx, ctx2);
 
         PresenceEntity pe = new PresenceEntity(ctx, "name1", 100L);
         MockIdProvider idProvider = new MockIdProvider();

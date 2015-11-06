@@ -266,7 +266,7 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.PRESENCE_ENTITIES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (PresenceEntity entity : presenceManager.getAllEntities(hub.getContext())) {
+                    for (PresenceEntity entity : presenceManager.getAllPresenceEntities(hub.getContext())) {
                         dto.presenceEntities.add(new PresenceEntityDTO.Builder(entity, presenceManager, showDetails, expansions, idProvider).build());
                     }
                     expansions.popContext();
@@ -280,7 +280,7 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.PRESENCE_LOCATIONS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (PresenceLocation loc : presenceManager.getAllLocations(hub.getContext())) {
+                    for (PresenceLocation loc : presenceManager.getAllPresenceLocations(hub.getContext())) {
                         dto.presenceLocations.add(new PresenceLocationDTO.Builder(loc, idProvider, showDetails).build());
                     }
                     expansions.popContext();
