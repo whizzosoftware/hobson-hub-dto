@@ -18,8 +18,6 @@ import java.util.Collection;
 
 public class TypedPropertyDTO extends ThingDTO {
     public String id;
-    public String name;
-    public String description;
     public TypedProperty.Type type;
     public Collection<TypedPropertyConstraint> constraints;
 
@@ -36,12 +34,6 @@ public class TypedPropertyDTO extends ThingDTO {
         JSONObject json = super.toJSON();
         if (id != null) {
             json.put(JSONAttributes.ID, id);
-        }
-        if (name != null) {
-            json.put(JSONAttributes.NAME, name);
-        }
-        if (description != null) {
-            json.put(JSONAttributes.DESCRIPTION, description);
         }
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
@@ -61,6 +53,13 @@ public class TypedPropertyDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new TypedPropertyDTO(id);
+        }
+
+        public Builder(TypedProperty tp) {
+            dto = new TypedPropertyDTO(tp.getId());
+            dto.setName(tp.getName());
+            dto.setDescription(tp.getDescription());
+            dto.type = tp.getType();
         }
 
         public Builder description(String description) {

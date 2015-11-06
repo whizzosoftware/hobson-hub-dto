@@ -38,6 +38,11 @@ public class PasswordChangeDTO implements JSONProducer {
         return MediaTypes.PASSWORD_CHANGE;
     }
 
+    @Override
+    public String getJSONMediaType() {
+        return getMediaType() + "+json";
+    }
+
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put(JSONAttributes.CURRENT_PASSWORD, currentPassword);

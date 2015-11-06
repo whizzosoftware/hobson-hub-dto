@@ -8,11 +8,14 @@
 package com.whizzosoftware.hobson.dto.plugin;
 
 import com.whizzosoftware.hobson.api.plugin.*;
-import com.whizzosoftware.hobson.dto.MediaTypes;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
+import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.image.ImageDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
-import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -78,7 +81,7 @@ public class HobsonPluginDTO extends ThingDTO {
         json.put(JSONAttributes.VERSION, version != null ? version : null);
         json.put(JSONAttributes.TYPE, type != null ? type.toString() : null);
         json.put(JSONAttributes.CONFIGURABLE, configurable != null ? configurable : null);
-        json.put(JSONAttributes.CONFIGURATION_CLASS, configurationClass != null ? configurationClass.toJSON() : null);
+        json.put(JSONAttributes.CCLASS, configurationClass != null ? configurationClass.toJSON() : null);
         json.put(JSONAttributes.CONFIGURATION, configuration != null ? configuration.toJSON() : null);
         json.put(JSONAttributes.IMAGE, image != null ? image.toJSON() : null);
         if (status != null) {
@@ -95,6 +98,40 @@ public class HobsonPluginDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new HobsonPluginDTO(id);
+        }
+
+        public Builder(DTOBuildContext ctx, final HobsonPlugin plugin, String description, String remoteVersion, boolean showDetails) {
+            dto = new HobsonPluginDTO(remoteVersion != null ? ctx.getIdProvider().createRemotePluginId(plugin.getContext(), remoteVersion) : ctx.getIdProvider().createLocalPluginId(plugin.getContext()));
+            ExpansionFields expansions = ctx.getExpansionFields();
+            if (showDetails) {
+                dto.setName(plugin.getName());
+                dto.setDescription(description);
+                dto.pluginId = plugin.getContext().getPluginId();
+                dto.type = plugin.getType();
+                dto.version = plugin.getVersion();
+                dto.status = plugin.getStatus();
+                dto.configurable = plugin.isConfigurable();
+                if (dto.configurable) {
+                    dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createLocalPluginConfigurationClassId(plugin.getContext()), plugin.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
+                    dto.configuration = new PropertyContainerDTO.Builder(
+                            ctx.getPluginManager().getLocalPluginConfiguration(plugin.getContext()),
+                            new PropertyContainerClassProvider() {
+                                @Override
+                                public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
+                                    return plugin.getConfigurationClass();
+                                }
+                            },
+                            PropertyContainerClassType.PLUGIN_CONFIG,
+                            expansions != null && expansions.has(JSONAttributes.CONFIGURATION),
+                            expansions,
+                            ctx.getIdProvider()
+                    ).build();
+                }
+                if (remoteVersion == null) {
+                    dto.image = new ImageDTO.Builder(ctx.getIdProvider().createLocalPluginIconId(plugin.getContext())).build();
+                }
+
+            }
         }
 
         public Builder pluginId(String pluginId) {

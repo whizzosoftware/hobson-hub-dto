@@ -9,6 +9,8 @@ package com.whizzosoftware.hobson.json;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
+import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +20,7 @@ import java.util.List;
 
 public class TypedPropertyValueSerializer {
 
-    static public Object createValueObject(TypedProperty.Type type, Object jsonValue, DeviceContextProvider dcp) {
+    static public Object createValueObject(TypedProperty.Type type, Object jsonValue, PropertyContextProvider cp) {
         switch (type) {
             case NUMBER:
                 if (jsonValue instanceof Double || jsonValue instanceof Integer) {
@@ -37,27 +39,43 @@ public class TypedPropertyValueSerializer {
                     return jsonValue;
                 } else if (jsonValue instanceof Integer || jsonValue instanceof Double || jsonValue instanceof Boolean) {
                     return jsonValue.toString();
+                } else if (JSONObject.NULL.equals(jsonValue)) {
+                    return null;
                 } else {
                     throw new HobsonInvalidRequestException("String property is not a valid JSON string: " + jsonValue);
                 }
             case DEVICE:
                 if (jsonValue instanceof JSONObject) {
-                    return createDeviceValueObject((JSONObject)jsonValue, dcp);
+                    return createDeviceValueObject((JSONObject)jsonValue, cp);
                 } else {
                     throw new HobsonInvalidRequestException("Device property is not a JSON object: " + jsonValue);
                 }
             case DEVICES:
                 if (jsonValue instanceof JSONArray) {
-                    return createDevicesValueObject((JSONArray)jsonValue, dcp);
+                    return createDevicesValueObject((JSONArray)jsonValue, cp);
                 } else {
                     throw new HobsonInvalidRequestException("Devices property is not a JSON array: " + jsonValue);
+                }
+            case PRESENCE_ENTITY:
+                if (jsonValue instanceof JSONObject) {
+                    JSONObject json = (JSONObject)jsonValue;
+                    return cp.createPresenceEntityContext(json.getString(JSONAttributes.AID));
+                } else {
+                    throw new HobsonInvalidRequestException("Presence entity property is not a JSON object: " + jsonValue);
+                }
+            case LOCATION:
+                if (jsonValue instanceof JSONObject) {
+                    JSONObject json = (JSONObject)jsonValue;
+                    return cp.createPresenceLocationContext(json.getString(JSONAttributes.AID));
+                } else {
+                    throw new HobsonInvalidRequestException("Presence location property is not a JSON object: " + jsonValue);
                 }
             default:
                 return jsonValue.toString();
         }
     }
 
-    static public Object createDevicesValueObject(JSONArray a, DeviceContextProvider dcp) {
+    static public Object createDevicesValueObject(JSONArray a, PropertyContextProvider dcp) {
         List<DeviceContext> results = new ArrayList<>();
         for (int i=0; i < a.length(); i++) {
             Object o = a.get(i);
@@ -77,7 +95,7 @@ public class TypedPropertyValueSerializer {
         return results;
     }
 
-    static public Object createDeviceValueObject(JSONObject json, DeviceContextProvider dcp) {
+    static public Object createDeviceValueObject(JSONObject json, PropertyContextProvider dcp) {
         if (json.has(JSONAttributes.AID)) {
             if (dcp != null) {
                 return dcp.createDeviceContext(json.getString(JSONAttributes.AID));
@@ -89,7 +107,9 @@ public class TypedPropertyValueSerializer {
         }
     }
 
-    public interface DeviceContextProvider {
+    public interface PropertyContextProvider {
         DeviceContext createDeviceContext(String id);
+        PresenceEntityContext createPresenceEntityContext(String id);
+        PresenceLocationContext createPresenceLocationContext(String id);
     }
 }

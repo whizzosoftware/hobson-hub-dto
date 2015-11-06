@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.dto.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
@@ -20,14 +21,6 @@ public class HobsonVariableDTO extends ThingDTO {
 
     private HobsonVariableDTO(String id) {
         super(id);
-    }
-
-    private HobsonVariableDTO(String id, HobsonVariable var) {
-        super(id);
-        setName(var.getName());
-        this.mask = var.getMask();
-        this.value = var.getValue();
-        this.lastUpdate = var.getLastUpdate();
     }
 
     @Override
@@ -56,8 +49,14 @@ public class HobsonVariableDTO extends ThingDTO {
             dto = new HobsonVariableDTO(id);
         }
 
-        public Builder(String id, HobsonVariable var) {
-            dto = new HobsonVariableDTO(id, var);
+        public Builder(DTOBuildContext ctx, String id, HobsonVariable var, boolean showDetails) {
+            dto = new HobsonVariableDTO(id);
+            if (showDetails) {
+                dto.setName(var.getName());
+                dto.mask = var.getMask();
+                dto.value = ctx.getProxyValue(var);
+                dto.lastUpdate = var.getLastUpdate();
+            }
         }
 
         public Builder name(String name) {

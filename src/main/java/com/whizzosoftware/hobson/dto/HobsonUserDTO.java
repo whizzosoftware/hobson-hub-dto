@@ -7,15 +7,16 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.user.HobsonUser;
 import org.json.JSONObject;
 
-public class PersonDTO extends ThingDTO {
+public class HobsonUserDTO extends ThingDTO {
     private String givenName;
     private String familyName;
     private ItemListDTO hubs;
     private UserAccountDTO account;
 
-    private PersonDTO(String id) {
+    private HobsonUserDTO(String id) {
         super(id);
     }
 
@@ -55,10 +56,21 @@ public class PersonDTO extends ThingDTO {
     }
 
     static public class Builder {
-        private PersonDTO dto;
+        private HobsonUserDTO dto;
 
         public Builder(String id) {
-            this.dto = new PersonDTO(id);
+            this.dto = new HobsonUserDTO(id);
+        }
+
+        public Builder(HobsonUser user, IdProvider idProvider) {
+            dto = new HobsonUserDTO(idProvider.createPersonId(user.getId()));
+            dto.givenName = user.getGivenName();
+            dto.familyName = user.getFamilyName();
+            dto.setName(dto.givenName + " " + dto.familyName);
+            if (user.isRemote()) {
+                dto.account = new UserAccountDTO.Builder(user.getAccount()).build();
+            }
+            dto.hubs = new ItemListDTO(idProvider.createHubsId(user.getId()));
         }
 
         public Builder givenName(String givenName) {
@@ -87,7 +99,7 @@ public class PersonDTO extends ThingDTO {
             return this;
         }
 
-        public PersonDTO build() {
+        public HobsonUserDTO build() {
             return dto;
         }
     }

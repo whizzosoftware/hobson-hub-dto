@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -14,18 +15,28 @@ import static org.junit.Assert.*;
 
 public class ItemListDTOTest {
     @Test
-    public void testToJsonWithNoItems() {
+    public void testToJsonWithIdOnly() {
         ItemListDTO dto = new ItemListDTO("listLink");
         JSONObject json = dto.toJSON();
+        assertEquals("listLink", json.getString(JSONAttributes.AID));
         assertFalse(json.has("numberOfItems"));
+        assertFalse(json.has("itemListElement"));
+    }
+
+    @Test
+    public void testToJsonWithForcedDetails() {
+        ItemListDTO dto = new ItemListDTO("listLink2", true);
+        JSONObject json = dto.toJSON();
+        assertEquals(0, json.getInt("numberOfItems"));
+        assertEquals(0, json.getJSONArray("itemListElement").length());
     }
 
     @Test
     public void testToJsonWithOneItem() {
         ItemListDTO dto = new ItemListDTO("listLink");
-        dto.add(new PersonDTO.Builder("personLink").build());
+        dto.add(new HobsonUserDTO.Builder("personLink").build());
         JSONObject json = dto.toJSON();
-        assertEquals(1, json.getDouble("numberOfItems"), 0);
+        assertEquals(1, json.getInt("numberOfItems"));
         JSONArray a = json.getJSONArray("itemListElement");
         assertEquals(1, a.length());
         JSONObject a1 = a.getJSONObject(0);

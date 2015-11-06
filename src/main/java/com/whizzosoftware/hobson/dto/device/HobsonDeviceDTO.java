@@ -9,6 +9,11 @@ package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
+import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -30,14 +35,6 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     private HobsonDeviceDTO(String id) {
         super(id);
-    }
-
-    private HobsonDeviceDTO(String id, HobsonDevice device) {
-        super(id);
-        setName(device.getName());
-        this.type = device.getType();
-        this.checkInTime = device.getLastCheckIn();
-        this.available = device.isAvailable();
     }
 
     @Override
@@ -83,15 +80,9 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        if (available != null) {
-            json.put(JSONAttributes.AVAILABLE, available);
-        }
-        if (checkInTime != null) {
-            json.put(JSONAttributes.LAST_CHECK_IN, checkInTime);
-        }
-        if (lastVariableUpdate != null) {
-            json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
-        }
+        json.put(JSONAttributes.AVAILABLE, available);
+        json.put(JSONAttributes.LAST_CHECK_IN, checkInTime);
+        json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
         }
@@ -99,7 +90,7 @@ public class HobsonDeviceDTO extends ThingDTO {
             json.put(JSONAttributes.CONFIGURATION, configuration.toJSON());
         }
         if (configurationClass != null) {
-            json.put(JSONAttributes.CONFIGURATION_CLASS, configurationClass.toJSON());
+            json.put(JSONAttributes.CCLASS, configurationClass.toJSON());
         }
         if (preferredVariable != null) {
             json.put(JSONAttributes.PREFERRED_VARIABLE, preferredVariable.toJSON());
@@ -120,8 +111,54 @@ public class HobsonDeviceDTO extends ThingDTO {
             dto = new HobsonDeviceDTO(id);
         }
 
-        public Builder(String id, HobsonDevice device) {
-            dto = new HobsonDeviceDTO(id, device);
+        public Builder(DTOBuildContext ctx, final HobsonDevice device, boolean showDetails) {
+            dto = new HobsonDeviceDTO(ctx.getIdProvider().createDeviceId(device.getContext()));
+            if (showDetails) {
+                dto.setName(device.getName());
+                dto.type = device.getType();
+                dto.checkInTime = device.getLastCheckIn();
+                dto.available = device.isAvailable();
+
+                // preferred variable
+                if (device.hasPreferredVariableName()) {
+                    dto.preferredVariable = new HobsonVariableDTO.Builder(ctx, ctx.getIdProvider().createDeviceVariableId(device.getContext(), device.getPreferredVariableName()), ctx.getVariableManager().getDeviceVariable(device.getContext(), device.getPreferredVariableName()), ctx.getExpansionFields().has(JSONAttributes.PREFERRED_VARIABLE)).build();
+                }
+
+                // variables
+                boolean expand = ctx.getExpansionFields().has(JSONAttributes.VARIABLES);
+                dto.variables = new ItemListDTO(ctx.getIdProvider().createDeviceVariablesId(device.getContext()), expand);
+                if (expand) {
+                    ctx.getExpansionFields().pushContext(JSONAttributes.VARIABLES);
+                    boolean expandItem = ctx.getExpansionFields().has(JSONAttributes.ITEM);
+                    for (HobsonVariable v : ctx.getVariableManager().getDeviceVariables(device.getContext()).getCollection()) {
+                        dto.variables.add(new HobsonVariableDTO.Builder(ctx, ctx.getIdProvider().createDeviceVariableId(device.getContext(), v.getName()), v, expandItem).build());
+                        dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
+                    }
+                    ctx.getExpansionFields().popContext();
+                }
+
+                // configurationClass
+                dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createDeviceConfigurationClassId(device.getContext()), device.getConfigurationClass(), ctx.getExpansionFields().has(JSONAttributes.CCLASS)).build();
+
+                // configuration
+                dto.configuration = new PropertyContainerDTO.Builder(
+                        ctx.getDeviceManager().getDeviceConfiguration(device.getContext()),
+                        new PropertyContainerClassProvider() {
+                            @Override
+                            public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
+                                return device.getConfigurationClass();
+                            }
+                        },
+                        PropertyContainerClassType.DEVICE_CONFIG,
+                        ctx.getExpansionFields().has(JSONAttributes.CONFIGURATION),
+                        ctx.getExpansionFields().pushContext(JSONAttributes.CONFIGURATION),
+                        ctx.getIdProvider()
+                ).build();
+                ctx.getExpansionFields().popContext();
+
+                // telemetry
+                dto.telemetry = new DeviceTelemetryDTO.Builder(ctx.getIdProvider().createDeviceTelemetryId(device.getContext())).build();
+            }
         }
 
         public Builder name(String name) {

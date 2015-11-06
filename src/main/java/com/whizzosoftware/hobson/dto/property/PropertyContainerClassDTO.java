@@ -7,6 +7,8 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
+import com.whizzosoftware.hobson.api.property.TypedProperty;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
@@ -59,6 +61,20 @@ public class PropertyContainerClassDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new PropertyContainerClassDTO(id);
+        }
+
+        public Builder(String id, PropertyContainerClass pcc, boolean showDetails) {
+            dto = new PropertyContainerClassDTO(id);
+            if (showDetails) {
+                dto.setName(pcc.getName());
+                dto.descriptionTemplate = pcc.getDescriptionTemplate();
+                if (pcc.hasSupportedProperties()) {
+                    dto.supportedProperties = new ArrayList<>();
+                    for (TypedProperty tp : pcc.getSupportedProperties()) {
+                        dto.supportedProperties.add(new TypedPropertyDTO.Builder(tp).build());
+                    }
+                }
+            }
         }
 
         public Builder(JSONObject json) {

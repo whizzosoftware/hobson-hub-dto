@@ -13,7 +13,6 @@ import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class RepositoryDTO extends ThingDTO {
-    private String id;
     private String uri;
 
     public RepositoryDTO(String id, String uri) {
@@ -22,14 +21,8 @@ public class RepositoryDTO extends ThingDTO {
     }
 
     public RepositoryDTO(JSONObject json) {
-        if (json.has("id")) {
-            this.id = json.getString("id");
-        }
+        super(json);
         this.uri = json.getString("uri");
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getUri() {
@@ -42,8 +35,7 @@ public class RepositoryDTO extends ThingDTO {
     }
 
     public JSONObject toJSON() {
-        JSONObject json = new JSONObject();
-        json.put(JSONAttributes.ID, id);
+        JSONObject json = super.toJSON();
         json.put(JSONAttributes.URI, uri);
         return json;
     }

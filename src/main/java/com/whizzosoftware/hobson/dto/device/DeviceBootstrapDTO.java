@@ -7,6 +7,8 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.device;
 
+import com.whizzosoftware.hobson.api.device.DeviceBootstrap;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import org.json.JSONObject;
 
@@ -25,9 +27,25 @@ public class DeviceBootstrapDTO extends ThingDTO {
         super(id);
     }
 
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public Long getCreationTime() {
+        return creationTime;
+    }
+
+    public Long getBootstrapTime() {
+        return bootstrapTime;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
     @Override
     public String getMediaType() {
-        return null;
+        return MediaTypes.DEVICE_BOOTSTRAP;
     }
 
     @Override
@@ -45,6 +63,18 @@ public class DeviceBootstrapDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new DeviceBootstrapDTO(id);
+        }
+
+        public Builder(String id, DeviceBootstrap db, boolean showDetails, boolean includeSecret) {
+            dto = new DeviceBootstrapDTO(id);
+            if (showDetails) {
+                dto.bootstrapTime = db.getBootstrapTime();
+                dto.creationTime = db.getCreationTime();
+                dto.deviceId = db.getDeviceId();
+                if (includeSecret) {
+                    dto.secret = db.getSecret();
+                }
+            }
         }
 
         public Builder deviceId(String deviceId) {

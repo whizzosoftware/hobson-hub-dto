@@ -25,16 +25,8 @@ public class SnapshotEventDTO extends HobsonEventDTO {
     private List<HobsonDeviceDTO> devices = new ArrayList<>();
     private List<HobsonVariableDTO> variables = new ArrayList<>();
 
-    public SnapshotEventDTO(Long timestamp) {
+    private SnapshotEventDTO(Long timestamp) {
         super("snapshot", timestamp);
-    }
-
-    public void addDevice(HobsonDeviceDTO device) {
-        devices.add(device);
-    }
-
-    public void addVariable(HobsonVariableDTO variable) {
-        variables.add(variable);
     }
 
     @Override
@@ -64,5 +56,27 @@ public class SnapshotEventDTO extends HobsonEventDTO {
     @Override
     public HobsonEvent createEvent() {
         return null;
+    }
+
+    public static class Builder {
+        SnapshotEventDTO dto;
+
+        public Builder(long timestamp) {
+            dto = new SnapshotEventDTO(timestamp);
+        }
+
+        public Builder addDevice(HobsonDeviceDTO d) {
+            dto.devices.add(d);
+            return this;
+        }
+
+        public Builder addVariable(HobsonVariableDTO d) {
+            dto.variables.add(d);
+            return this;
+        }
+
+        public SnapshotEventDTO build() {
+            return dto;
+        }
     }
 }

@@ -11,10 +11,10 @@ import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class PersonDTOTest {
+public class HobsonUserDTOTest {
     @Test
     public void testToJson() {
-        PersonDTO dto = new PersonDTO.Builder("personLink").familyName("Doe").givenName("John").hubs(new ItemListDTO("hubsLink")).build();
+        HobsonUserDTO dto = new HobsonUserDTO.Builder("personLink").familyName("Doe").givenName("John").hubs(new ItemListDTO("hubsLink")).build();
         JSONObject json = dto.toJSON();
         assertEquals("personLink", json.getString("@id"));
         assertEquals("John", json.getString("givenName"));

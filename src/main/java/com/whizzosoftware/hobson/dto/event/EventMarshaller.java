@@ -8,7 +8,7 @@
 package com.whizzosoftware.hobson.dto.event;
 
 import com.whizzosoftware.hobson.api.event.HobsonEvent;
-import com.whizzosoftware.hobson.api.event.PresenceUpdateEvent;
+import com.whizzosoftware.hobson.api.event.PresenceUpdateNotificationEvent;
 import com.whizzosoftware.hobson.api.event.VariableUpdateNotificationEvent;
 import org.json.JSONObject;
 
@@ -22,8 +22,8 @@ public class EventMarshaller {
     public JSONObject marshal(HobsonEvent event) {
         if (event instanceof VariableUpdateNotificationEvent) {
             return new VariableUpdateNotificationEventDTO((VariableUpdateNotificationEvent)event).toJSON();
-        } else if (event instanceof PresenceUpdateEvent) {
-            return new PresenceUpdateEventDTO((PresenceUpdateEvent)event).toJSON();
+        } else if (event instanceof PresenceUpdateNotificationEvent) {
+            return new PresenceUpdateNotificationEventDTO((PresenceUpdateNotificationEvent)event).toJSON();
         }
         return null;
     }
@@ -32,8 +32,8 @@ public class EventMarshaller {
         switch (json.getString("eventId")) {
             case VariableUpdateNotificationEvent.ID:
                 return new VariableUpdateNotificationEventDTO(json);
-            case PresenceUpdateEvent.ID:
-                return new PresenceUpdateEventDTO(json);
+            case PresenceUpdateNotificationEvent.ID:
+                return new PresenceUpdateNotificationEventDTO(json);
             default:
                 return null;
         }

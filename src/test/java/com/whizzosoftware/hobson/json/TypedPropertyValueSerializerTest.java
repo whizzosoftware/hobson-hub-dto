@@ -9,6 +9,8 @@ package com.whizzosoftware.hobson.json;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
+import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,6 +80,11 @@ public class TypedPropertyValueSerializerTest {
         o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.STRING, json.get("value"), null);
         assertTrue(o instanceof String);
         assertEquals("true", o);
+
+        // test that passing in a JSON null will success
+        json = new JSONObject(new JSONTokener("{\"value\": null}"));
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.STRING, json.get("value"), null);
+        assertNull(o);
     }
 
     @Test
@@ -98,10 +105,20 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in a valid JSON object succeeds
         JSONObject json = new JSONObject(new JSONTokener("{\"@id\":\"device1\"}"));
-        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICE, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICE, json, new TypedPropertyValueSerializer.PropertyContextProvider() {
             @Override
             public DeviceContext createDeviceContext(String id) {
                 return DeviceContext.createLocal("pid", id);
+            }
+
+            @Override
+            public PresenceEntityContext createPresenceEntityContext(String id) {
+                return null;
+            }
+
+            @Override
+            public PresenceLocationContext createPresenceLocationContext(String id) {
+                return null;
             }
         });
         assertTrue(o instanceof DeviceContext);
@@ -120,10 +137,20 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in an array of arrays fails
         try {
-            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[[{\"pluginId\":\"plugin1\",\"deviceId\":\"device1\"}]]")), new TypedPropertyValueSerializer.PropertyContextProvider() {
                 @Override
                 public DeviceContext createDeviceContext(String id) {
                     return DeviceContext.createLocal("pid", "did");
+                }
+
+                @Override
+                public PresenceEntityContext createPresenceEntityContext(String id) {
+                    return null;
+                }
+
+                @Override
+                public PresenceLocationContext createPresenceLocationContext(String id) {
+                    return null;
                 }
             });
             fail("Should have thrown an exception");
@@ -132,10 +159,20 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in an array containing objects with invalid properties fails
         try {
-            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[{\"d\":\"device1\"}]")), new TypedPropertyValueSerializer.DeviceContextProvider() {
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, new JSONArray(new JSONTokener("[{\"d\":\"device1\"}]")), new TypedPropertyValueSerializer.PropertyContextProvider() {
                 @Override
                 public DeviceContext createDeviceContext(String id) {
                     return DeviceContext.createLocal("pid", "did");
+                }
+
+                @Override
+                public PresenceEntityContext createPresenceEntityContext(String id) {
+                    return null;
+                }
+
+                @Override
+                public PresenceLocationContext createPresenceLocationContext(String id) {
+                    return null;
                 }
             });
             fail("Should have thrown an exception");
@@ -144,10 +181,20 @@ public class TypedPropertyValueSerializerTest {
 
         // test that passing in a JSON array succeeds
         JSONArray json = new JSONArray(new JSONTokener("[{\"@id\":\"device1\"},{\"@id\":\"device2\"}]"));
-        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, json, new TypedPropertyValueSerializer.DeviceContextProvider() {
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.DEVICES, json, new TypedPropertyValueSerializer.PropertyContextProvider() {
             @Override
             public DeviceContext createDeviceContext(String id) {
                 return DeviceContext.createLocal("plugin1", id);
+            }
+
+            @Override
+            public PresenceEntityContext createPresenceEntityContext(String id) {
+                return null;
+            }
+
+            @Override
+            public PresenceLocationContext createPresenceLocationContext(String id) {
+                return null;
             }
         });
         assertTrue(o instanceof List);
@@ -160,5 +207,32 @@ public class TypedPropertyValueSerializerTest {
         ctx = (DeviceContext)((List)o).get(1);
         assertEquals("plugin1", ctx.getPluginId());
         assertEquals("device2", ctx.getDeviceId());
+    }
+
+    @Test
+    public void testPresenceEntityObject() {
+        JSONObject json = new JSONObject();
+        json.put("@id", "/api/v1/users/local/hubs/local/presence/entities/foo");
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.PRESENCE_ENTITY, json, new TypedPropertyValueSerializer.PropertyContextProvider() {
+            @Override
+            public DeviceContext createDeviceContext(String id) {
+                return DeviceContext.createLocal("p1", "d1");
+            }
+
+            @Override
+            public PresenceEntityContext createPresenceEntityContext(String id) {
+                return PresenceEntityContext.createLocal("foo");
+            }
+
+            @Override
+            public PresenceLocationContext createPresenceLocationContext(String id) {
+                return PresenceLocationContext.createLocal("bar");
+            }
+        });
+        assertTrue(o instanceof PresenceEntityContext);
+        PresenceEntityContext pec = (PresenceEntityContext)o;
+        assertEquals("local", pec.getUserId());
+        assertEquals("local", pec.getHubId());
+        assertEquals("foo", pec.getEntityId());
     }
 }

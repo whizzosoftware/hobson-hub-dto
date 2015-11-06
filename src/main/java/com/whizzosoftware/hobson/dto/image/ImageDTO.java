@@ -23,10 +23,6 @@ public class ImageDTO extends ThingDTO {
         return base64Data;
     }
 
-    public void setBase64Data(String base64Data) {
-        this.base64Data = base64Data;
-    }
-
     @Override
     public String getMediaType() {
         return MediaTypes.IMAGE;

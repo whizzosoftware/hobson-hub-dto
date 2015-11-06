@@ -15,11 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemListDTO extends ThingDTO {
-    private List<ListItemDTO> itemListElement;
-    private Integer numberOfItems;
+    private List<ListItemDTO> itemListElement = new ArrayList<>();
+    private boolean forceDetails;
 
     public ItemListDTO(String id) {
         super(id);
+    }
+
+    public ItemListDTO(String id, boolean forceDetails) {
+        this(id);
+        this.forceDetails = forceDetails;
     }
 
     public List<ListItemDTO> getItemListElement() {
@@ -27,11 +32,7 @@ public class ItemListDTO extends ThingDTO {
     }
 
     public Integer getNumberOfItems() {
-        return numberOfItems;
-    }
-
-    public void updateNumberOfItems() {
-        numberOfItems = (itemListElement != null) ? itemListElement.size() : 0;
+        return itemListElement.size();
     }
 
     public void add(ThingDTO item) {
@@ -39,11 +40,7 @@ public class ItemListDTO extends ThingDTO {
     }
 
     public void add(ListItemDTO item) {
-        if (itemListElement == null) {
-            itemListElement = new ArrayList<>();
-        }
         itemListElement.add(item);
-        updateNumberOfItems();
     }
 
     @Override
@@ -53,10 +50,8 @@ public class ItemListDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        if (numberOfItems != null) {
-            json.put(JSONAttributes.NUMBER_OF_ITEMS, numberOfItems);
-        }
-        if (itemListElement != null) {
+        if (forceDetails || itemListElement.size() > 0) {
+            json.put(JSONAttributes.NUMBER_OF_ITEMS, itemListElement.size());
             JSONArray array = new JSONArray();
             for (ListItemDTO li : itemListElement) {
                 array.put(li.toJSON());
@@ -65,5 +60,4 @@ public class ItemListDTO extends ThingDTO {
         }
         return json;
     }
-
 }

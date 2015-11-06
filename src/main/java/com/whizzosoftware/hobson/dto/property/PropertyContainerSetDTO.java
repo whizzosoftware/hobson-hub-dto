@@ -7,6 +7,13 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.property.PropertyContainer;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
+import com.whizzosoftware.hobson.api.property.PropertyContainerSet;
+import com.whizzosoftware.hobson.dto.ExpansionFields;
+import com.whizzosoftware.hobson.dto.IdProvider;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
@@ -36,7 +43,7 @@ public class PropertyContainerSetDTO extends ThingDTO {
             containers = new ArrayList<>();
             JSONArray ja = json.getJSONArray(propertyListName);
             for (int i=0; i < ja.length(); i++) {
-                containers.add(new PropertyContainerDTO(ja.getJSONObject(i)));
+                containers.add(new PropertyContainerDTO.Builder(ja.getJSONObject(i)).build());
             }
         }
     }
@@ -73,6 +80,27 @@ public class PropertyContainerSetDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new PropertyContainerSetDTO(id);
+        }
+
+        public Builder(PropertyContainerSet pcs, HubContext hubContext, PropertyContainerClassType type, boolean showDetails, PropertyContainerClassProvider pccp, ExpansionFields expansions, IdProvider idProvider) {
+            dto = new PropertyContainerSetDTO(idProvider.createTaskActionSetId(hubContext, pcs.getId()));
+
+            if (showDetails) {
+                dto.setName(pcs.getName());
+                if (pcs.hasProperties()) {
+                    for (PropertyContainer pc : pcs.getProperties()) {
+                        dto.containers.add(new PropertyContainerDTO.Builder(
+                            pc,
+                            pccp,
+                            type,
+                            true,
+                            expansions,
+                            idProvider
+                        ).build());
+                    }
+                }
+            }
+
         }
 
         public Builder(JSONObject json, PropertyContainerMappingContext ctx) {

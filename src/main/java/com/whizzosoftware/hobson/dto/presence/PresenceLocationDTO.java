@@ -7,6 +7,9 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.presence;
 
+import com.whizzosoftware.hobson.api.presence.PresenceLocation;
+import com.whizzosoftware.hobson.dto.IdProvider;
+import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -63,7 +66,7 @@ public class PresenceLocationDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return null;
+        return MediaTypes.PRESENCE_LOCATION;
     }
 
     @Override
@@ -82,6 +85,18 @@ public class PresenceLocationDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new PresenceLocationDTO(id);
+        }
+
+        public Builder(PresenceLocation pl, IdProvider idProvider, boolean showDetails) {
+            dto = new PresenceLocationDTO(pl != null ? idProvider.createPresenceLocationId(pl.getContext()) : null);
+            if (pl != null && showDetails) {
+                dto.setName(pl.getName());
+                dto.latitude = pl.getLatitude();
+                dto.longitude = pl.getLongitude();
+                dto.radius = pl.getRadius();
+                dto.beaconMajor = pl.getBeaconMajor();
+                dto.beaconMinor = pl.getBeaconMinor();
+            }
         }
 
         public Builder(JSONObject json) {

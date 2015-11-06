@@ -70,6 +70,10 @@ abstract public class ThingDTO implements JSONProducer {
         links.put(rel, url);
     }
 
+    public String getJSONMediaType() {
+        return getMediaType() + "+json";
+    }
+
     @Override
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
@@ -86,5 +90,9 @@ abstract public class ThingDTO implements JSONProducer {
             json.put("links", links);
         }
         return json;
+    }
+
+    public String toString() {
+        return toJSON().toString();
     }
 }

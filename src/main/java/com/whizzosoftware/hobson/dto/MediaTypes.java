@@ -14,6 +14,7 @@ package com.whizzosoftware.hobson.dto;
  */
 public class MediaTypes {
     public static final String DEVICE = "application/vnd.hobson.device";
+    public static final String DEVICE_BOOTSTRAP = "application/vnd.hobson.deviceBootstrap";
     public static final String ERROR = "application/vnd.hobson.error";
     public static final String ERRORS = "application/vnd.hobson.errors";
     public static final String EVENT = "application/hobson.vnd.event";
@@ -26,6 +27,7 @@ public class MediaTypes {
     public static final String PERSON = "application/vnd.hobson.person";
     public static final String PLUGIN = "application/vnd.hobson.plugin";
     public static final String PRESENCE_ENTITY = "application/vnd.hobson.presenceEntity";
+    public static final String PRESENCE_LOCATION = "application/vnd.hobson.presenceLocation";
     public static final String PROPERTY = "application/vnd.hobson.property";
     public static final String PROPERTY_CONTAINER = "application/vnd.hobson.propertyContainer";
     public static final String PROPERTY_CONTAINER_CLASS = "application/vnd.hobson.propertyContainerClass";

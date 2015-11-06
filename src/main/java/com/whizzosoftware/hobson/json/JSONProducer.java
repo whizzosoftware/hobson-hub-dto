@@ -11,5 +11,6 @@ import org.json.JSONObject;
 
 public interface JSONProducer {
     String getMediaType();
+    String getJSONMediaType();
     JSONObject toJSON();
 }

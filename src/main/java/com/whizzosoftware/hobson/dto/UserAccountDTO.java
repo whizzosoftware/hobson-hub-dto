@@ -7,15 +7,12 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.user.UserAccount;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserAccountDTO {
     private long expiration;
     private boolean hasAvailableHubs;
-    private Map<String,String> links;
 
     private UserAccountDTO(long expiration, boolean hasAvailableHubs) {
         this.expiration = expiration;
@@ -26,13 +23,6 @@ public class UserAccountDTO {
         JSONObject json = new JSONObject();
         json.put("expiration", expiration);
         json.put("hasAvailableHubs", hasAvailableHubs);
-        if (links != null && links.size() > 0) {
-            JSONObject l = new JSONObject();
-            for (String rel : links.keySet()) {
-                l.put(rel, links.get(rel));
-            }
-            json.put("links", l);
-        }
         return json;
     }
 
@@ -43,12 +33,9 @@ public class UserAccountDTO {
             dto = new UserAccountDTO(expiration, hasAvailableHubs);
         }
 
-        public Builder link(String rel, String url) {
-            if (dto.links == null) {
-                dto.links = new HashMap<>();
-            }
-            dto.links.put(rel, url);
-            return this;
+        public Builder(UserAccount userAccount) {
+            dto.expiration = userAccount.getExpiration();
+            dto.hasAvailableHubs = userAccount.hasAvailableHubs();
         }
 
         public UserAccountDTO build() {

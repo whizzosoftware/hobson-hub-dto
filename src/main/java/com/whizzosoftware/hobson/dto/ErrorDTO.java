@@ -34,6 +34,11 @@ public class ErrorDTO implements JSONProducer {
         return MediaTypes.ERROR;
     }
 
+    @Override
+    public String getJSONMediaType() {
+        return getMediaType() + "+json";
+    }
+
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put(JSONAttributes.CODE, code);

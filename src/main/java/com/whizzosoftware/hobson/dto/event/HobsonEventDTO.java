@@ -28,11 +28,17 @@ abstract public class HobsonEventDTO implements JSONProducer {
     public HobsonEventDTO(JSONObject json) {
         this.eventId = json.getString("eventId");
         this.timestamp = json.getLong("timestamp");
+        readProperties(json);
     }
 
     @Override
     public String getMediaType() {
         return "";
+    }
+
+    @Override
+    public String getJSONMediaType() {
+        return getMediaType() + "+json";
     }
 
     @Override

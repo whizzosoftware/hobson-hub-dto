@@ -11,9 +11,9 @@ import org.json.JSONObject;
 
 public class AuthResultDTO {
     private String token;
-    private PersonDTO user;
+    private HobsonUserDTO user;
 
-    public AuthResultDTO(String token, PersonDTO user) {
+    public AuthResultDTO(String token, HobsonUserDTO user) {
         this.token = token;
         this.user = user;
     }
@@ -22,7 +22,7 @@ public class AuthResultDTO {
         return "application/vnd.hobson.authResult";
     }
 
-    public PersonDTO getUser() {
+    public HobsonUserDTO getUser() {
         return user;
     }
 
