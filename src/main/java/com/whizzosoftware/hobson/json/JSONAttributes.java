@@ -46,6 +46,7 @@ public class JSONAttributes {
     public static final String ERRORS = "errors";
     public static final String GLOBAL_VARIABLES = "globalVariables";
     public static final String HUB_ID = "hubId";
+    public static final String HUBS = "hubs";
     public static final String ID = "id";
     public static final String IMAGE = "image";
     public static final String ITEM = "item";
@@ -83,6 +84,7 @@ public class JSONAttributes {
     public static final String TIMESTAMP = "timestamp";
     public static final String TYPE = "type";
     public static final String URI = "uri";
+    public static final String USER = "user";
     public static final String USER_ID = "userId";
     public static final String VALUE = "value";
     public static final String VALUES = "values";

@@ -7,7 +7,10 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.user.HobsonUser;
+import com.whizzosoftware.hobson.dto.hub.HobsonHubDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonUserDTO extends ThingDTO {
@@ -62,15 +65,28 @@ public class HobsonUserDTO extends ThingDTO {
             this.dto = new HobsonUserDTO(id);
         }
 
-        public Builder(HobsonUser user, IdProvider idProvider) {
-            dto = new HobsonUserDTO(idProvider.createPersonId(user.getId()));
-            dto.givenName = user.getGivenName();
-            dto.familyName = user.getFamilyName();
-            dto.setName(dto.givenName + " " + dto.familyName);
-            if (user.isRemote()) {
-                dto.account = new UserAccountDTO.Builder(user.getAccount()).build();
+        public Builder(DTOBuildContext ctx, HobsonUser user, boolean showDetails) {
+            ExpansionFields expansions = ctx.getExpansionFields();
+            dto = new HobsonUserDTO(ctx.getIdProvider().createPersonId(user.getId()));
+            if (showDetails) {
+                dto.givenName = user.getGivenName();
+                dto.familyName = user.getFamilyName();
+                dto.setName(dto.givenName + " " + dto.familyName);
+                if (user.isRemote()) {
+                    dto.account = new UserAccountDTO.Builder(user.getAccount()).build();
+                }
+                dto.hubs = new ItemListDTO(ctx.getIdProvider().createHubsId(user.getId()));
+                if (expansions.has(JSONAttributes.HUBS)) {
+                    expansions.pushContext(JSONAttributes.HUBS);
+                    boolean showHubDetails = expansions.has(JSONAttributes.ITEM);
+                    expansions.pushContext(JSONAttributes.ITEM);
+                    for (HobsonHub hub : ctx.getHubManager().getHubs(user.getId())) {
+                        dto.hubs.add(new HobsonHubDTO.Builder(ctx, hub, showHubDetails).build());
+                    }
+                    expansions.popContext();
+                    expansions.popContext();
+                }
             }
-            dto.hubs = new ItemListDTO(idProvider.createHubsId(user.getId()));
         }
 
         public Builder givenName(String givenName) {
