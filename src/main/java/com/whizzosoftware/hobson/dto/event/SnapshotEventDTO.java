@@ -22,11 +22,25 @@ import java.util.List;
  * @author Dan Noguerol
  */
 public class SnapshotEventDTO extends HobsonEventDTO {
-    private List<HobsonDeviceDTO> devices = new ArrayList<>();
-    private List<HobsonVariableDTO> variables = new ArrayList<>();
+    private List<HobsonDeviceDTO> devices;
+    private List<HobsonVariableDTO> variables;
 
     private SnapshotEventDTO(Long timestamp) {
         super("snapshot", timestamp);
+        devices = new ArrayList<>();
+        variables = new ArrayList<>();
+    }
+
+    private SnapshotEventDTO(JSONObject json) {
+        super(json);
+    }
+
+    public List<HobsonDeviceDTO> getDevices() {
+        return devices;
+    }
+
+    public List<HobsonVariableDTO> getVariables() {
+        return variables;
     }
 
     @Override
@@ -50,7 +64,22 @@ public class SnapshotEventDTO extends HobsonEventDTO {
 
     @Override
     protected void readProperties(JSONObject json) {
-
+        if (json.has("devices")) {
+            devices = new ArrayList<>();
+            JSONArray jdevices = json.getJSONArray("devices");
+            for (int i = 0; i < jdevices.length(); i++) {
+                JSONObject jd = jdevices.getJSONObject(i);
+                devices.add(new HobsonDeviceDTO.Builder(jd).build());
+            }
+        }
+        if (json.has("variables")) {
+            variables = new ArrayList<>();
+            JSONArray jvars = json.getJSONArray("variables");
+            for (int i=0; i < jvars.length(); i++) {
+                JSONObject jv = jvars.getJSONObject(i);
+                variables.add(new HobsonVariableDTO.Builder(jv).build());
+            }
+        }
     }
 
     @Override
@@ -65,12 +94,16 @@ public class SnapshotEventDTO extends HobsonEventDTO {
             dto = new SnapshotEventDTO(timestamp);
         }
 
-        public Builder addDevice(HobsonDeviceDTO d) {
+        public Builder(JSONObject json) {
+            dto = new SnapshotEventDTO(json);
+        }
+
+        public Builder device(HobsonDeviceDTO d) {
             dto.devices.add(d);
             return this;
         }
 
-        public Builder addVariable(HobsonVariableDTO d) {
+        public Builder variable(HobsonVariableDTO d) {
             dto.variables.add(d);
             return this;
         }

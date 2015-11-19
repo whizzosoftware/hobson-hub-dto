@@ -9,10 +9,7 @@ package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
+import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
@@ -20,6 +17,7 @@ import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.telemetry.DeviceTelemetryDTO;
 import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class HobsonDeviceDTO extends ThingDTO {
@@ -35,6 +33,28 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     private HobsonDeviceDTO(String id) {
         super(id);
+    }
+
+    private HobsonDeviceDTO(JSONObject json) {
+        super(json.getString(JSONAttributes.AID));
+
+        setName(json.getString(JSONAttributes.NAME));
+
+        if (json.has(JSONAttributes.TYPE)) {
+            type = DeviceType.valueOf(json.getString(JSONAttributes.TYPE));
+        }
+
+        if (json.has(JSONAttributes.VARIABLES)) {
+            JSONObject jvaril = json.getJSONObject(JSONAttributes.VARIABLES);
+            variables = new ItemListDTO(jvaril.getString(JSONAttributes.AID));
+            if (jvaril.has(JSONAttributes.ITEM_LIST_ELEMENT)) {
+                JSONArray jvarile = jvaril.getJSONArray(JSONAttributes.ITEM_LIST_ELEMENT);
+                for (int i=0; i < jvarile.length(); i++) {
+                    JSONObject jvar = jvarile.getJSONObject(i);
+                    variables.add(new HobsonVariableDTO.Builder(jvar.getJSONObject(JSONAttributes.ITEM)).build());
+                }
+            }
+        }
     }
 
     @Override
@@ -111,6 +131,10 @@ public class HobsonDeviceDTO extends ThingDTO {
             dto = new HobsonDeviceDTO(id);
         }
 
+        public Builder(JSONObject json) {
+            dto = new HobsonDeviceDTO(json);
+        }
+
         public Builder(DTOBuildContext ctx, final HobsonDevice device, boolean showDetails) {
             dto = new HobsonDeviceDTO(ctx.getIdProvider().createDeviceId(device.getContext()));
             if (showDetails) {
@@ -141,7 +165,9 @@ public class HobsonDeviceDTO extends ThingDTO {
                 dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createDeviceConfigurationClassId(device.getContext()), device.getConfigurationClass(), ctx.getExpansionFields().has(JSONAttributes.CCLASS)).build();
 
                 // configuration
-                dto.configuration = new PropertyContainerDTO.Builder(
+                PropertyContainer pc = ctx.getDeviceManager().getDeviceConfiguration(device.getContext());
+                if (pc != null) {
+                    dto.configuration = new PropertyContainerDTO.Builder(
                         ctx.getDeviceManager().getDeviceConfiguration(device.getContext()),
                         new PropertyContainerClassProvider() {
                             @Override
@@ -153,8 +179,11 @@ public class HobsonDeviceDTO extends ThingDTO {
                         ctx.getExpansionFields().has(JSONAttributes.CONFIGURATION),
                         ctx.getExpansionFields().pushContext(JSONAttributes.CONFIGURATION),
                         ctx.getIdProvider()
-                ).build();
-                ctx.getExpansionFields().popContext();
+                    ).build();
+                    ctx.getExpansionFields().popContext();
+                } else {
+                    dto.configuration = new PropertyContainerDTO.Builder(ctx.getIdProvider().createDeviceConfigurationId(device.getContext())).build();
+                }
 
                 // telemetry
                 dto.telemetry = new DeviceTelemetryDTO.Builder(ctx.getIdProvider().createDeviceTelemetryId(device.getContext())).build();

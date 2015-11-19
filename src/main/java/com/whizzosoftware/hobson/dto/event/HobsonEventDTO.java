@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.event;
 
 import com.whizzosoftware.hobson.api.event.HobsonEvent;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
@@ -26,9 +27,11 @@ abstract public class HobsonEventDTO implements JSONProducer {
     }
 
     public HobsonEventDTO(JSONObject json) {
-        this.eventId = json.getString("eventId");
-        this.timestamp = json.getLong("timestamp");
-        readProperties(json);
+        this.eventId = json.getString(JSONAttributes.EVENT_ID);
+        this.timestamp = json.getLong(JSONAttributes.TIMESTAMP);
+        if (json.has(JSONAttributes.PROPERTIES)) {
+            readProperties(json.getJSONObject(JSONAttributes.PROPERTIES));
+        }
     }
 
     @Override
@@ -44,9 +47,9 @@ abstract public class HobsonEventDTO implements JSONProducer {
     @Override
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
-        json.put("eventId", eventId);
-        json.put("timestamp", timestamp);
-        json.put("properties", createProperties());
+        json.put(JSONAttributes.EVENT_ID, eventId);
+        json.put(JSONAttributes.TIMESTAMP, timestamp);
+        json.put(JSONAttributes.PROPERTIES, createProperties());
         return json;
     }
 

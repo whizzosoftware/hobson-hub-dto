@@ -23,9 +23,32 @@ public class HobsonVariableDTO extends ThingDTO {
         super(id);
     }
 
+    private HobsonVariableDTO(JSONObject json) {
+        super(json.getString(JSONAttributes.AID));
+
+        setName(json.getString(JSONAttributes.NAME));
+        lastUpdate = json.getLong(JSONAttributes.LAST_UPDATE);
+        mask = HobsonVariable.Mask.valueOf(json.getString(JSONAttributes.MASK));
+        if (json.has(JSONAttributes.VALUE)) {
+            value = json.get(JSONAttributes.VALUE);
+        }
+    }
+
     @Override
     public String getMediaType() {
         return MediaTypes.VARIABLE;
+    }
+
+    public HobsonVariable.Mask getMask() {
+        return mask;
+    }
+
+    public Long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public Object getValue() {
+        return value;
     }
 
     public JSONObject toJSON() {
@@ -57,6 +80,10 @@ public class HobsonVariableDTO extends ThingDTO {
                 dto.value = ctx.getProxyValue(var);
                 dto.lastUpdate = var.getLastUpdate();
             }
+        }
+
+        public Builder(JSONObject json) {
+            dto = new HobsonVariableDTO(json);
         }
 
         public Builder name(String name) {

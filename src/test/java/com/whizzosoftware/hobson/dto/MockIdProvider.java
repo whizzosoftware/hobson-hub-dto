@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
@@ -63,6 +64,11 @@ public class MockIdProvider implements IdProvider {
 
     @Override
     public DeviceContext createDeviceContext(String deviceId) {
+        return null;
+    }
+
+    @Override
+    public DeviceContext createDeviceContextWithHub(HubContext ctx, String deviceId) {
         return null;
     }
 
@@ -183,6 +189,11 @@ public class MockIdProvider implements IdProvider {
 
     @Override
     public String createPersonId(String userId) {
+        return null;
+    }
+
+    @Override
+    public PluginContext createPluginContext(String pluginId) {
         return null;
     }
 

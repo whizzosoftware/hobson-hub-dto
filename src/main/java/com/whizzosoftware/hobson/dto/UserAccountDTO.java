@@ -34,8 +34,7 @@ public class UserAccountDTO {
         }
 
         public Builder(UserAccount userAccount) {
-            dto.expiration = userAccount.getExpiration();
-            dto.hasAvailableHubs = userAccount.hasAvailableHubs();
+            dto = new UserAccountDTO(userAccount.getExpiration(), userAccount.hasAvailableHubs());
         }
 
         public UserAccountDTO build() {
