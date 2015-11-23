@@ -22,6 +22,9 @@ import org.json.JSONObject;
 
 public class HobsonDeviceDTO extends ThingDTO {
     private DeviceType type;
+    private String manufacturerName;
+    private String modelName;
+    private String manufacturerVersion;
     private Long checkInTime;
     private Boolean available;
     private HobsonVariableDTO preferredVariable;
@@ -66,6 +69,18 @@ public class HobsonDeviceDTO extends ThingDTO {
         return type;
     }
 
+    public String getManufacturerName() {
+        return manufacturerName;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public String getManufacturerVersion() {
+        return manufacturerVersion;
+    }
+
     public boolean isAvailable() {
         return (available != null && available);
     }
@@ -103,6 +118,9 @@ public class HobsonDeviceDTO extends ThingDTO {
         json.put(JSONAttributes.AVAILABLE, available);
         json.put(JSONAttributes.LAST_CHECK_IN, checkInTime);
         json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
+        json.put(JSONAttributes.MANUFACTURER_NAME, manufacturerName);
+        json.put(JSONAttributes.MANUFACTURER_VERSION, manufacturerVersion);
+        json.put(JSONAttributes.MODEL_NAME, modelName);
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
         }
@@ -140,6 +158,9 @@ public class HobsonDeviceDTO extends ThingDTO {
             if (showDetails) {
                 dto.setName(device.getName());
                 dto.type = device.getType();
+                dto.manufacturerName = device.getManufacturerName();
+                dto.manufacturerVersion = device.getManufacturerVersion();
+                dto.modelName = device.getModelName();
                 dto.checkInTime = device.getLastCheckIn();
                 dto.available = device.isAvailable();
 
@@ -197,6 +218,21 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder type(DeviceType type) {
             dto.type = type;
+            return this;
+        }
+
+        public Builder manufacturerName(String manufacturerName) {
+            dto.manufacturerName = manufacturerName;
+            return this;
+        }
+
+        public Builder manufacturerVersion(String manufacturerVersion) {
+            dto.manufacturerVersion = manufacturerVersion;
+            return this;
+        }
+
+        public Builder modelName(String modelName) {
+            dto.modelName = modelName;
             return this;
         }
 

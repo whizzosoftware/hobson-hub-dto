@@ -60,6 +60,9 @@ public class JSONAttributes {
     public static final String LOCATION_ID = "locationId";
     public static final String LOG = "log";
     public static final String LONGITUDE = "longitude";
+    public static final String MANUFACTURER_NAME = "manufacturerName";
+    public static final String MANUFACTURER_VERSION = "manufacturerVersion";
+    public static final String MODEL_NAME = "modelName";
     public static final String MASK = "mask";
     public static final String MESSAGE = "message";
     public static final String NAME = "name";
