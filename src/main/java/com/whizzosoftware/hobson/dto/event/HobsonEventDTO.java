@@ -34,6 +34,10 @@ abstract public class HobsonEventDTO implements JSONProducer {
         }
     }
 
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
     @Override
     public String getMediaType() {
         return "";

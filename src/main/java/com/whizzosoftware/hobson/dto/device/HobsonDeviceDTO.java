@@ -26,7 +26,6 @@ public class HobsonDeviceDTO extends ThingDTO {
     private String modelName;
     private String manufacturerVersion;
     private Long lastCheckIn;
-    private Boolean available;
     private HobsonVariableDTO preferredVariable;
     private ItemListDTO variables;
     private PropertyContainerClassDTO configurationClass;
@@ -56,9 +55,6 @@ public class HobsonDeviceDTO extends ThingDTO {
         }
         if (json.has(JSONAttributes.LAST_CHECK_IN)) {
             this.lastCheckIn = json.getLong(JSONAttributes.LAST_CHECK_IN);
-        }
-        if (json.has(JSONAttributes.AVAILABLE)) {
-            this.available = json.getBoolean(JSONAttributes.AVAILABLE);
         }
         if (json.has(JSONAttributes.PREFERRED_VARIABLE)) {
             this.preferredVariable = new HobsonVariableDTO.Builder(json.getJSONObject(JSONAttributes.PREFERRED_VARIABLE)).build();
@@ -98,10 +94,6 @@ public class HobsonDeviceDTO extends ThingDTO {
         return manufacturerVersion;
     }
 
-    public boolean isAvailable() {
-        return (available != null && available);
-    }
-
     public Long getLastCheckIn() {
         return lastCheckIn;
     }
@@ -132,7 +124,6 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        json.put(JSONAttributes.AVAILABLE, available);
         json.put(JSONAttributes.LAST_CHECK_IN, lastCheckIn);
         json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
         json.put(JSONAttributes.MANUFACTURER_NAME, manufacturerName);
@@ -178,8 +169,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                 dto.manufacturerName = device.getManufacturerName();
                 dto.manufacturerVersion = device.getManufacturerVersion();
                 dto.modelName = device.getModelName();
-                dto.lastCheckIn = device.getLastCheckIn();
-                dto.available = device.isAvailable();
+                dto.lastCheckIn = ctx.getDeviceManager().getDeviceLastCheckIn(device.getContext());
 
                 // preferred variable
                 if (device.hasPreferredVariableName()) {
@@ -252,11 +242,6 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder modelName(String modelName) {
             dto.modelName = modelName;
-            return this;
-        }
-
-        public Builder available(boolean available) {
-            dto.available = available;
             return this;
         }
 

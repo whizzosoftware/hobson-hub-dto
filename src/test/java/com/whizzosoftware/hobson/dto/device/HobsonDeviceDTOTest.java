@@ -24,8 +24,10 @@ import static org.junit.Assert.*;
 public class HobsonDeviceDTOTest {
     @Test
     public void testConstructorWithJustId() {
-        HobsonDevice device = new MockHobsonDevice(new MockHobsonPlugin("plugin1"), "device1");
         DeviceManager deviceManager = new MockDeviceManager();
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        plugin.setDeviceManager(deviceManager);
+        HobsonDevice device = new MockHobsonDevice(plugin, "device1");
         VariableManager varManager = new MockVariableManager();
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setDeviceId("device1Link");
@@ -43,7 +45,10 @@ public class HobsonDeviceDTOTest {
 
     @Test
     public void testConstructorWithDetailsAndNoExpansions() {
-        MockHobsonDevice device = new MockHobsonDevice(new MockHobsonPlugin("plugin1"), "device1");
+        DeviceManager deviceManager = new MockDeviceManager();
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        plugin.setDeviceManager(deviceManager);
+        MockHobsonDevice device = new MockHobsonDevice(plugin, "device1");
         device.setDefaultName("deviceName");
         device.setType(DeviceType.LIGHTBULB);
         device.setManufacturerName("Mfg");
@@ -51,7 +56,6 @@ public class HobsonDeviceDTOTest {
         device.setModelName("model");
         device.checkInDevice(100L);
 
-        DeviceManager deviceManager = new MockDeviceManager();
         VariableManager varManager = new MockVariableManager();
 
         MockIdProvider idProvider = new MockIdProvider();
@@ -80,12 +84,14 @@ public class HobsonDeviceDTOTest {
 
     @Test
     public void testConstructorWithDetailsAndVariablesExpansions() {
-        MockHobsonDevice device = new MockHobsonDevice(new MockHobsonPlugin("plugin1"), "device1");
+        DeviceManager deviceManager = new MockDeviceManager();
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        plugin.setDeviceManager(deviceManager);
+        MockHobsonDevice device = new MockHobsonDevice(plugin, "device1");
         device.setDefaultName("deviceName");
         device.setType(DeviceType.LIGHTBULB);
         device.checkInDevice(100l);
 
-        DeviceManager deviceManager = new MockDeviceManager();
 
         VariableManager varManager = new MockVariableManager();
         varManager.publishDeviceVariable(device.getContext(), "foo", "bar", HobsonVariable.Mask.READ_ONLY);
@@ -126,6 +132,5 @@ public class HobsonDeviceDTOTest {
         assertEquals("1.0", dto.getManufacturerVersion());
         assertNotNull(dto.getPreferredVariable());
         assertEquals("local:hubs:local:variables:device:outTempF", dto.getPreferredVariable().getId());
-        assertTrue(dto.isAvailable());
     }
 }

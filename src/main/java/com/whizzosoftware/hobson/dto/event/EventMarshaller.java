@@ -7,10 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.event;
 
-import com.whizzosoftware.hobson.api.event.HobsonEvent;
-import com.whizzosoftware.hobson.api.event.PresenceUpdateNotificationEvent;
-import com.whizzosoftware.hobson.api.event.VariableUpdateNotificationEvent;
-import com.whizzosoftware.hobson.api.event.VariableUpdateRequestEvent;
+import com.whizzosoftware.hobson.api.event.*;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -27,6 +24,8 @@ public class EventMarshaller {
             return new VariableUpdateNotificationEventDTO((VariableUpdateNotificationEvent)event).toJSON();
         } else if (event instanceof VariableUpdateRequestEvent) {
             return new VariableUpdateRequestEventDTO((VariableUpdateRequestEvent)event, idProvider).toJSON();
+        } else if (event instanceof DeviceConfigurationUpdateEvent) {
+            return new DeviceConfigurationUpdateEventDTO((DeviceConfigurationUpdateEvent)event).toJSON();
         } else if (event instanceof PresenceUpdateNotificationEvent) {
             return new PresenceUpdateNotificationEventDTO((PresenceUpdateNotificationEvent)event).toJSON();
         }
@@ -39,6 +38,8 @@ public class EventMarshaller {
                 return new VariableUpdateNotificationEventDTO(json);
             case VariableUpdateRequestEvent.ID:
                 return new VariableUpdateRequestEventDTO(json, idProvider, convertToLocal);
+            case DeviceConfigurationUpdateEvent.ID:
+                return new DeviceConfigurationUpdateEventDTO(json);
             case PresenceUpdateNotificationEvent.ID:
                 return new PresenceUpdateNotificationEventDTO(json);
             default:
