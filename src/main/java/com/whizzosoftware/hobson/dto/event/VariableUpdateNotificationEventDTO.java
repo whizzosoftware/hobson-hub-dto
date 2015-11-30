@@ -3,6 +3,8 @@ package com.whizzosoftware.hobson.dto.event;
 import com.whizzosoftware.hobson.api.event.HobsonEvent;
 import com.whizzosoftware.hobson.api.event.VariableUpdateNotificationEvent;
 import com.whizzosoftware.hobson.api.variable.VariableUpdate;
+import com.whizzosoftware.hobson.json.JSONAttributes;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -25,20 +27,28 @@ public class VariableUpdateNotificationEventDTO extends HobsonEventDTO {
 
     public VariableUpdateNotificationEventDTO(JSONObject json) {
         super(json);
+    }
 
-        // TODO
+    public List<JSONObject> getUpdates() {
+        return updates;
     }
 
     @Override
     protected JSONObject createProperties() {
         JSONObject json = new JSONObject();
-        json.put("updates", updates);
+        json.put(JSONAttributes.UPDATES, updates);
         return json;
     }
 
     @Override
     protected void readProperties(JSONObject json) {
-
+        if (json.has(JSONAttributes.UPDATES)) {
+            updates = new ArrayList<>();
+            JSONArray arr = json.getJSONArray(JSONAttributes.UPDATES);
+            for (int i = 0; i < arr.length(); i++) {
+                updates.add(arr.getJSONObject(0));
+            }
+        }
     }
 
     @Override

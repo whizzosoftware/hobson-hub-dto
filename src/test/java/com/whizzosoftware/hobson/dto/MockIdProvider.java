@@ -113,8 +113,18 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public DeviceContext createDeviceVariableContext(String variableId) {
+        return null;
+    }
+
+    @Override
     public String createDeviceVariableId(DeviceContext ctx, String name) {
         return deviceVariableId;
+    }
+
+    @Override
+    public String createDeviceVariableName(String variableId) {
+        return null;
     }
 
     @Override
@@ -300,6 +310,11 @@ public class MockIdProvider implements IdProvider {
     @Override
     public String createTasksId(HubContext ctx) {
         return tasksId;
+    }
+
+    @Override
+    public String createVariablesId(HubContext ctx) {
+        return null;
     }
 
     public String getDevicesId() {

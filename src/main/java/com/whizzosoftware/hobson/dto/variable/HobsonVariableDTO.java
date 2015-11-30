@@ -26,9 +26,15 @@ public class HobsonVariableDTO extends ThingDTO {
     private HobsonVariableDTO(JSONObject json) {
         super(json.getString(JSONAttributes.AID));
 
-        setName(json.getString(JSONAttributes.NAME));
-        lastUpdate = json.getLong(JSONAttributes.LAST_UPDATE);
-        mask = HobsonVariable.Mask.valueOf(json.getString(JSONAttributes.MASK));
+        if (json.has(JSONAttributes.NAME)) {
+            setName(json.getString(JSONAttributes.NAME));
+        }
+        if (json.has(JSONAttributes.LAST_UPDATE)) {
+            lastUpdate = json.getLong(JSONAttributes.LAST_UPDATE);
+        }
+        if (json.has(JSONAttributes.MASK)) {
+            mask = HobsonVariable.Mask.valueOf(json.getString(JSONAttributes.MASK));
+        }
         if (json.has(JSONAttributes.VALUE)) {
             value = json.get(JSONAttributes.VALUE);
         }

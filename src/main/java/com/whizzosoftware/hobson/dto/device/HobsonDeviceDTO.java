@@ -25,7 +25,7 @@ public class HobsonDeviceDTO extends ThingDTO {
     private String manufacturerName;
     private String modelName;
     private String manufacturerVersion;
-    private Long checkInTime;
+    private Long lastCheckIn;
     private Boolean available;
     private HobsonVariableDTO preferredVariable;
     private ItemListDTO variables;
@@ -42,9 +42,26 @@ public class HobsonDeviceDTO extends ThingDTO {
         super(json.getString(JSONAttributes.AID));
 
         setName(json.getString(JSONAttributes.NAME));
-
         if (json.has(JSONAttributes.TYPE)) {
             type = DeviceType.valueOf(json.getString(JSONAttributes.TYPE));
+        }
+        if (json.has(JSONAttributes.MANUFACTURER_NAME)) {
+            this.manufacturerName = json.getString(JSONAttributes.MANUFACTURER_NAME);
+        }
+        if (json.has(JSONAttributes.MODEL_NAME)) {
+            this.modelName = json.getString(JSONAttributes.MODEL_NAME);
+        }
+        if (json.has(JSONAttributes.MANUFACTURER_VERSION)) {
+            this.manufacturerVersion = json.getString(JSONAttributes.MANUFACTURER_VERSION);
+        }
+        if (json.has(JSONAttributes.LAST_CHECK_IN)) {
+            this.lastCheckIn = json.getLong(JSONAttributes.LAST_CHECK_IN);
+        }
+        if (json.has(JSONAttributes.AVAILABLE)) {
+            this.available = json.getBoolean(JSONAttributes.AVAILABLE);
+        }
+        if (json.has(JSONAttributes.PREFERRED_VARIABLE)) {
+            this.preferredVariable = new HobsonVariableDTO.Builder(json.getJSONObject(JSONAttributes.PREFERRED_VARIABLE)).build();
         }
 
         if (json.has(JSONAttributes.VARIABLES)) {
@@ -85,8 +102,8 @@ public class HobsonDeviceDTO extends ThingDTO {
         return (available != null && available);
     }
 
-    public Long getCheckInTime() {
-        return checkInTime;
+    public Long getLastCheckIn() {
+        return lastCheckIn;
     }
 
     public Long getLastVariableUpdate() {
@@ -116,7 +133,7 @@ public class HobsonDeviceDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         json.put(JSONAttributes.AVAILABLE, available);
-        json.put(JSONAttributes.LAST_CHECK_IN, checkInTime);
+        json.put(JSONAttributes.LAST_CHECK_IN, lastCheckIn);
         json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
         json.put(JSONAttributes.MANUFACTURER_NAME, manufacturerName);
         json.put(JSONAttributes.MANUFACTURER_VERSION, manufacturerVersion);
@@ -161,7 +178,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                 dto.manufacturerName = device.getManufacturerName();
                 dto.manufacturerVersion = device.getManufacturerVersion();
                 dto.modelName = device.getModelName();
-                dto.checkInTime = device.getLastCheckIn();
+                dto.lastCheckIn = device.getLastCheckIn();
                 dto.available = device.isAvailable();
 
                 // preferred variable
@@ -177,7 +194,9 @@ public class HobsonDeviceDTO extends ThingDTO {
                     boolean expandItem = ctx.getExpansionFields().has(JSONAttributes.ITEM);
                     for (HobsonVariable v : ctx.getVariableManager().getDeviceVariables(device.getContext()).getCollection()) {
                         dto.variables.add(new HobsonVariableDTO.Builder(ctx, ctx.getIdProvider().createDeviceVariableId(device.getContext(), v.getName()), v, expandItem).build());
-                        dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
+                        if (v.getLastUpdate() != null) {
+                            dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
+                        }
                     }
                     ctx.getExpansionFields().popContext();
                 }
@@ -242,7 +261,7 @@ public class HobsonDeviceDTO extends ThingDTO {
         }
 
         public Builder checkInTime(Long checkInTime) {
-            dto.checkInTime = checkInTime;
+            dto.lastCheckIn = checkInTime;
             return this;
         }
 
