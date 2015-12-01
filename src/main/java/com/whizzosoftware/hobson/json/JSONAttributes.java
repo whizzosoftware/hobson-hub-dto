@@ -46,6 +46,7 @@ public class JSONAttributes {
     public static final String ENTITY_ID = "entityId";
     public static final String ERRORS = "errors";
     public static final String EVENT_ID = "eventId";
+    public static final String EVENTS = "events";
     public static final String GLOBAL_VARIABLES = "globalVariables";
     public static final String HUB_ID = "hubId";
     public static final String HUBS = "hubs";
