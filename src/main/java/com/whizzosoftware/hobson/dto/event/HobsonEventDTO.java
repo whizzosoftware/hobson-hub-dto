@@ -57,7 +57,17 @@ abstract public class HobsonEventDTO implements JSONProducer {
         return json;
     }
 
+    /**
+     * Allows sub-classes to return their custom properties for inclusion.
+     *
+     * @return a JSONObject with any custom properties
+     */
     abstract protected JSONObject createProperties();
+
+    /**
+     * Allows sub-classes to restore their custom properties from a JSONObject.
+     *
+     * @param json the JSONObject to populate from
+     */
     abstract protected void readProperties(JSONObject json);
-    abstract public HobsonEvent createEvent();
 }

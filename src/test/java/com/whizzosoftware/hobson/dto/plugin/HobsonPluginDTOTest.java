@@ -10,9 +10,9 @@ package com.whizzosoftware.hobson.dto.plugin;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.plugin.*;
 import com.whizzosoftware.hobson.api.property.*;
-import com.whizzosoftware.hobson.dto.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -55,7 +55,7 @@ public class HobsonPluginDTOTest {
         PluginDescriptor pd = new PluginDescriptor("plugin1", "Plugin", "Description", PluginType.FRAMEWORK, PluginStatus.running(), "1.0.0");
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setLocalPluginId("/api/v1/users/local/hubs/local/plugins/local/plugin1");
-        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new DTOBuildContext.Builder().idProvider(idProvider).build(), new PluginDescriptorAdapter(pd, null), pd.getDescription(), null, true).build();
+        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().idProvider(idProvider).build(), new PluginDescriptorAdapter(pd, null), pd.getDescription(), null, true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1", dto.getId());
         assertEquals("Plugin", dto.getName());
         assertEquals("Description", dto.getDescription());
@@ -68,7 +68,7 @@ public class HobsonPluginDTOTest {
         PluginDescriptor pd = new PluginDescriptor("plugin1", "Plugin", "Description", PluginType.PLUGIN, PluginStatus.notInstalled(), "1.0.0");
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setRemotePluginId("/api/v1/users/local/hubs/local/plugins/remote/plugin1/1.0.0");
-        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new DTOBuildContext.Builder().idProvider(idProvider).build(), new PluginDescriptorAdapter(pd, null), pd.getDescription(), pd.getVersionString(), true).build();
+        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().idProvider(idProvider).build(), new PluginDescriptorAdapter(pd, null), pd.getDescription(), pd.getVersionString(), true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/remote/plugin1/1.0.0", dto.getId());
         assertEquals("Plugin", dto.getName());
         assertEquals("Description", dto.getDescription());
@@ -142,7 +142,7 @@ public class HobsonPluginDTOTest {
         idProvider.setPropertyContainerId("/api/v1/users/local/hubs/local/plugins/local/plugin1/configuration");
 
         // test with no expansions
-        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new DTOBuildContext.Builder().pluginManager(pluginManager).idProvider(idProvider).build(), plugin, "Description", null, false).build();
+        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().pluginManager(pluginManager).idProvider(idProvider).build(), plugin, "Description", null, false).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1", dto.getId());
         assertNull(dto.getName());
         assertNull(dto.getDescription());
@@ -154,7 +154,7 @@ public class HobsonPluginDTOTest {
         assertNull(dto.getConfiguration());
 
         // test with details
-        dto = new HobsonPluginDTO.Builder(new DTOBuildContext.Builder().pluginManager(pluginManager).idProvider(idProvider).build(), plugin, "Description", null, true).build();
+        dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().pluginManager(pluginManager).idProvider(idProvider).build(), plugin, "Description", null, true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1", dto.getId());
         assertEquals("My Plugin", dto.getName());
         assertEquals("Description", dto.getDescription());
@@ -172,12 +172,12 @@ public class HobsonPluginDTOTest {
         assertNull(dto.getConfiguration().getContainerClass());
 
         // test with configuration class expansion
-        dto = new HobsonPluginDTO.Builder(new DTOBuildContext.Builder().idProvider(idProvider).pluginManager(pluginManager).expansionFields(new ExpansionFields(JSONAttributes.CCLASS)).build(), plugin, "Description", null, true).build();
+        dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().idProvider(idProvider).pluginManager(pluginManager).expansionFields(new ExpansionFields(JSONAttributes.CCLASS)).build(), plugin, "Description", null, true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin2/configurationClass", dto.getConfigurationClass().getId());
         assertEquals("name", dto.getConfigurationClass().getName());
 
         // test with configuration expansion
-        dto = new HobsonPluginDTO.Builder(new DTOBuildContext.Builder().idProvider(idProvider).pluginManager(pluginManager).expansionFields(new ExpansionFields(JSONAttributes.CONFIGURATION)).build(), plugin, "Description", null, true).build();
+        dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().idProvider(idProvider).pluginManager(pluginManager).expansionFields(new ExpansionFields(JSONAttributes.CONFIGURATION)).build(), plugin, "Description", null, true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin2/configurationClass", dto.getConfigurationClass().getId());
         assertNotNull(dto.getConfiguration());
         assertNotNull(dto.getConfiguration().getValues());

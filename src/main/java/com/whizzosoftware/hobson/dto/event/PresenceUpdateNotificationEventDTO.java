@@ -7,14 +7,13 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.event;
 
-import com.whizzosoftware.hobson.api.event.HobsonEvent;
 import com.whizzosoftware.hobson.api.event.PresenceUpdateNotificationEvent;
 import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
 import org.json.JSONObject;
 
 /**
- * A DTO for PresenceUpdateEvent objects.
+ * A DTO for presence update notification events.
  *
  * @author Dan Noguerol
  */
@@ -48,10 +47,5 @@ public class PresenceUpdateNotificationEventDTO extends HobsonEventDTO {
         this.entityContext = PresenceEntityContext.create(json.getString("entity"));
         this.oldLocationContext = PresenceLocationContext.create(json.getString("oldLocation"));
         this.newLocationContext = PresenceLocationContext.create(json.getString("newLocation"));
-    }
-
-    @Override
-    public HobsonEvent createEvent() {
-        return new PresenceUpdateNotificationEvent(this.timestamp, this.entityContext, this.oldLocationContext, this.newLocationContext);
     }
 }

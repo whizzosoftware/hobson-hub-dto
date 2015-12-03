@@ -7,10 +7,8 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.presence;
 
-import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.presence.PresenceEntity;
-import com.whizzosoftware.hobson.api.presence.PresenceManager;
-import com.whizzosoftware.hobson.dto.ExpansionFields;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
@@ -52,12 +50,12 @@ public class PresenceEntityDTO extends ThingDTO {
     public static class Builder {
         private PresenceEntityDTO dto;
 
-        public Builder(PresenceEntity entity, PresenceManager manager, boolean showDetails, ExpansionFields expansions, IdProvider idProvider) {
-            dto = new PresenceEntityDTO(idProvider.createPresenceEntityId(entity.getContext()));
+        public Builder(DTOBuildContext ctx, PresenceEntity entity, boolean showDetails) {
+            dto = new PresenceEntityDTO(ctx.getIdProvider().createPresenceEntityId(entity.getContext()));
             if (showDetails) {
                 dto.setName(entity.getName());
                 dto.lastUpdate = entity.getLastUpdate();
-                dto.location = new PresenceLocationDTO.Builder(manager.getPresenceEntityLocation(entity.getContext()), idProvider, expansions.has(JSONAttributes.LOCATION)).build();
+                dto.location = new PresenceLocationDTO.Builder(ctx.getPresenceEntityLocation(entity.getContext()), ctx.getIdProvider(), ctx.getExpansionFields().has(JSONAttributes.LOCATION)).build();
             }
         }
 

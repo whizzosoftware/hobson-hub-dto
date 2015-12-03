@@ -23,9 +23,9 @@ import com.whizzosoftware.hobson.api.task.MockTaskManager;
 import com.whizzosoftware.hobson.api.task.TaskManager;
 import com.whizzosoftware.hobson.api.variable.MockVariableManager;
 import com.whizzosoftware.hobson.api.variable.VariableManager;
-import com.whizzosoftware.hobson.dto.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -51,7 +51,8 @@ public class HobsonHubDTOTest {
 
     @Test
     public void testHubConstructor() {
-        HobsonHub hub = new HobsonHub(HubContext.createLocal());
+        HubContext hctx = HubContext.createLocal();
+        HobsonHub hub = new HobsonHub(hctx);
         HubManager hubManager = new MockHubManager();
         PluginManager pluginManager = new MockPluginManager();
         DeviceManager deviceManager = new MockDeviceManager();
@@ -76,7 +77,7 @@ public class HobsonHubDTOTest {
 
         // test with just ID
         HobsonHubDTO dto = new HobsonHubDTO.Builder(
-            new DTOBuildContext.Builder().
+            new ManagerDTOBuildContext.Builder().
                 hubManager(hubManager).
                 pluginManager(pluginManager).
                 deviceManager(deviceManager).
@@ -102,7 +103,7 @@ public class HobsonHubDTOTest {
 
         // test with top-level expansion
         dto = new HobsonHubDTO.Builder(
-            new DTOBuildContext.Builder().
+            new ManagerDTOBuildContext.Builder().
                 hubManager(hubManager).
                 pluginManager(pluginManager).
                 deviceManager(deviceManager).
@@ -132,7 +133,7 @@ public class HobsonHubDTOTest {
         plugin.setDeviceManager(new MockDeviceManager());
         deviceManager.publishDevice(new MockHobsonDevice(plugin, "device1"));
         dto = new HobsonHubDTO.Builder(
-            new DTOBuildContext.Builder().
+            new ManagerDTOBuildContext.Builder().
                 hubManager(hubManager).
                 pluginManager(pluginManager).
                 deviceManager(deviceManager).

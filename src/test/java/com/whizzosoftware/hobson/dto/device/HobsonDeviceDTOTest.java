@@ -12,9 +12,9 @@ import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.api.variable.MockVariableManager;
 import com.whizzosoftware.hobson.api.variable.VariableManager;
-import com.whizzosoftware.hobson.dto.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -32,7 +32,7 @@ public class HobsonDeviceDTOTest {
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setDeviceId("device1Link");
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
-            new DTOBuildContext.Builder().
+            new ManagerDTOBuildContext.Builder().
                 deviceManager(deviceManager).
                 variableManager(varManager).
                 idProvider(idProvider).
@@ -63,7 +63,7 @@ public class HobsonDeviceDTOTest {
         idProvider.setDeviceVariablesId("deviceVariablesLink");
 
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
-            new DTOBuildContext.Builder().
+            new ManagerDTOBuildContext.Builder().
                 deviceManager(deviceManager).
                 variableManager(varManager).
                 idProvider(idProvider).
@@ -102,7 +102,7 @@ public class HobsonDeviceDTOTest {
         idProvider.setDeviceVariableId("deviceVariableLink");
 
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
-            new DTOBuildContext.Builder().
+            new ManagerDTOBuildContext.Builder().
                 deviceManager(deviceManager).
                 variableManager(varManager).
                 idProvider(idProvider).

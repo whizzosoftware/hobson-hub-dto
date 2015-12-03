@@ -54,8 +54,10 @@ public class ExpansionFields {
     }
 
     public void popContext() {
-        contextStack.pop();
-        buildContextPrefix();
+        if (!contextStack.empty()) {
+            contextStack.pop();
+            buildContextPrefix();
+        }
     }
 
     protected void buildContextPrefix() {

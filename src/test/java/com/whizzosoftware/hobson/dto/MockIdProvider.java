@@ -168,6 +168,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createHubUploadCredentialsId(HubContext ctx) {
+        return null;
+    }
+
+    @Override
     public String createLocalPluginConfigurationId(PluginContext ctx) {
         return localPluginConfigurationId;
     }

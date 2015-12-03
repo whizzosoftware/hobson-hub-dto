@@ -13,6 +13,7 @@ import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
 import com.whizzosoftware.hobson.dto.*;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.image.ImageDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -114,7 +115,7 @@ public class HobsonPluginDTO extends ThingDTO {
                 if (dto.configurable) {
                     dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createLocalPluginConfigurationClassId(plugin.getContext()), plugin.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
                     dto.configuration = new PropertyContainerDTO.Builder(
-                            ctx.getPluginManager().getLocalPluginConfiguration(plugin.getContext()),
+                            ctx.getLocalPluginConfiguration(plugin.getContext()),
                             new PropertyContainerClassProvider() {
                                 @Override
                                 public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {

@@ -14,6 +14,7 @@ import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -26,7 +27,11 @@ public class PresenceEntityDTOTest {
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setPresenceEntityId("foo");
 
-        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(pe, presenceManager, false, null, idProvider).build();
+        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(
+            new ManagerDTOBuildContext.Builder().presenceManager(presenceManager).idProvider(idProvider).build(),
+            pe,
+            false
+        ).build();
         assertEquals("foo", dto.getId());
         assertNull(dto.getName());
         assertNull(dto.getLastUpdate());
@@ -47,7 +52,7 @@ public class PresenceEntityDTOTest {
         idProvider.setPresenceLocationId("bar");
 
         // test with just item expansion
-        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(pe, presenceManager, true, new ExpansionFields(""), idProvider).build();
+        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(new ManagerDTOBuildContext.Builder().presenceManager(presenceManager).expansionFields(new ExpansionFields("")).idProvider(idProvider).build(), pe, true).build();
         assertEquals("foo", dto.getId());
         assertEquals("name1", dto.getName());
         assertEquals(100L, (long) dto.getLastUpdate());
@@ -56,7 +61,7 @@ public class PresenceEntityDTOTest {
         assertNull(dto.getLocation().getName());
 
         // test with both item and location expansions
-        dto = new PresenceEntityDTO.Builder(pe, presenceManager, true, new ExpansionFields(JSONAttributes.LOCATION), idProvider).build();
+        dto = new PresenceEntityDTO.Builder(new ManagerDTOBuildContext.Builder().presenceManager(presenceManager).expansionFields(new ExpansionFields(JSONAttributes.LOCATION)).idProvider(idProvider).build(), pe, true).build();
         assertEquals("foo", dto.getId());
         assertEquals("name1", dto.getName());
         assertEquals(100L, (long) dto.getLastUpdate());
@@ -74,7 +79,7 @@ public class PresenceEntityDTOTest {
         MockPresenceManager manager = new MockPresenceManager();
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setPresenceEntityId("entityId1");
-        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(pe, manager, true, new ExpansionFields(""), idProvider).build();
+        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(new ManagerDTOBuildContext.Builder().presenceManager(manager).expansionFields(new ExpansionFields("")).idProvider(idProvider).build(), pe, true).build();
         assertEquals("entityId1", dto.getId());
         assertEquals("entity", dto.getName());
         assertNotNull(dto.getLocation());

@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.user.HobsonUser;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.hub.HobsonHubDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -80,7 +81,7 @@ public class HobsonUserDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.HUBS);
                     boolean showHubDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (HobsonHub hub : ctx.getHubManager().getHubs(user.getId())) {
+                    for (HobsonHub hub : ctx.getHubs(user.getId())) {
                         dto.hubs.add(new HobsonHubDTO.Builder(ctx, hub, showHubDetails).build());
                     }
                     expansions.popContext();

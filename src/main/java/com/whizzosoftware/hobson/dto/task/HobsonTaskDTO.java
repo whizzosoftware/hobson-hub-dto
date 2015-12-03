@@ -11,7 +11,7 @@ import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
-import com.whizzosoftware.hobson.api.task.TaskManager;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
@@ -120,8 +120,8 @@ public class HobsonTaskDTO extends ThingDTO {
             dto = new HobsonTaskDTO(id);
         }
 
-        public Builder(HobsonTask task, final TaskManager taskManager, boolean showDetails, ExpansionFields expansions, IdProvider idProvider) {
-            dto = new HobsonTaskDTO(idProvider.createTaskId(task.getContext()));
+        public Builder(final DTOBuildContext ctx, HobsonTask task, boolean showDetails) {
+            dto = new HobsonTaskDTO(ctx.getIdProvider().createTaskId(task.getContext()));
 
             if (showDetails) {
                 dto.setName(task.getName());
@@ -129,43 +129,43 @@ public class HobsonTaskDTO extends ThingDTO {
 
                 if (task.hasConditions()) {
                     dto.conditions = new ArrayList<>();
-                    boolean showConditionDetails = expansions.has(JSONAttributes.CONDITIONS);
-                    expansions.pushContext(JSONAttributes.CONDITIONS);
+                    boolean showConditionDetails = ctx.getExpansionFields().has(JSONAttributes.CONDITIONS);
+                    ctx.getExpansionFields().pushContext(JSONAttributes.CONDITIONS);
                     for (PropertyContainer pc : task.getConditions()) {
                         dto.conditions.add(new PropertyContainerDTO.Builder(
                                 pc,
                                 new PropertyContainerClassProvider() {
                                     @Override
-                                    public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
-                                        return taskManager.getConditionClass(ctx);
+                                    public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext pcctx) {
+                                        return ctx.getTaskConditionClass(pcctx);
                                     }
                                 },
                                 PropertyContainerClassType.CONDITION,
                                 showConditionDetails,
-                                expansions,
-                                idProvider
+                                ctx.getExpansionFields(),
+                                ctx.getIdProvider()
                         ).build());
                     }
-                    expansions.popContext();
+                    ctx.getExpansionFields().popContext();
                 }
 
                 if (task.getActionSet() != null) {
-                    expansions.pushContext(JSONAttributes.ACTION_SET);
+                    ctx.getExpansionFields().pushContext(JSONAttributes.ACTION_SET);
                     dto.actionSet = new PropertyContainerSetDTO.Builder(
                             task.getActionSet(),
                             task.getContext().getHubContext(),
                             PropertyContainerClassType.ACTION,
-                            expansions != null && expansions.has(JSONAttributes.ACTION_SET),
+                            ctx.getExpansionFields() != null && ctx.getExpansionFields().has(JSONAttributes.ACTION_SET),
                             new PropertyContainerClassProvider() {
                                 @Override
-                                public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
-                                    return taskManager.getActionClass(ctx);
+                                public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext pcctx) {
+                                    return ctx.getTaskActionClass(pcctx);
                                 }
                             },
-                            expansions,
-                            idProvider
+                            ctx.getExpansionFields(),
+                            ctx.getIdProvider()
                     ).build();
-                    expansions.popContext();
+                    ctx.getExpansionFields().popContext();
                 }
 
                 dto.properties = task.getProperties();

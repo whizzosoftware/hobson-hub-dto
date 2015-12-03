@@ -7,10 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.event;
 
-import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.event.DeviceCheckInEvent;
-import com.whizzosoftware.hobson.api.event.HobsonEvent;
-import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -61,10 +58,5 @@ public class DeviceCheckInEventDTO extends HobsonEventDTO {
         this.pluginId = json.getString(JSONAttributes.PLUGIN_ID);
         this.deviceId = json.getString(JSONAttributes.DEVICE_ID);
         this.checkInTime = json.getLong(JSONAttributes.LAST_CHECK_IN);
-    }
-
-    @Override
-    public HobsonEvent createEvent() {
-        return new DeviceCheckInEvent(DeviceContext.create(HubContext.createLocal(), pluginId, deviceId), checkInTime);
     }
 }

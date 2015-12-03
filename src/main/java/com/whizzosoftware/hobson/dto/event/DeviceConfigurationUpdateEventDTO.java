@@ -7,18 +7,18 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.event;
 
-import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.event.DeviceConfigurationUpdateEvent;
-import com.whizzosoftware.hobson.api.event.HobsonEvent;
-import com.whizzosoftware.hobson.api.hub.HubContext;
-import com.whizzosoftware.hobson.api.property.PropertyContainer;
-import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A DTO for device configuration update events.
+ *
+ * @author Dan Noguerol
+ */
 public class DeviceConfigurationUpdateEventDTO extends HobsonEventDTO {
     private String pluginId;
     private String deviceId;
@@ -74,12 +74,5 @@ public class DeviceConfigurationUpdateEventDTO extends HobsonEventDTO {
             String key = (String)o;
             configuration.put(key, c.get(key));
         }
-    }
-
-    @Override
-    public HobsonEvent createEvent() {
-        PropertyContainerClassContext ctx = PropertyContainerClassContext.create(DeviceContext.create(HubContext.createLocal(), pluginId, deviceId), containerClassId);
-        PropertyContainer pc = new PropertyContainer(ctx, configuration);
-        return new DeviceConfigurationUpdateEvent(getTimestamp(), pluginId, deviceId, pc);
     }
 }
