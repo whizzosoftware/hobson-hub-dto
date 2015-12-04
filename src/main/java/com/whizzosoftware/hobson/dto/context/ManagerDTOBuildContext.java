@@ -46,7 +46,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     VariableManager variableManager;
     ExpansionFields expansionFields;
     IdProvider idProvider;
-    Map<VariableProxyType,VariableProxyValueProvider> proxyValueProviders;
 
     public Collection<HobsonHub> getHubs(String userId) {
         return hubManager.getHubs(userId);
@@ -73,41 +72,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     }
 
     public HobsonVariableCollection getDeviceVariables(DeviceContext dctx) {
-        List<HobsonVariable> l = new ArrayList<>();
-        for (HobsonVariable v : variableManager.getDeviceVariables(dctx).getCollection()) {
-            l.add(createVariableStubIfNecessary(dctx, v));
-        }
-        return new HobsonVariableCollection(l);
+        return variableManager.getDeviceVariables(dctx);
     }
 
     public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return createVariableStubIfNecessary(dctx, variableManager.getDeviceVariable(dctx, name));
-    }
-
-    private HobsonVariable createVariableStubIfNecessary(DeviceContext dctx, HobsonVariable v) {
-        if (v.hasProxyType()) {
-            return new HobsonVariableStub(
-                v.getPluginId(),
-                v.getDeviceId(),
-                v.getName(),
-                v.getMask(),
-                v.getLastUpdate(),
-                getProxyValue(dctx.getHubContext(), v),
-                v.isGlobal()
-            );
-        } else {
-            return v;
-        }
-    }
-
-    private Object getProxyValue(HubContext hubContext, HobsonVariable v) {
-        if (v.hasProxyType() && proxyValueProviders != null) {
-            VariableProxyValueProvider vpvp = proxyValueProviders.get(v.getProxyType());
-            if (vpvp != null && hubContext != null) {
-                return vpvp.getProxyValue(hubContext, v);
-            }
-        }
-        return v.getValue();
+        return variableManager.getDeviceVariable(dctx, name);
     }
 
     public Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx) {
@@ -165,7 +134,7 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return idProvider;
     }
 
-    public static final class Builder {
+    public static class Builder {
         ManagerDTOBuildContext ctx;
 
         public Builder() {
@@ -209,14 +178,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
         public Builder variableManager(VariableManager val) {
             ctx.variableManager = val;
-            return this;
-        }
-
-        public Builder addProxyValueProvider(VariableProxyValueProvider provider) {
-            if (ctx.proxyValueProviders == null) {
-                ctx.proxyValueProviders = new HashMap<>();
-            }
-            ctx.proxyValueProviders.put(provider.getProxyType(), provider);
             return this;
         }
 

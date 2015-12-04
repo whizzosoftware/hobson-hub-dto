@@ -66,6 +66,7 @@ public class JSONAttributes {
     public static final String MANUFACTURER_VERSION = "manufacturerVersion";
     public static final String MODEL_NAME = "modelName";
     public static final String MASK = "mask";
+    public static final String MEDIA_TYPE = "mediaType";
     public static final String MESSAGE = "message";
     public static final String NAME = "name";
     public static final String NEW_PASSWORD = "newPassword";

@@ -8,6 +8,9 @@
 package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.api.variable.ImmutableHobsonVariable;
+import com.whizzosoftware.hobson.api.variable.VariableMediaType;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,11 +18,23 @@ import static org.junit.Assert.*;
 public class HobsonVariableDTOTest {
     @Test
     public void testToJSON() {
-        HobsonVariableDTO dto = new HobsonVariableDTO.Builder("varLink").name("varName").mask(HobsonVariable.Mask.READ_WRITE).lastUpdate(1000l).build();
+        HobsonVariableDTO dto = new HobsonVariableDTO.Builder("varLink").name("varName").mask(HobsonVariable.Mask.READ_WRITE).lastUpdate(1000l).valueMediaType(VariableMediaType.VIDEO_MP4).build();
         JSONObject json = dto.toJSON();
         assertEquals("varLink", json.getString("@id"));
         assertEquals("varName", json.getString("name"));
         assertEquals("READ_WRITE", json.getString("mask"));
+        assertEquals("VIDEO_MP4", json.getString(JSONAttributes.MEDIA_TYPE));
         assertEquals(1000, json.getDouble("lastUpdate"), 0);
+    }
+
+    @Test
+    public void testHobsonVariableConstructor() {
+        ImmutableHobsonVariable v = new ImmutableHobsonVariable("plugin1", "device1", "name", HobsonVariable.Mask.READ_ONLY, "foo", VariableMediaType.IMAGE_PNG, 0L);
+        HobsonVariableDTO dto = new HobsonVariableDTO.Builder("id", v, true).build();
+        assertEquals("name", dto.getName());
+        assertEquals(HobsonVariable.Mask.READ_ONLY, dto.getMask());
+        assertEquals(0L, (long)dto.getLastUpdate());
+        assertEquals("foo", dto.getValue());
+        assertEquals(VariableMediaType.IMAGE_PNG, dto.getValueMediaType());
     }
 }

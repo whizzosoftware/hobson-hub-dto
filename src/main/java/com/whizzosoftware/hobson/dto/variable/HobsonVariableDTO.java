@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.api.variable.VariableMediaType;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
@@ -17,6 +18,7 @@ public class HobsonVariableDTO extends ThingDTO {
     private Long lastUpdate;
     private HobsonVariable.Mask mask;
     private Object value;
+    private VariableMediaType valueMediaType;
 
     private HobsonVariableDTO(String id) {
         super(id);
@@ -37,9 +39,11 @@ public class HobsonVariableDTO extends ThingDTO {
         if (json.has(JSONAttributes.VALUE)) {
             value = json.get(JSONAttributes.VALUE);
         }
+        if (json.has(JSONAttributes.MEDIA_TYPE)) {
+            valueMediaType = VariableMediaType.valueOf(json.getString(JSONAttributes.MEDIA_TYPE));
+        }
     }
 
-    @Override
     public String getMediaType() {
         return MediaTypes.VARIABLE;
     }
@@ -56,6 +60,10 @@ public class HobsonVariableDTO extends ThingDTO {
         return value;
     }
 
+    public VariableMediaType getValueMediaType() {
+        return valueMediaType;
+    }
+
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (lastUpdate != null) {
@@ -66,6 +74,9 @@ public class HobsonVariableDTO extends ThingDTO {
         }
         if (value != null) {
             json.put(JSONAttributes.VALUE, value);
+        }
+        if (valueMediaType != null) {
+            json.put(JSONAttributes.MEDIA_TYPE, valueMediaType.toString());
         }
         return json;
     }
@@ -83,6 +94,7 @@ public class HobsonVariableDTO extends ThingDTO {
                 dto.setName(var.getName());
                 dto.mask = var.getMask();
                 dto.value = var.getValue();
+                dto.valueMediaType = var.getMediaType();
                 dto.lastUpdate = var.getLastUpdate();
             }
         }
@@ -108,6 +120,11 @@ public class HobsonVariableDTO extends ThingDTO {
 
         public Builder value(Object value) {
             dto.value = value;
+            return this;
+        }
+
+        public Builder valueMediaType(VariableMediaType mediaType) {
+            dto.valueMediaType = mediaType;
             return this;
         }
 
