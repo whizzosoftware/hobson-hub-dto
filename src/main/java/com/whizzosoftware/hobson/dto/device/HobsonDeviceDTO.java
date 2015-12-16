@@ -11,6 +11,7 @@ import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.api.variable.HobsonVariableCollection;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
@@ -183,10 +184,13 @@ public class HobsonDeviceDTO extends ThingDTO {
                 if (expand) {
                     ctx.getExpansionFields().pushContext(JSONAttributes.VARIABLES);
                     boolean expandItem = ctx.getExpansionFields().has(JSONAttributes.ITEM);
-                    for (HobsonVariable v : ctx.getDeviceVariables(device.getContext()).getCollection()) {
-                        dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(device.getContext(), v.getName()), v, expandItem).build());
-                        if (v.getLastUpdate() != null) {
-                            dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
+                    HobsonVariableCollection hvc = ctx.getDeviceVariables(device.getContext());
+                    if (hvc != null) {
+                        for (HobsonVariable v : hvc.getCollection()) {
+                            dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(device.getContext(), v.getName()), v, expandItem).build());
+                            if (v.getLastUpdate() != null) {
+                                dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
+                            }
                         }
                     }
                     ctx.getExpansionFields().popContext();

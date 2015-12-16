@@ -48,79 +48,79 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     IdProvider idProvider;
 
     public Collection<HobsonHub> getHubs(String userId) {
-        return hubManager.getHubs(userId);
+        return (hubManager != null) ? hubManager.getHubs(userId) : null;
     }
 
     public PropertyContainer getHubConfiguration(HubContext hctx) {
-        return hubManager.getConfiguration(hctx);
+        return (hubManager != null) ? hubManager.getConfiguration(hctx) : null;
     }
 
     public PropertyContainer getDeviceConfiguration(DeviceContext dctx) {
-        return deviceManager.getDeviceConfiguration(dctx);
+        return (deviceManager != null) ? deviceManager.getDeviceConfiguration(dctx) : null;
     }
 
     public Collection<HobsonDevice> getAllDevices(HubContext hctx) {
-        return deviceManager.getAllDevices(hctx);
+        return (deviceManager != null) ? deviceManager.getAllDevices(hctx) : null;
     }
 
     public Long getDeviceLastCheckIn(DeviceContext dctx) {
-        return deviceManager.getDeviceLastCheckIn(dctx);
+        return (deviceManager != null) ? deviceManager.getDeviceLastCheckIn(dctx) : null;
     }
 
     public Collection<HobsonVariable> getGlobalVariables(HubContext hctx) {
-        return variableManager.getGlobalVariables(hctx);
+        return (variableManager != null) ? variableManager.getGlobalVariables(hctx) : null;
     }
 
     public HobsonVariableCollection getDeviceVariables(DeviceContext dctx) {
-        return variableManager.getDeviceVariables(dctx);
+        return (variableManager != null) ? variableManager.getDeviceVariables(dctx) : null;
     }
 
     public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return variableManager.getDeviceVariable(dctx, name);
+        return (variableManager != null) ? variableManager.getDeviceVariable(dctx, name) : null;
     }
 
     public Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx) {
-        return taskManager.getAllActionClasses(hctx, false);
+        return (taskManager != null) ? taskManager.getAllActionClasses(hctx, false) : null;
     }
 
     public TaskActionClass getTaskActionClass(PropertyContainerClassContext ctx) {
-        return taskManager.getActionClass(ctx);
+        return (taskManager != null) ? taskManager.getActionClass(ctx) : null;
     }
 
     public Collection<TaskConditionClass> getAllTaskConditionClasses(HubContext hctx) {
-        return taskManager.getAllConditionClasses(hctx, null, false);
+        return (taskManager != null) ? taskManager.getAllConditionClasses(hctx, null, false) : null;
     }
 
     public TaskConditionClass getTaskConditionClass(PropertyContainerClassContext ctx) {
-        return taskManager.getConditionClass(ctx);
+        return (taskManager != null) ? taskManager.getConditionClass(ctx) : null;
     }
 
     public Collection<HobsonTask> getAllTasks(HubContext hctx) {
-        return taskManager.getAllTasks(hctx);
+        return (taskManager != null) ? taskManager.getAllTasks(hctx) : null;
     }
 
     public PropertyContainer getLocalPluginConfiguration(PluginContext pctx) {
-        return pluginManager.getLocalPluginConfiguration(pctx);
+        return (pluginManager != null) ? pluginManager.getLocalPluginConfiguration(pctx) : null;
     }
 
     public Collection<PluginDescriptor> getLocalPluginDescriptors(HubContext hctx) {
-        return pluginManager.getLocalPluginDescriptors(hctx);
+        return (pluginManager != null) ? pluginManager.getLocalPluginDescriptors(hctx) : null;
     }
 
     public Collection<PluginDescriptor> getRemotePluginDescriptors(HubContext hctx) {
-        return pluginManager.getRemotePluginDescriptors(hctx);
+        return (pluginManager != null) ? pluginManager.getRemotePluginDescriptors(hctx) : null;
     }
 
     public Collection<PresenceEntity> getAllPresenceEntities(HubContext hctx) {
-        return presenceManager.getAllPresenceEntities(hctx);
+        return (presenceManager != null) ? presenceManager.getAllPresenceEntities(hctx) : null;
     }
 
     public Collection<PresenceLocation> getAllPresenceLocations(HubContext hctx) {
-        return presenceManager.getAllPresenceLocations(hctx);
+        return (presenceManager != null) ? presenceManager.getAllPresenceLocations(hctx) : null;
     }
 
     public PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx) {
-        return presenceManager.getPresenceEntityLocation(pctx);
+        return (presenceManager != null) ? presenceManager.getPresenceEntityLocation(pctx) : null;
     }
 
     public ExpansionFields getExpansionFields() {
