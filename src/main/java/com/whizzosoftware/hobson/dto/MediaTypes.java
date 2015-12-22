@@ -14,7 +14,7 @@ package com.whizzosoftware.hobson.dto;
  */
 public class MediaTypes {
     public static final String DEVICE = "application/vnd.hobson.device";
-    public static final String DEVICE_BOOTSTRAP = "application/vnd.hobson.deviceBootstrap";
+    public static final String DEVICE_PASSPORT = "application/vnd.hobson.devicePassport";
     public static final String ERROR = "application/vnd.hobson.error";
     public static final String ERRORS = "application/vnd.hobson.errors";
     public static final String EVENT = "application/hobson.vnd.event";

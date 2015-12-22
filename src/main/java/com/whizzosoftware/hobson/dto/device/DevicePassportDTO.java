@@ -7,9 +7,10 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.device;
 
-import com.whizzosoftware.hobson.api.device.DeviceBootstrap;
+import com.whizzosoftware.hobson.api.device.DevicePassport;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 /**
@@ -17,13 +18,13 @@ import org.json.JSONObject;
  *
  * @author Dan Noguerol
  */
-public class DeviceBootstrapDTO extends ThingDTO {
+public class DevicePassportDTO extends ThingDTO {
     private String deviceId;
     private Long creationTime;
-    private Long bootstrapTime;
+    private Long activationTime;
     private String secret;
 
-    private DeviceBootstrapDTO(String id) {
+    private DevicePassportDTO(String id) {
         super(id);
     }
 
@@ -35,8 +36,8 @@ public class DeviceBootstrapDTO extends ThingDTO {
         return creationTime;
     }
 
-    public Long getBootstrapTime() {
-        return bootstrapTime;
+    public Long getActivationTime() {
+        return activationTime;
     }
 
     public String getSecret() {
@@ -45,30 +46,30 @@ public class DeviceBootstrapDTO extends ThingDTO {
 
     @Override
     public String getMediaType() {
-        return MediaTypes.DEVICE_BOOTSTRAP;
+        return MediaTypes.DEVICE_PASSPORT;
     }
 
     @Override
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        json.put("deviceId", deviceId);
-        json.put("creationTime", creationTime);
-        json.put("bootstrapTime", bootstrapTime);
-        json.put("secret", secret);
+        json.put(JSONAttributes.DEVICE_ID, deviceId);
+        json.put(JSONAttributes.CREATION_TIME, creationTime);
+        json.put(JSONAttributes.ACTIVATION_TIME, activationTime);
+        json.put(JSONAttributes.SECRET, secret);
         return json;
     }
 
     static public class Builder {
-        private DeviceBootstrapDTO dto;
+        private DevicePassportDTO dto;
 
         public Builder(String id) {
-            dto = new DeviceBootstrapDTO(id);
+            dto = new DevicePassportDTO(id);
         }
 
-        public Builder(String id, DeviceBootstrap db, boolean showDetails, boolean includeSecret) {
-            dto = new DeviceBootstrapDTO(id);
+        public Builder(String id, DevicePassport db, boolean showDetails, boolean includeSecret) {
+            dto = new DevicePassportDTO(id);
             if (showDetails) {
-                dto.bootstrapTime = db.getBootstrapTime();
+                dto.activationTime = db.getActivationTime();
                 dto.creationTime = db.getCreationTime();
                 dto.deviceId = db.getDeviceId();
                 if (includeSecret) {
@@ -87,8 +88,8 @@ public class DeviceBootstrapDTO extends ThingDTO {
             return this;
         }
 
-        public Builder bootstrapTime(Long bootstrapTime) {
-            dto.bootstrapTime = bootstrapTime;
+        public Builder activationTime(Long activationTime) {
+            dto.activationTime = activationTime;
             return this;
         }
 
@@ -97,7 +98,7 @@ public class DeviceBootstrapDTO extends ThingDTO {
             return this;
         }
 
-        public DeviceBootstrapDTO build() {
+        public DevicePassportDTO build() {
             return dto;
         }
     }

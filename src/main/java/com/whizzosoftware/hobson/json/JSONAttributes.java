@@ -18,12 +18,12 @@ public class JSONAttributes {
     public static final String ACTION_SET = "actionSet";
     public static final String ACTION_SET_ID = "actionSetId";
     public static final String ACTIONS = "actions";
+    public static final String ACTIVATION_TIME = "activationTime";
     public static final String AID = "@id";
     public static final String API_KEY = "apiKey";
     public static final String AVAILABLE = "available";
     public static final String BEACON_MAJOR = "beaconMajor";
     public static final String BEACON_MINOR = "beaconMinor";
-    public static final String BOOTSTRAP_ID = "bootstrapId";
     public static final String CAPABLE = "capable";
     public static final String CCLASS = "cclass";
     public static final String CODE = "code";
@@ -35,6 +35,7 @@ public class JSONAttributes {
     public static final String CONSTRAINTS = "constraints";
     public static final String CONTAINER_CLASS_ID = "containerClassId";
     public static final String CONTAINERS = "containers";
+    public static final String CREATION_TIME = "creationTime";
     public static final String CURRENT_PASSWORD = "currentPassword";
     public static final String DATA = "data";
     public static final String DATASETS = "datasets";
@@ -47,6 +48,7 @@ public class JSONAttributes {
     public static final String ERRORS = "errors";
     public static final String EVENT_ID = "eventId";
     public static final String EVENTS = "events";
+    public static final String EXPAND = "expand";
     public static final String GLOBAL_VARIABLES = "globalVariables";
     public static final String HUB_ID = "hubId";
     public static final String HUBS = "hubs";
@@ -71,6 +73,7 @@ public class JSONAttributes {
     public static final String NAME = "name";
     public static final String NEW_PASSWORD = "newPassword";
     public static final String NUMBER_OF_ITEMS = "numberOfItems";
+    public static final String PASSPORT_ID = "passportId";
     public static final String PLUGIN_ID = "pluginId";
     public static final String PLUGIN_VERSION = "pluginVersion";
     public static final String POSITION = "position";
@@ -82,6 +85,7 @@ public class JSONAttributes {
     public static final String RADIUS = "radius";
     public static final String REMOTE_PLUGINS = "remotePlugins";
     public static final String REPOSITORY_ID = "repositoryId";
+    public static final String SECRET = "secret";
     public static final String STATUS = "status";
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
     public static final String TASKS = "tasks";
