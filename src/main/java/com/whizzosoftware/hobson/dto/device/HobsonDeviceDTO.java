@@ -221,7 +221,11 @@ public class HobsonDeviceDTO extends ThingDTO {
                 }
 
                 // telemetry
-                dto.telemetry = new DeviceTelemetryDTO.Builder(ctx.getIdProvider().createDeviceTelemetryId(device.getContext())).build();
+                dto.telemetry = new DeviceTelemetryDTO.Builder(
+                    ctx,
+                    device,
+                    ctx.getExpansionFields().has(JSONAttributes.TELEMETRY)
+                ).build();
             }
         }
 

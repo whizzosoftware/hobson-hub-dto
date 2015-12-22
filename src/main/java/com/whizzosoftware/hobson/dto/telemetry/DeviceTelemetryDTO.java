@@ -7,9 +7,11 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.telemetry;
 
+import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.dto.ItemListDTO;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -55,6 +57,15 @@ public class DeviceTelemetryDTO extends ThingDTO {
 
         public Builder(String id) {
             dto = new DeviceTelemetryDTO(id);
+        }
+
+        public Builder(DTOBuildContext ctx, HobsonDevice device, boolean showDetails) {
+            dto = new DeviceTelemetryDTO(ctx.getIdProvider().createDeviceTelemetryId(device.getContext()));
+            if (showDetails) {
+                dto.capable = device.isTelemetryCapable();
+                dto.enabled = ctx.isDeviceTelemetryEnabled(device.getContext());
+                dto.datasets = new ItemListDTO(ctx.getIdProvider().createDeviceTelemetryDatasetsId(device.getContext()));
+            }
         }
 
         public Builder capable(Boolean capable) {
