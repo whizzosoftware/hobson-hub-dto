@@ -41,6 +41,7 @@ public class JSONAttributes {
     public static final String DATASETS = "datasets";
     public static final String DESCRIPTION = "description";
     public static final String DESCRIPTION_TEMPLATE = "descriptionTemplate";
+    public static final String DEVICE = "device";
     public static final String DEVICES = "devices";
     public static final String DEVICE_ID = "deviceId";
     public static final String ENABLED = "enabled";
