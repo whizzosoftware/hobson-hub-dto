@@ -138,7 +138,7 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
     @Override
     public boolean isDeviceTelemetryEnabled(DeviceContext dctx) {
-        return telemetryManager.isDeviceTelemetryEnabled(dctx);
+        return (telemetryManager != null && telemetryManager.isDeviceTelemetryEnabled(dctx));
     }
 
     public static class Builder {
