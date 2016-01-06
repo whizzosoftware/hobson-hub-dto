@@ -55,5 +55,6 @@ public interface DTOBuildContext {
     PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx);
     ExpansionFields getExpansionFields();
     IdProvider getIdProvider();
+    boolean isDeviceAvailable(DeviceContext dctx);
     boolean isDeviceTelemetryEnabled(DeviceContext dctx);
 }

@@ -54,7 +54,7 @@ public class HobsonDeviceDTOTest {
         device.setManufacturerName("Mfg");
         device.setManufacturerVersion("1.0");
         device.setModelName("model");
-        device.checkInDevice(100L);
+        device.setDeviceAvailability(true, 100L);
 
         VariableManager varManager = new MockVariableManager();
 
@@ -90,7 +90,7 @@ public class HobsonDeviceDTOTest {
         MockHobsonDevice device = new MockHobsonDevice(plugin, "device1");
         device.setDefaultName("deviceName");
         device.setType(DeviceType.LIGHTBULB);
-        device.checkInDevice(100l);
+        device.setDeviceAvailability(true, 100l);
 
 
         VariableManager varManager = new MockVariableManager();

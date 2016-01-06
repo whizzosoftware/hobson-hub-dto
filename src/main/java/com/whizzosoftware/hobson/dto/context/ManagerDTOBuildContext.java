@@ -137,6 +137,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     }
 
     @Override
+    public boolean isDeviceAvailable(DeviceContext dctx) {
+        return (deviceManager != null && deviceManager.isDeviceAvailable(dctx));
+    }
+
+    @Override
     public boolean isDeviceTelemetryEnabled(DeviceContext dctx) {
         return (telemetryManager != null && telemetryManager.isDeviceTelemetryEnabled(dctx));
     }

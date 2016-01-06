@@ -27,6 +27,7 @@ public class HobsonDeviceDTO extends ThingDTO {
     private String manufacturerName;
     private String modelName;
     private String manufacturerVersion;
+    private Boolean available;
     private Long lastCheckIn;
     private HobsonVariableDTO preferredVariable;
     private ItemListDTO variables;
@@ -54,6 +55,9 @@ public class HobsonDeviceDTO extends ThingDTO {
         }
         if (json.has(JSONAttributes.MANUFACTURER_VERSION)) {
             this.manufacturerVersion = json.getString(JSONAttributes.MANUFACTURER_VERSION);
+        }
+        if (json.has(JSONAttributes.AVAILABLE)) {
+            this.available = json.getBoolean(JSONAttributes.AVAILABLE);
         }
         if (json.has(JSONAttributes.LAST_CHECK_IN)) {
             this.lastCheckIn = json.getLong(JSONAttributes.LAST_CHECK_IN);
@@ -96,6 +100,10 @@ public class HobsonDeviceDTO extends ThingDTO {
         return manufacturerVersion;
     }
 
+    public Boolean getAvailable() {
+        return available;
+    }
+
     public Long getLastCheckIn() {
         return lastCheckIn;
     }
@@ -126,6 +134,7 @@ public class HobsonDeviceDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
+        json.put(JSONAttributes.AVAILABLE, available);
         json.put(JSONAttributes.LAST_CHECK_IN, lastCheckIn);
         json.put(JSONAttributes.LAST_UPDATE, lastVariableUpdate);
         json.put(JSONAttributes.MANUFACTURER_NAME, manufacturerName);
@@ -171,6 +180,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                 dto.manufacturerName = device.getManufacturerName();
                 dto.manufacturerVersion = device.getManufacturerVersion();
                 dto.modelName = device.getModelName();
+                dto.available = ctx.isDeviceAvailable(device.getContext());
                 dto.lastCheckIn = ctx.getDeviceLastCheckIn(device.getContext());
 
                 // preferred variable
@@ -254,7 +264,12 @@ public class HobsonDeviceDTO extends ThingDTO {
             return this;
         }
 
-        public Builder checkInTime(Long checkInTime) {
+        public Builder available(Boolean available) {
+            dto.available = available;
+            return this;
+        }
+
+        public Builder lastCheckIn(Long checkInTime) {
             dto.lastCheckIn = checkInTime;
             return this;
         }
