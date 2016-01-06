@@ -73,7 +73,9 @@ public class JSONAttributes {
     public static final String MESSAGE = "message";
     public static final String NAME = "name";
     public static final String NEW_PASSWORD = "newPassword";
+    public static final String NEW_VALUE = "newValue";
     public static final String NUMBER_OF_ITEMS = "numberOfItems";
+    public static final String OLD_VALUE = "oldValue";
     public static final String PASSPORT_ID = "passportId";
     public static final String PLUGIN_ID = "pluginId";
     public static final String PLUGIN_VERSION = "pluginVersion";
