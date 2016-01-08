@@ -8,11 +8,12 @@
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.variable.VariableContext;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
-import com.whizzosoftware.hobson.api.variable.HobsonVariableCollection;
 import com.whizzosoftware.hobson.api.variable.ImmutableHobsonVariable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,29 +24,27 @@ import java.util.List;
  */
 public class URLMaskingDTOBuildContext extends ManagerDTOBuildContext {
     @Override
-    public HobsonVariableCollection getDeviceVariables(DeviceContext dctx) {
+    public Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx) {
         List<HobsonVariable> results = new ArrayList<>();
-        for (HobsonVariable v : variableManager.getDeviceVariables(dctx).getCollection()) {
+        for (HobsonVariable v : variableManager.getDeviceVariables(dctx)) {
             results.add(createStubVariableIfNecessary(v));
         }
-        return new HobsonVariableCollection(results);
+        return results;
     }
 
     @Override
     public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return createStubVariableIfNecessary(variableManager.getDeviceVariable(dctx, name));
+        return createStubVariableIfNecessary(variableManager.getVariable(VariableContext.create(dctx, name)));
     }
 
     private HobsonVariable createStubVariableIfNecessary(HobsonVariable v) {
-        if (v.hasMediaType()) {
+        if (v != null && v.hasMediaType()) {
             return new ImmutableHobsonVariable(
-                    v.getPluginId(),
-                    v.getDeviceId(),
-                    v.getName(),
-                    v.getMask(),
-                    "MASKED",
-                    v.getMediaType(),
-                    v.getLastUpdate()
+                v.getContext(),
+                v.getMask(),
+                "MASKED",
+                v.getMediaType(),
+                v.getLastUpdate()
             );
         } else {
             return v;

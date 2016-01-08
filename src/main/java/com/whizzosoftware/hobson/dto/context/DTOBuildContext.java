@@ -40,7 +40,7 @@ public interface DTOBuildContext {
     Collection<HobsonDevice> getAllDevices(HubContext hctx);
     Long getDeviceLastCheckIn(DeviceContext dctx);
     Collection<HobsonVariable> getGlobalVariables(HubContext hctx);
-    HobsonVariableCollection getDeviceVariables(DeviceContext dctx);
+    Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx);
     HobsonVariable getDeviceVariable(DeviceContext dctx, String name);
     Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx);
     TaskActionClass getTaskActionClass(PropertyContainerClassContext ctx);

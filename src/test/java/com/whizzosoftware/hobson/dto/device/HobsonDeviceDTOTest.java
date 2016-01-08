@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.*;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
+import com.whizzosoftware.hobson.api.variable.VariableContext;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.api.variable.MockVariableManager;
 import com.whizzosoftware.hobson.api.variable.VariableManager;
@@ -94,7 +95,7 @@ public class HobsonDeviceDTOTest {
 
 
         VariableManager varManager = new MockVariableManager();
-        varManager.publishDeviceVariable(device.getContext(), "foo", "bar", HobsonVariable.Mask.READ_ONLY);
+        varManager.publishVariable(VariableContext.create(device.getContext(), "foo"), "bar", HobsonVariable.Mask.READ_ONLY);
 
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setDeviceId("device1Link");

@@ -73,12 +73,12 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return (variableManager != null) ? variableManager.getGlobalVariables(hctx) : null;
     }
 
-    public HobsonVariableCollection getDeviceVariables(DeviceContext dctx) {
+    public Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx) {
         return (variableManager != null) ? variableManager.getDeviceVariables(dctx) : null;
     }
 
     public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return (variableManager != null) ? variableManager.getDeviceVariable(dctx, name) : null;
+        return (variableManager != null) ? variableManager.getVariable(VariableContext.create(dctx, name)) : null;
     }
 
     public Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx) {

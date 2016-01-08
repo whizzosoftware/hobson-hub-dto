@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.api.variable.ImmutableHobsonVariable;
+import com.whizzosoftware.hobson.api.variable.VariableContext;
 import com.whizzosoftware.hobson.api.variable.VariableMediaType;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class HobsonVariableDTOTest {
 
     @Test
     public void testHobsonVariableConstructor() {
-        ImmutableHobsonVariable v = new ImmutableHobsonVariable("plugin1", "device1", "name", HobsonVariable.Mask.READ_ONLY, "foo", VariableMediaType.IMAGE_PNG, 0L);
+        ImmutableHobsonVariable v = new ImmutableHobsonVariable(VariableContext.createLocal("plugin1", "device1", "name"), HobsonVariable.Mask.READ_ONLY, "foo", VariableMediaType.IMAGE_PNG, 0L);
         HobsonVariableDTO dto = new HobsonVariableDTO.Builder("id", v, true).build();
         assertEquals("name", dto.getName());
         assertEquals(HobsonVariable.Mask.READ_ONLY, dto.getMask());

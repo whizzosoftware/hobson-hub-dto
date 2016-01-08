@@ -20,7 +20,7 @@ public class VariableUpdateDTO implements JSONProducer {
     private long timestamp;
 
     public VariableUpdateDTO(VariableUpdate vu, IdProvider idProvider) {
-        this.id = idProvider.createDeviceId(vu.getDeviceContext());
+        this.id = idProvider.createDeviceId(vu.getContext().getDeviceContext());
         this.name = vu.getName();
         this.value = vu.getValue();
         this.timestamp = vu.getTimestamp();
