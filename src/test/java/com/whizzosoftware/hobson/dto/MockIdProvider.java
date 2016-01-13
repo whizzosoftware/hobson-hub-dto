@@ -17,6 +17,7 @@ import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
 import com.whizzosoftware.hobson.api.task.TaskContext;
+import com.whizzosoftware.hobson.api.variable.VariableContext;
 
 public class MockIdProvider implements IdProvider {
     private String actionClassesId;
@@ -159,6 +160,11 @@ public class MockIdProvider implements IdProvider {
 
     @Override
     public String createUserHubsId(String userId) {
+        return null;
+    }
+
+    @Override
+    public VariableContext createVariableContext(String variableId) {
         return null;
     }
 
