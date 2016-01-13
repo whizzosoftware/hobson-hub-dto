@@ -15,7 +15,6 @@ import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
-import com.whizzosoftware.hobson.dto.telemetry.DeviceTelemetryDTO;
 import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
@@ -34,7 +33,6 @@ public class HobsonDeviceDTO extends ThingDTO {
     private ItemListDTO variables;
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
-    private DeviceTelemetryDTO telemetry;
     private Long lastVariableUpdate;
 
     private HobsonDeviceDTO(String id) {
@@ -129,10 +127,6 @@ public class HobsonDeviceDTO extends ThingDTO {
         return configuration;
     }
 
-    public DeviceTelemetryDTO getTelemetry() {
-        return telemetry;
-    }
-
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         json.put(JSONAttributes.AVAILABLE, available);
@@ -155,9 +149,6 @@ public class HobsonDeviceDTO extends ThingDTO {
         }
         if (variables != null) {
             json.put(JSONAttributes.VARIABLES, variables.toJSON());
-        }
-        if (telemetry != null) {
-            json.put(JSONAttributes.TELEMETRY, telemetry.toJSON());
         }
         return json;
     }
@@ -230,13 +221,6 @@ public class HobsonDeviceDTO extends ThingDTO {
                 } else {
                     dto.configuration = new PropertyContainerDTO.Builder(ctx.getIdProvider().createDeviceConfigurationId(device.getContext())).build();
                 }
-
-                // telemetry
-                dto.telemetry = new DeviceTelemetryDTO.Builder(
-                    ctx,
-                    device,
-                    ctx.getExpansionFields().has(JSONAttributes.TELEMETRY)
-                ).build();
             }
         }
 
@@ -297,11 +281,6 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder configuration(PropertyContainerDTO configuration) {
             dto.configuration = configuration;
-            return this;
-        }
-
-        public Builder telemetry(DeviceTelemetryDTO telemetry) {
-            dto.telemetry = telemetry;
             return this;
         }
 

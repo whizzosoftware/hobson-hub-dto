@@ -58,6 +58,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createAllHubsId() {
+        return null;
+    }
+
+    @Override
     public String createDevicesId(HubContext ctx) {
         return devicesId;
     }
@@ -98,17 +103,7 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createDeviceTelemetryId(DeviceContext ctx) {
-        return null;
-    }
-
-    @Override
-    public String createDeviceTelemetryDatasetId(DeviceContext ctx, String dataSetId) {
-        return null;
-    }
-
-    @Override
-    public String createDeviceTelemetryDatasetsId(DeviceContext ctx) {
+    public String createTelemetryDatasetId(HubContext ctx, String dataSetId) {
         return null;
     }
 
@@ -163,7 +158,7 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createHubsId(String userId) {
+    public String createUserHubsId(String userId) {
         return null;
     }
 

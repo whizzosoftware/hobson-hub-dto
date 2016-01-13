@@ -34,7 +34,8 @@ import java.util.Collection;
  * @author Dan Noguerol
  */
 public interface DTOBuildContext {
-    Collection<HobsonHub> getHubs(String userId);
+    Collection<HubContext> getHubs(String userId);
+    HobsonHub getHub(HubContext hctx);
     PropertyContainer getHubConfiguration(HubContext hctx);
     PropertyContainer getDeviceConfiguration(DeviceContext dctx);
     Collection<HobsonDevice> getAllDevices(HubContext hctx);
@@ -56,5 +57,4 @@ public interface DTOBuildContext {
     ExpansionFields getExpansionFields();
     IdProvider getIdProvider();
     boolean isDeviceAvailable(DeviceContext dctx);
-    boolean isDeviceTelemetryEnabled(DeviceContext dctx);
 }

@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.user.HobsonUser;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.hub.HobsonHubDTO;
@@ -76,12 +77,13 @@ public class HobsonUserDTO extends ThingDTO {
                 if (user.isRemote()) {
                     dto.account = new UserAccountDTO.Builder(user.getAccount()).build();
                 }
-                dto.hubs = new ItemListDTO(ctx.getIdProvider().createHubsId(user.getId()));
+                dto.hubs = new ItemListDTO(ctx.getIdProvider().createUserHubsId(user.getId()));
                 if (expansions.has(JSONAttributes.HUBS)) {
                     expansions.pushContext(JSONAttributes.HUBS);
                     boolean showHubDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (HobsonHub hub : ctx.getHubs(user.getId())) {
+                    for (HubContext hctx : ctx.getHubs(user.getId())) {
+                        HobsonHub hub = ctx.getHub(hctx);
                         dto.hubs.add(new HobsonHubDTO.Builder(ctx, hub, showHubDetails).build());
                     }
                     expansions.popContext();

@@ -27,7 +27,6 @@ import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.api.task.TaskManager;
 import com.whizzosoftware.hobson.api.task.action.TaskActionClass;
 import com.whizzosoftware.hobson.api.task.condition.TaskConditionClass;
-import com.whizzosoftware.hobson.api.telemetry.TelemetryManager;
 import com.whizzosoftware.hobson.api.variable.*;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 
@@ -45,12 +44,16 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     PluginManager pluginManager;
     PresenceManager presenceManager;
     VariableManager variableManager;
-    TelemetryManager telemetryManager;
     ExpansionFields expansionFields;
     IdProvider idProvider;
 
-    public Collection<HobsonHub> getHubs(String userId) {
+    public Collection<HubContext> getHubs(String userId) {
         return (hubManager != null) ? hubManager.getHubs(userId) : null;
+    }
+
+    @Override
+    public HobsonHub getHub(HubContext hctx) {
+        return (hubManager != null) ? hubManager.getHub(hctx) : null;
     }
 
     public PropertyContainer getHubConfiguration(HubContext hctx) {
@@ -141,11 +144,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return (deviceManager != null && deviceManager.isDeviceAvailable(dctx));
     }
 
-    @Override
-    public boolean isDeviceTelemetryEnabled(DeviceContext dctx) {
-        return (telemetryManager != null && telemetryManager.isDeviceTelemetryEnabled(dctx));
-    }
-
     public static class Builder {
         ManagerDTOBuildContext ctx;
 
@@ -175,11 +173,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
         public Builder taskManager(TaskManager val) {
             ctx.taskManager = val;
-            return this;
-        }
-
-        public Builder telemetryManager(TelemetryManager val) {
-            ctx.telemetryManager = val;
             return this;
         }
 
