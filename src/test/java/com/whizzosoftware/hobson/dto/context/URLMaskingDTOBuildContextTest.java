@@ -18,7 +18,7 @@ public class URLMaskingDTOBuildContextTest {
         DeviceContext dctx = DeviceContext.createLocal("plugin1", "device1");
         MockVariableManager vm = new MockVariableManager();
         vm.publishVariable(VariableContext.create(dctx, VariableConstants.OUTDOOR_TEMP_F), 57.0, HobsonVariable.Mask.READ_ONLY, null);
-        vm.publishVariable(VariableContext.create(dctx, VariableConstants.IMAGE_STATUS_URL), "http://www.foo.com", HobsonVariable.Mask.READ_ONLY, VariableMediaType.IMAGE_JPG);
+        vm.publishVariable(VariableContext.create(dctx, VariableConstants.IMAGE_STATUS_URL), "http://www.foo.com", HobsonVariable.Mask.READ_ONLY, null, VariableMediaType.IMAGE_JPG);
 
         DTOBuildContext ctx = new URLMaskingDTOBuildContext.Builder().
             variableManager(vm).

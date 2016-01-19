@@ -26,7 +26,6 @@ public class MockIdProvider implements IdProvider {
     private String configurationClassId;
     private String devicesId;
     private String deviceId;
-    private String deviceVariableId;
     private String deviceVariablesId;
     private String hubId;
     private String localPluginId;
@@ -42,6 +41,7 @@ public class MockIdProvider implements IdProvider {
     private String remotePluginId;
     private String remotePluginsId;
     private String tasksId;
+    private String variableId;
 
     @Override
     public String createTaskActionSetId(HubContext ctx, String id) {
@@ -50,6 +50,31 @@ public class MockIdProvider implements IdProvider {
 
     @Override
     public String createTaskActionSetsId(HubContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createActionId(HubContext ctx, String actionId) {
+        return null;
+    }
+
+    @Override
+    public String createActionSetId(HubContext ctx, String actionSetId) {
+        return null;
+    }
+
+    @Override
+    public String createActionSetActionsId(HubContext ctx, String actionSetId) {
+        return null;
+    }
+
+    @Override
+    public String createActionSetsId(HubContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createActionPropertiesId(HubContext ctx, String actionId) {
         return null;
     }
 
@@ -109,21 +134,6 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public DeviceContext createDeviceVariableContext(String variableId) {
-        return null;
-    }
-
-    @Override
-    public String createDeviceVariableId(DeviceContext ctx, String name) {
-        return deviceVariableId;
-    }
-
-    @Override
-    public String createDeviceVariableName(String variableId) {
-        return null;
-    }
-
-    @Override
     public String createDeviceVariablesId(DeviceContext ctx) {
         return deviceVariablesId;
     }
@@ -166,6 +176,11 @@ public class MockIdProvider implements IdProvider {
     @Override
     public VariableContext createVariableContext(String variableId) {
         return null;
+    }
+
+    @Override
+    public String createVariableId(VariableContext ctx) {
+        return variableId;
     }
 
     @Override
@@ -309,13 +324,38 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createTaskConditionId(TaskContext ctx, String propertyContainerId) {
+        return null;
+    }
+
+    @Override
+    public String createTaskConditionPropertiesId(TaskContext ctx, String propertyContainerId) {
+        return null;
+    }
+
+    @Override
+    public String createTaskConditionsId(TaskContext ctx) {
+        return null;
+    }
+
+    @Override
     public String createTaskId(TaskContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createTaskPropertiesId(TaskContext ctx) {
         return null;
     }
 
     @Override
     public String createTasksId(HubContext ctx) {
         return tasksId;
+    }
+
+    @Override
+    public String createUserId(String userId) {
+        return null;
     }
 
     @Override
@@ -447,10 +487,6 @@ public class MockIdProvider implements IdProvider {
         this.localPluginId = localPluginId;
     }
 
-    public void setDeviceVariableId(String deviceVariableId) {
-        this.deviceVariableId = deviceVariableId;
-    }
-
     public void setLocalPluginConfigurationClassId(String localPluginConfigurationClassId) {
         this.localPluginConfigurationClassId = localPluginConfigurationClassId;
     }
@@ -465,5 +501,9 @@ public class MockIdProvider implements IdProvider {
 
     public void setPropertyContainerClassId(String propertyContainerClassId) {
         this.propertyContainerClassId = propertyContainerClassId;
+    }
+
+    public void setVariableId(String variableId) {
+        this.variableId = variableId;
     }
 }

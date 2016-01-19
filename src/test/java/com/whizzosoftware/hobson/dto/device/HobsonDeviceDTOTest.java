@@ -91,16 +91,16 @@ public class HobsonDeviceDTOTest {
         MockHobsonDevice device = new MockHobsonDevice(plugin, "device1");
         device.setDefaultName("deviceName");
         device.setType(DeviceType.LIGHTBULB);
-        device.setDeviceAvailability(true, 100l);
+        device.setDeviceAvailability(true, 100L);
 
 
         VariableManager varManager = new MockVariableManager();
-        varManager.publishVariable(VariableContext.create(device.getContext(), "foo"), "bar", HobsonVariable.Mask.READ_ONLY);
+        varManager.publishVariable(VariableContext.create(device.getContext(), "foo"), "bar", HobsonVariable.Mask.READ_ONLY, null);
 
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setDeviceId("device1Link");
         idProvider.setDeviceVariablesId("deviceVariablesLink");
-        idProvider.setDeviceVariableId("deviceVariableLink");
+        idProvider.setVariableId("deviceVariableLink");
 
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
             new ManagerDTOBuildContext.Builder().

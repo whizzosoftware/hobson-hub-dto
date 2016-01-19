@@ -11,6 +11,7 @@ import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
+import com.whizzosoftware.hobson.api.variable.VariableContext;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
@@ -177,7 +178,7 @@ public class HobsonDeviceDTO extends ThingDTO {
 
                 // preferred variable
                 if (device.hasPreferredVariableName()) {
-                    dto.preferredVariable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(device.getContext(), device.getPreferredVariableName()), ctx.getDeviceVariable(device.getContext(), device.getPreferredVariableName()), ctx.getExpansionFields().has(JSONAttributes.PREFERRED_VARIABLE)).build();
+                    dto.preferredVariable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(VariableContext.create(device.getContext(), device.getPreferredVariableName())), ctx.getDeviceVariable(device.getContext(), device.getPreferredVariableName()), ctx.getExpansionFields().has(JSONAttributes.PREFERRED_VARIABLE)).build();
                 }
 
                 // variables
@@ -189,7 +190,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                     Collection<HobsonVariable> hvc = ctx.getDeviceVariables(device.getContext());
                     if (hvc != null) {
                         for (HobsonVariable v : hvc) {
-                            dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(device.getContext(), v.getName()), v, expandItem).build());
+                            dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(v.getContext()), v, expandItem).build());
                             if (v.getLastUpdate() != null) {
                                 dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
                             }

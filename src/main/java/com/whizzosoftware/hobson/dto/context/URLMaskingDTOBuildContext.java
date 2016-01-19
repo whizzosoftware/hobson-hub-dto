@@ -43,8 +43,8 @@ public class URLMaskingDTOBuildContext extends ManagerDTOBuildContext {
                 v.getContext(),
                 v.getMask(),
                 "MASKED",
-                v.getMediaType(),
-                v.getLastUpdate()
+                v.getLastUpdate(),
+                v.getMediaType()
             );
         } else {
             return v;
