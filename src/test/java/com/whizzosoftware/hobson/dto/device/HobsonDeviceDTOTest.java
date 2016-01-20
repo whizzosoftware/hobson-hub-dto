@@ -8,6 +8,8 @@
 package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.*;
+import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
+import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
 import com.whizzosoftware.hobson.api.variable.VariableContext;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
@@ -30,8 +32,7 @@ public class HobsonDeviceDTOTest {
         plugin.setDeviceManager(deviceManager);
         HobsonDevice device = new MockHobsonDevice(plugin, "device1");
         VariableManager varManager = new MockVariableManager();
-        MockIdProvider idProvider = new MockIdProvider();
-        idProvider.setDeviceId("device1Link");
+        IdProvider idProvider = new ContextPathIdProvider();
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
             new ManagerDTOBuildContext.Builder().
                 deviceManager(deviceManager).
@@ -41,7 +42,7 @@ public class HobsonDeviceDTOTest {
             device,
             false
         ).build();
-        assertEquals("device1Link", dto.getId());
+        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getId());
     }
 
     @Test
@@ -59,9 +60,7 @@ public class HobsonDeviceDTOTest {
 
         VariableManager varManager = new MockVariableManager();
 
-        MockIdProvider idProvider = new MockIdProvider();
-        idProvider.setDeviceId("device1Link");
-        idProvider.setDeviceVariablesId("deviceVariablesLink");
+        IdProvider idProvider = new ContextPathIdProvider();
 
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
             new ManagerDTOBuildContext.Builder().
@@ -73,14 +72,14 @@ public class HobsonDeviceDTOTest {
             true
         ).build();
 
-        assertEquals("device1Link", dto.getId());
+        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getId());
         assertEquals("deviceName", dto.getName());
         assertEquals("Mfg", dto.getManufacturerName());
         assertEquals("1.0", dto.getManufacturerVersion());
         assertEquals("model", dto.getModelName());
         assertEquals("LIGHTBULB", dto.getType().toString());
         assertEquals(100, (long)dto.getLastCheckIn());
-        assertEquals("deviceVariablesLink", dto.getVariables().getId());
+        assertEquals("users:local:hubs:local:variables:plugin1:device1", dto.getVariables().getId());
     }
 
     @Test
@@ -97,10 +96,7 @@ public class HobsonDeviceDTOTest {
         VariableManager varManager = new MockVariableManager();
         varManager.publishVariable(VariableContext.create(device.getContext(), "foo"), "bar", HobsonVariable.Mask.READ_ONLY, null);
 
-        MockIdProvider idProvider = new MockIdProvider();
-        idProvider.setDeviceId("device1Link");
-        idProvider.setDeviceVariablesId("deviceVariablesLink");
-        idProvider.setVariableId("deviceVariableLink");
+        IdProvider idProvider = new ContextPathIdProvider();
 
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
             new ManagerDTOBuildContext.Builder().
@@ -113,13 +109,13 @@ public class HobsonDeviceDTOTest {
             true
         ).build();
 
-        assertEquals("device1Link", dto.getId());
+        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getId());
         assertEquals("deviceName", dto.getName());
         assertEquals("LIGHTBULB", dto.getType().toString());
         assertEquals(100, (long)dto.getLastCheckIn());
-        assertEquals("deviceVariablesLink", dto.getVariables().getId());
+        assertEquals("users:local:hubs:local:variables:plugin1:device1", dto.getVariables().getId());
         assertEquals(1, (int)dto.getVariables().getNumberOfItems());
-        assertEquals("deviceVariableLink", dto.getVariables().getItemListElement().get(0).getItem().getId());
+        assertEquals("users:local:hubs:local:variables:plugin1:device1:foo", dto.getVariables().getItemListElement().get(0).getItem().getId());
     }
 
     @Test

@@ -89,6 +89,21 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createDataStreamsId(HubContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createDataStreamId(HubContext ctx, String dataStreamId) {
+        return null;
+    }
+
+    @Override
+    public String createDataStreamVariablesId(HubContext ctx, String dataStreamId) {
+        return null;
+    }
+
+    @Override
     public String createDevicesId(HubContext ctx) {
         return devicesId;
     }

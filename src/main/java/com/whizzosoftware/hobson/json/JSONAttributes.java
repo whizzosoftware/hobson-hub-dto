@@ -38,7 +38,7 @@ public class JSONAttributes {
     public static final String CREATION_TIME = "creationTime";
     public static final String CURRENT_PASSWORD = "currentPassword";
     public static final String DATA = "data";
-    public static final String DATASETS = "datasets";
+    public static final String DATA_STREAM_ID = "dataStreamId";
     public static final String DESCRIPTION = "description";
     public static final String DESCRIPTION_TEMPLATE = "descriptionTemplate";
     public static final String DEVICE = "device";
