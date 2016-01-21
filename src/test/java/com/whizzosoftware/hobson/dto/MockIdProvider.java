@@ -84,11 +84,6 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createAllHubsId() {
-        return null;
-    }
-
-    @Override
     public String createDataStreamsId(HubContext ctx) {
         return null;
     }
@@ -185,6 +180,11 @@ public class MockIdProvider implements IdProvider {
 
     @Override
     public String createUserHubsId(String userId) {
+        return null;
+    }
+
+    @Override
+    public String createUsersId() {
         return null;
     }
 
