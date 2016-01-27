@@ -63,6 +63,10 @@ abstract public class ThingDTO implements JSONProducer {
         this.description = description;
     }
 
+    public Map<String, String> getLinks() {
+        return links;
+    }
+
     public void addLink(String rel, String url) {
         if (links == null) {
             links = new HashMap<>();

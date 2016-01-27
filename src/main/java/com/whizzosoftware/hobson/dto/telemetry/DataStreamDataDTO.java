@@ -23,8 +23,12 @@ public class DataStreamDataDTO extends ThingDTO {
     private TelemetryInterval interval;
     private JSONArray data;
 
-    public DataStreamDataDTO(String id, long endTime, TelemetryInterval interval, Collection<TemporalValueSet> data) {
+    public DataStreamDataDTO(String id) {
         super(id);
+    }
+
+    public DataStreamDataDTO(String id, long endTime, TelemetryInterval interval, Collection<TemporalValueSet> data) {
+        this(id);
 
         this.endTime = endTime;
         this.interval = interval;

@@ -78,6 +78,7 @@ public class DataStreamDTO extends ThingDTO {
                         dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(v)).build());
                     }
                 }
+                dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(ds.getUserId(), ds.getId()));
             }
         }
 
