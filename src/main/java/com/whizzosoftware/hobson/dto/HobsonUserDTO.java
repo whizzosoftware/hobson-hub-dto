@@ -16,10 +16,11 @@ import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonUserDTO extends ThingDTO {
-    private String givenName;
-    private String familyName;
-    private ItemListDTO hubs;
     private UserAccountDTO account;
+    private ItemListDTO dataStreams;
+    private String familyName;
+    private String givenName;
+    private ItemListDTO hubs;
 
     private HobsonUserDTO(String id) {
         super(id);
@@ -41,6 +42,10 @@ public class HobsonUserDTO extends ThingDTO {
         return hubs;
     }
 
+    public ItemListDTO getDataStreams() {
+        return dataStreams;
+    }
+
     public void setHubs(ItemListDTO hubs) {
         this.hubs = hubs;
     }
@@ -48,14 +53,17 @@ public class HobsonUserDTO extends ThingDTO {
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (givenName != null && familyName != null) {
-            json.put("givenName", getGivenName());
-            json.put("familyName", getFamilyName());
+            json.put(JSONAttributes.GIVEN_NAME, getGivenName());
+            json.put(JSONAttributes.FAMILY_NAME, getFamilyName());
         }
         if (hubs != null) {
-            json.put("hubs", hubs.toJSON());
+            json.put(JSONAttributes.HUBS, hubs.toJSON());
         }
         if (account != null) {
-            json.put("account", account.toJSON());
+            json.put(JSONAttributes.ACCOUNT, account.toJSON());
+        }
+        if (dataStreams != null) {
+            json.put("dataStreams", dataStreams.toJSON());
         }
         return json;
     }
@@ -67,7 +75,7 @@ public class HobsonUserDTO extends ThingDTO {
             this.dto = new HobsonUserDTO(id);
         }
 
-        public Builder(DTOBuildContext ctx, HobsonUser user, boolean showDetails) {
+        public Builder(DTOBuildContext ctx, HobsonUser user, boolean supportsDataStreams, boolean showDetails) {
             ExpansionFields expansions = ctx.getExpansionFields();
             dto = new HobsonUserDTO(ctx.getIdProvider().createPersonId(user.getId()));
             if (showDetails) {
@@ -78,6 +86,9 @@ public class HobsonUserDTO extends ThingDTO {
                     dto.account = new UserAccountDTO.Builder(user.getAccount()).build();
                 }
                 dto.hubs = new ItemListDTO(ctx.getIdProvider().createUserHubsId(user.getId()));
+                if (supportsDataStreams) {
+                    dto.dataStreams = new ItemListDTO(ctx.getIdProvider().createDataStreamsId(user.getId()));
+                }
                 if (expansions.has(JSONAttributes.HUBS)) {
                     expansions.pushContext(JSONAttributes.HUBS);
                     boolean showHubDetails = expansions.has(JSONAttributes.ITEM);
@@ -105,6 +116,11 @@ public class HobsonUserDTO extends ThingDTO {
             if (dto.givenName != null && dto.familyName != null) {
                 dto.setName(dto.givenName + " " + dto.familyName);
             }
+            return this;
+        }
+
+        public Builder dataStreams(ItemListDTO dataStreams) {
+            dto.dataStreams = dataStreams;
             return this;
         }
 

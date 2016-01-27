@@ -53,6 +53,7 @@ public interface DTOBuildContext {
     Collection<PluginDescriptor> getRemotePluginDescriptors(HubContext hctx);
     Collection<PresenceEntity> getAllPresenceEntities(HubContext hctx);
     Collection<PresenceLocation> getAllPresenceLocations(HubContext hctx);
+    boolean hasTelemetryManager(HubContext hctx);
     PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx);
     ExpansionFields getExpansionFields();
     IdProvider getIdProvider();

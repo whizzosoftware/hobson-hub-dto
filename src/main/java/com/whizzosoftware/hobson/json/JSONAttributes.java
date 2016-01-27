@@ -13,6 +13,7 @@ package com.whizzosoftware.hobson.json;
  * @author Dan Noguerol
  */
 public class JSONAttributes {
+    public static final String ACCOUNT = "account";
     public static final String ACTION_CLASSES = "actionClasses";
     public static final String ACTION_CLASS_ID = "actionClassId";
     public static final String ACTION_SET = "actionSet";
@@ -39,22 +40,27 @@ public class JSONAttributes {
     public static final String CURRENT_PASSWORD = "currentPassword";
     public static final String DATA = "data";
     public static final String DATA_STREAM_ID = "dataStreamId";
+    public static final String DATA_STREAMS = "dataStreams";
     public static final String DESCRIPTION = "description";
     public static final String DESCRIPTION_TEMPLATE = "descriptionTemplate";
     public static final String DEVICE = "device";
     public static final String DEVICES = "devices";
     public static final String DEVICE_ID = "deviceId";
     public static final String ENABLED = "enabled";
+    public static final String END_TIME = "endTime";
     public static final String ENTITY_ID = "entityId";
     public static final String ERRORS = "errors";
     public static final String EVENT_ID = "eventId";
     public static final String EVENTS = "events";
     public static final String EXPAND = "expand";
+    public static final String FAMILY_NAME = "familyName";
+    public static final String GIVEN_NAME = "givenName";
     public static final String GLOBAL_VARIABLES = "globalVariables";
     public static final String HUB_ID = "hubId";
     public static final String HUBS = "hubs";
     public static final String ID = "id";
     public static final String IMAGE = "image";
+    public static final String INTERVAL = "interval";
     public static final String ITEM = "item";
     public static final String ITEM_LIST_ELEMENT = "itemListElement";
     public static final String LAST_UPDATE = "lastUpdate";

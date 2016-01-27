@@ -14,6 +14,7 @@ package com.whizzosoftware.hobson.dto;
  */
 public class MediaTypes {
     public static final String DATA_STREAM = "application/vnd.hobson.dataStream";
+    public static final String DATA_STREAM_DATA = "application/vnd.hobson.dataStreamData";
     public static final String DEVICE = "application/vnd.hobson.device";
     public static final String DEVICE_PASSPORT = "application/vnd.hobson.devicePassport";
     public static final String ERROR = "application/vnd.hobson.error";
@@ -35,8 +36,6 @@ public class MediaTypes {
     public static final String PROPERTY_CONTAINER_SET = "application/vnd.hobson.propertyContainerSet";
     public static final String REPOSITORY = "application/vnd.hobson.repository";
     public static final String TASK = "application/vnd.hobson.task";
-    public static final String TELEMETRY = "application/vnd.hobson.telemetry";
-    public static final String TELEMETRY_DATASET = "application/vnd.hobson.telemetryDataset";
-    public static final String TEMPORAL_VALUE = "application/vnd.hobson.temporalValue";
+    public static final String TEMPORAL_VALUE_SET = "application/vnd.hobson.temporalValueSet";
     public static final String VARIABLE = "application/vnd.hobson.variable";
 }

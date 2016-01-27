@@ -69,7 +69,7 @@ public class DataStreamDTO extends ThingDTO {
         DataStreamDTO dto;
 
         public Builder(DTOBuildContext ctx, DataStream ds, boolean showDetails) {
-            dto = new DataStreamDTO(ctx.getIdProvider().createDataStreamId(ds.getHubContext(), ds.getId()));
+            dto = new DataStreamDTO(ctx.getIdProvider().createDataStreamId(ds.getUserId(), ds.getId()));
             if (showDetails) {
                 dto.setName(ds.getName());
                 if (ds.hasVariables()) {
