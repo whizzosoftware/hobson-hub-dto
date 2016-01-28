@@ -10,6 +10,7 @@ package com.whizzosoftware.hobson.dto.device;
 import com.whizzosoftware.hobson.api.device.DevicePassport;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -66,14 +67,14 @@ public class DevicePassportDTO extends ThingDTO {
             dto = new DevicePassportDTO(id);
         }
 
-        public Builder(String id, DevicePassport db, boolean showDetails, boolean includeSecret) {
-            dto = new DevicePassportDTO(id);
+        public Builder(DTOBuildContext ctx, DevicePassport dp, boolean showDetails, boolean includeSecret) {
+            dto = new DevicePassportDTO(ctx.getIdProvider().createDevicePassportId(dp.getHubContext(), dp.getDeviceId()));
             if (showDetails) {
-                dto.activationTime = db.getActivationTime();
-                dto.creationTime = db.getCreationTime();
-                dto.deviceId = db.getDeviceId();
+                dto.activationTime = dp.getActivationTime();
+                dto.creationTime = dp.getCreationTime();
+                dto.deviceId = dp.getDeviceId();
                 if (includeSecret) {
-                    dto.secret = db.getSecret();
+                    dto.secret = dp.getSecret();
                 }
             }
         }

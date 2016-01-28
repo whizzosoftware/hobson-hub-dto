@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.hub;
 
+import com.whizzosoftware.hobson.api.device.DevicePassport;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
@@ -18,6 +19,7 @@ import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.device.DevicePassportDTO;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.dto.plugin.HobsonPluginDTO;
 import com.whizzosoftware.hobson.dto.plugin.PluginDescriptorAdapter;
@@ -42,12 +44,14 @@ public class HobsonHubDTO extends ThingDTO {
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
     private ItemListDTO devices;
+    private ItemListDTO devicePassports;
     private ItemListDTO globalVariables;
     private ItemListDTO localPlugins;
     private HubLogDTO log;
     private ItemListDTO presenceEntities;
     private ItemListDTO presenceLocations;
     private ItemListDTO remotePlugins;
+    private ItemListDTO repositories;
     private ItemListDTO tasks;
     private String version;
 
@@ -82,6 +86,10 @@ public class HobsonHubDTO extends ThingDTO {
 
     public ItemListDTO getDevices() {
         return devices;
+    }
+
+    public ItemListDTO getDevicePassports() {
+        return devicePassports;
     }
 
     public ItemListDTO getLocalPlugins() {
@@ -121,6 +129,9 @@ public class HobsonHubDTO extends ThingDTO {
         if (devices != null) {
             json.put(JSONAttributes.DEVICES, devices.toJSON());
         }
+        if (devicePassports != null) {
+            json.put(JSONAttributes.DEVICE_PASSPORTS, devicePassports.toJSON());
+        }
         if (globalVariables != null) {
             json.put(JSONAttributes.GLOBAL_VARIABLES, globalVariables.toJSON());
         }
@@ -132,6 +143,9 @@ public class HobsonHubDTO extends ThingDTO {
         }
         if (remotePlugins != null) {
             json.put(JSONAttributes.REMOTE_PLUGINS, remotePlugins.toJSON());
+        }
+        if (repositories != null) {
+            json.put(JSONAttributes.REPOSITORIES, repositories.toJSON());
         }
         if (tasks != null) {
             json.put(JSONAttributes.TASKS, tasks.toJSON());
@@ -220,6 +234,20 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.popContext();
                 }
 
+                // add device passports
+                expand = expansions.has(JSONAttributes.DEVICE_PASSPORTS);
+                dto.devicePassports = new ItemListDTO(idProvider.createDevicePassportsId(hub.getContext()), expand);
+                if (expand) {
+                    expansions.pushContext(JSONAttributes.DEVICE_PASSPORTS);
+                    boolean showDetails = expansions.has(JSONAttributes.ITEM);
+                    expansions.pushContext(JSONAttributes.ITEM);
+                    for (DevicePassport dp : ctx.getDevicePassports(hub.getContext())) {
+                        dto.devicePassports.add(new DevicePassportDTO.Builder(ctx, dp, showDetails, false).build());
+                    }
+                    expansions.popContext();
+                    expansions.popContext();
+                }
+
                 // add globalVariables
                 expand = expansions.has(JSONAttributes.GLOBAL_VARIABLES);
                 dto.globalVariables = new ItemListDTO(idProvider.createGlobalVariablesId(hub.getContext()), expand);
@@ -293,6 +321,10 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.popContext();
                 }
 
+                // add repositories
+                expand = expansions.has(JSONAttributes.REPOSITORIES);
+                dto.repositories = new ItemListDTO(idProvider.createRepositoriesId(hub.getContext()), expand);
+
                 // add tasks
                 expand = expansions.has(JSONAttributes.TASKS);
                 dto.tasks = new ItemListDTO(idProvider.createTasksId(hub.getContext()), expand);
@@ -315,6 +347,8 @@ public class HobsonHubDTO extends ThingDTO {
                 if (hub.isLocal()) {
                     dto.addLink("powerOff", idProvider.createShutdownId(hub.getContext()));
                     dto.addLink("activityLog", idProvider.createActivityLogId(hub.getContext()));
+                    dto.addLink("sendTestEmail", idProvider.createSendTestEmailId(hub.getContext()));
+                    dto.addLink("password", idProvider.createHubPasswordId(hub.getContext()));
                 }
             }
 

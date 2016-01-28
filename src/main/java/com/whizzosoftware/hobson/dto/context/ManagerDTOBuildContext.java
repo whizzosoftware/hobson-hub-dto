@@ -9,6 +9,7 @@ package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.device.DeviceManager;
+import com.whizzosoftware.hobson.api.device.DevicePassport;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
@@ -72,6 +73,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
     public Long getDeviceLastCheckIn(DeviceContext dctx) {
         return (deviceManager != null) ? deviceManager.getDeviceLastCheckIn(dctx) : null;
+    }
+
+    @Override
+    public Collection<DevicePassport> getDevicePassports(HubContext hctx) {
+        return (deviceManager != null) ? deviceManager.getDevicePassports(hctx) : null;
     }
 
     public Collection<HobsonVariable> getGlobalVariables(HubContext hctx) {

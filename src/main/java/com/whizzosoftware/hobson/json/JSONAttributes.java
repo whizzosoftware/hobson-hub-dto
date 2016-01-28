@@ -46,6 +46,7 @@ public class JSONAttributes {
     public static final String DEVICE = "device";
     public static final String DEVICES = "devices";
     public static final String DEVICE_ID = "deviceId";
+    public static final String DEVICE_PASSPORTS = "devicePassports";
     public static final String ENABLED = "enabled";
     public static final String END_TIME = "endTime";
     public static final String ENTITY_ID = "entityId";
@@ -93,6 +94,7 @@ public class JSONAttributes {
     public static final String LAST_CHECK_IN = "lastCheckIn";
     public static final String RADIUS = "radius";
     public static final String REMOTE_PLUGINS = "remotePlugins";
+    public static final String REPOSITORIES = "repositories";
     public static final String REPOSITORY_ID = "repositoryId";
     public static final String SECRET = "secret";
     public static final String STATUS = "status";

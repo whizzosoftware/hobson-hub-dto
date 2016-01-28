@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.device.DevicePassport;
 import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
@@ -40,6 +41,7 @@ public interface DTOBuildContext {
     PropertyContainer getDeviceConfiguration(DeviceContext dctx);
     Collection<HobsonDevice> getAllDevices(HubContext hctx);
     Long getDeviceLastCheckIn(DeviceContext dctx);
+    Collection<DevicePassport> getDevicePassports(HubContext hctx);
     Collection<HobsonVariable> getGlobalVariables(HubContext hctx);
     Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx);
     HobsonVariable getDeviceVariable(DeviceContext dctx, String name);
