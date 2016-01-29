@@ -68,7 +68,7 @@ public class DevicePassportDTO extends ThingDTO {
         }
 
         public Builder(DTOBuildContext ctx, DevicePassport dp, boolean showDetails, boolean includeSecret) {
-            dto = new DevicePassportDTO(ctx.getIdProvider().createDevicePassportId(dp.getHubContext(), dp.getDeviceId()));
+            dto = new DevicePassportDTO(ctx.getIdProvider().createDevicePassportId(dp.getHubContext(), dp.getId()));
             if (showDetails) {
                 dto.activationTime = dp.getActivationTime();
                 dto.creationTime = dp.getCreationTime();

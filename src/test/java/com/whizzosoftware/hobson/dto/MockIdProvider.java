@@ -144,11 +144,6 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createTelemetryDatasetId(HubContext ctx, String dataSetId) {
-        return null;
-    }
-
-    @Override
     public String createDeviceVariablesId(DeviceContext ctx) {
         return deviceVariablesId;
     }
