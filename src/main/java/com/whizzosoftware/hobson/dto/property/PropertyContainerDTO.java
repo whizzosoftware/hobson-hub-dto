@@ -18,12 +18,10 @@ import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PropertyContainerDTO extends ThingDTO {
     private PropertyContainerClassDTO containerClass;
@@ -73,16 +71,25 @@ public class PropertyContainerDTO extends ThingDTO {
         if (values != null) {
             JSONObject p = new JSONObject();
             for (String k : values.keySet()) {
-                Object v = values.get(k);
-                if (v instanceof JSONProducer) {
-                    p.put(k, ((JSONProducer)v).toJSON());
-                } else {
-                    p.put(k, v);
-                }
+                p.put(k, createJSONObject(values.get(k)));
             }
             json.put(JSONAttributes.VALUES, p);
         }
         return json;
+    }
+
+    private Object createJSONObject(Object v) {
+        if (v instanceof JSONProducer) {
+            return ((JSONProducer)v).toJSON();
+        } else if (v instanceof Collection) {
+            JSONArray a = new JSONArray();
+            for (Object o : ((Collection)v)) {
+                a.put(createJSONObject(o));
+            }
+            return a;
+        } else {
+            return v;
+        }
     }
 
     public static class Builder {

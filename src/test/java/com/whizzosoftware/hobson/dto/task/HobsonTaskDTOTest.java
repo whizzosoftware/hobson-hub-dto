@@ -7,6 +7,18 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.task;
 
+import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
+import com.whizzosoftware.hobson.api.plugin.PluginContext;
+import com.whizzosoftware.hobson.api.property.PropertyContainer;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
+import com.whizzosoftware.hobson.api.property.PropertyContainerSet;
+import com.whizzosoftware.hobson.api.task.HobsonTask;
+import com.whizzosoftware.hobson.api.task.MockTaskManager;
+import com.whizzosoftware.hobson.api.task.TaskContext;
+import com.whizzosoftware.hobson.dto.ExpansionFields;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
@@ -15,6 +27,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,8 +47,12 @@ public class HobsonTaskDTOTest {
                                     .build()
                     )
             )
-            .actionSet(new PropertyContainerSetDTO.Builder("actionSetLink")
-                            .build()
+            .actionSet(new PropertyContainerSetDTO.Builder("actionSetLink").
+                containers(Collections.singletonList(
+                    new PropertyContainerDTO.Builder("pc1").
+                        build())
+                ).
+                build()
             )
             .build();
 
@@ -53,9 +70,9 @@ public class HobsonTaskDTOTest {
 
         assertTrue(json.has("actionSet"));
         JSONObject jas = json.getJSONObject("actionSet");
-        assertFalse(jas.has("actions"));
         assertTrue(jas.has("@id"));
         assertEquals("actionSetLink", jas.getString("@id"));
+        assertTrue(jas.has("actions"));
     }
 
     @Test
@@ -69,5 +86,29 @@ public class HobsonTaskDTOTest {
         assertEquals(1, csdto.size());
 
         assertNotNull(dto.getActionSet());
+    }
+
+    @Test
+    public void testExpandActionSet() {
+        HubContext hctx = HubContext.createLocal();
+        ExpansionFields expansions = new ExpansionFields("actionSet");
+
+        MockTaskManager tm = new MockTaskManager();
+        List<PropertyContainer> actions = new ArrayList<>();
+        actions.add(new PropertyContainer(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "cc1"), Collections.singletonMap("foo", (Object)"bar")));
+        String actionSetId = tm.publishActionSet(hctx, null, actions).getId();
+
+        DTOBuildContext ctx = new ManagerDTOBuildContext.Builder().expansionFields(expansions).idProvider(new ContextPathIdProvider()).build();
+        TaskContext tctx = TaskContext.createLocal("task1");
+        List<PropertyContainer> conditions = new ArrayList<>();
+        HobsonTask task = new HobsonTask(tctx, "Test", null, null, conditions, new PropertyContainerSet(actionSetId, actions));
+        HobsonTaskDTO dto = new HobsonTaskDTO.Builder(ctx, task, true).build();
+        assertEquals("Test", dto.getName());
+        assertTrue(dto.getActionSet().getId().startsWith("users:local:hubs:local:actionSets:"));
+        assertNotNull(dto.getActionSet().getContainers());
+        assertEquals(1, dto.getActionSet().getContainers().size());
+        assertEquals("users:local:hubs:local:plugins:plugin1:containerClasses:cc1", dto.getActionSet().getContainers().get(0).getContainerClass().getId());
+        assertEquals(1, dto.getActionSet().getContainers().get(0).getValues().size());
+        assertEquals("bar", dto.getActionSet().getContainers().get(0).getValues().get("foo"));
     }
 }

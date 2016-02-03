@@ -16,6 +16,7 @@ import com.whizzosoftware.hobson.api.property.PropertyContainerSet;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,7 +68,7 @@ public class PropertyContainerSetDTO extends ThingDTO {
         if (containers != null && containers.size() > 0) {
             JSONArray a = new JSONArray();
             for (PropertyContainerDTO d : containers) {
-                a.put(d);
+                a.put(d.toJSON());
             }
             json.put(context.getContainersName(), a);
         }
@@ -82,25 +83,25 @@ public class PropertyContainerSetDTO extends ThingDTO {
             dto = new PropertyContainerSetDTO(id);
         }
 
-        public Builder(PropertyContainerSet pcs, HubContext hubContext, PropertyContainerClassType type, boolean showDetails, PropertyContainerClassProvider pccp, ExpansionFields expansions, IdProvider idProvider) {
-            dto = new PropertyContainerSetDTO(idProvider.createTaskActionSetId(hubContext, pcs.getId()));
+        public Builder(DTOBuildContext ctx, HubContext hctx, PropertyContainerSet pcs, PropertyContainerClassType type, PropertyContainerClassProvider pccp, boolean showDetails) {
+            dto = new PropertyContainerSetDTO(ctx.getIdProvider().createTaskActionSetId(hctx, pcs.getId()));
 
             if (showDetails) {
                 dto.setName(pcs.getName());
                 if (pcs.hasProperties()) {
+                    dto.containers = new ArrayList<>();
                     for (PropertyContainer pc : pcs.getProperties()) {
                         dto.containers.add(new PropertyContainerDTO.Builder(
                             pc,
                             pccp,
                             type,
                             true,
-                            expansions,
-                            idProvider
+                            ctx.getExpansionFields(),
+                            ctx.getIdProvider()
                         ).build());
                     }
                 }
             }
-
         }
 
         public Builder(JSONObject json, PropertyContainerMappingContext ctx) {

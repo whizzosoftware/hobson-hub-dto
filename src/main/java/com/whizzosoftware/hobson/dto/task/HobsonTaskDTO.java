@@ -8,11 +8,9 @@
 package com.whizzosoftware.hobson.dto.task;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
-import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
-import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -103,7 +101,12 @@ public class HobsonTaskDTO extends ThingDTO {
         }
 
         if (actionSet != null) {
-            json.put(JSONAttributes.ACTION_SET, actionSet.toJSON());
+            json.put(JSONAttributes.ACTION_SET, actionSet.toJSON(new PropertyContainerMappingContext() {
+                @Override
+                public String getContainersName() {
+                    return "actions";
+                }
+            }));
         }
 
         if (properties != null) {
@@ -150,20 +153,20 @@ public class HobsonTaskDTO extends ThingDTO {
                 }
 
                 if (task.getActionSet() != null) {
+                    boolean showActionSetDetails = ctx.getExpansionFields().has(JSONAttributes.ACTION_SET);
                     ctx.getExpansionFields().pushContext(JSONAttributes.ACTION_SET);
                     dto.actionSet = new PropertyContainerSetDTO.Builder(
-                            task.getActionSet(),
+                            ctx,
                             task.getContext().getHubContext(),
+                            task.getActionSet(),
                             PropertyContainerClassType.ACTION,
-                            ctx.getExpansionFields() != null && ctx.getExpansionFields().has(JSONAttributes.ACTION_SET),
                             new PropertyContainerClassProvider() {
                                 @Override
                                 public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext pcctx) {
                                     return ctx.getTaskActionClass(pcctx);
                                 }
                             },
-                            ctx.getExpansionFields(),
-                            ctx.getIdProvider()
+                            showActionSetDetails
                     ).build();
                     ctx.getExpansionFields().popContext();
                 }

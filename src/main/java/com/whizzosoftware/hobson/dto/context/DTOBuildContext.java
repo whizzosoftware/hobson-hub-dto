@@ -35,29 +35,29 @@ import java.util.Collection;
  * @author Dan Noguerol
  */
 public interface DTOBuildContext {
-    Collection<HubContext> getHubs(String userId);
-    HobsonHub getHub(HubContext hctx);
-    PropertyContainer getHubConfiguration(HubContext hctx);
-    PropertyContainer getDeviceConfiguration(DeviceContext dctx);
+    boolean isDeviceAvailable(DeviceContext dctx);
     Collection<HobsonDevice> getAllDevices(HubContext hctx);
-    Long getDeviceLastCheckIn(DeviceContext dctx);
-    Collection<DevicePassport> getDevicePassports(HubContext hctx);
-    Collection<HobsonVariable> getGlobalVariables(HubContext hctx);
-    Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx);
-    HobsonVariable getDeviceVariable(DeviceContext dctx, String name);
-    Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx);
-    TaskActionClass getTaskActionClass(PropertyContainerClassContext ctx);
-    Collection<TaskConditionClass> getAllTaskConditionClasses(HubContext hctx);
-    TaskConditionClass getTaskConditionClass(PropertyContainerClassContext ctx);
     Collection<HobsonTask> getAllTasks(HubContext hctx);
-    PropertyContainer getLocalPluginConfiguration(PluginContext pctx);
-    Collection<PluginDescriptor> getLocalPluginDescriptors(HubContext hctx);
-    Collection<PluginDescriptor> getRemotePluginDescriptors(HubContext hctx);
+    Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx);
+    Collection<TaskConditionClass> getAllTaskConditionClasses(HubContext hctx);
     Collection<PresenceEntity> getAllPresenceEntities(HubContext hctx);
     Collection<PresenceLocation> getAllPresenceLocations(HubContext hctx);
-    boolean hasTelemetryManager(HubContext hctx);
-    PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx);
+    PropertyContainer getDeviceConfiguration(DeviceContext dctx);
+    Long getDeviceLastCheckIn(DeviceContext dctx);
+    Collection<DevicePassport> getDevicePassports(HubContext hctx);
+    HobsonVariable getDeviceVariable(DeviceContext dctx, String name);
+    Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx);
     ExpansionFields getExpansionFields();
+    Collection<HobsonVariable> getGlobalVariables(HubContext hctx);
+    HobsonHub getHub(HubContext hctx);
+    PropertyContainer getHubConfiguration(HubContext hctx);
+    Collection<HubContext> getHubs(String userId);
     IdProvider getIdProvider();
-    boolean isDeviceAvailable(DeviceContext dctx);
+    PropertyContainer getLocalPluginConfiguration(PluginContext pctx);
+    Collection<PluginDescriptor> getLocalPluginDescriptors(HubContext hctx);
+    PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx);
+    Collection<PluginDescriptor> getRemotePluginDescriptors(HubContext hctx);
+    TaskActionClass getTaskActionClass(PropertyContainerClassContext ctx);
+    TaskConditionClass getTaskConditionClass(PropertyContainerClassContext ctx);
+    boolean hasTelemetryManager(HubContext hctx);
 }

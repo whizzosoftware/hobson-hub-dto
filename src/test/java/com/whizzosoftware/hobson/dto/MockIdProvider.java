@@ -289,6 +289,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createPropertyContainerClassesId(PluginContext pctx) {
+        return null;
+    }
+
+    @Override
     public String createPropertyContainerClassId(PropertyContainerClassContext pccc, PropertyContainerClassType type) {
         return propertyContainerClassId;
     }
