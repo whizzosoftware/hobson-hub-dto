@@ -104,7 +104,7 @@ public class PropertyContainerDTO extends ThingDTO {
         }
 
         public Builder(PropertyContainer pc, PropertyContainerClassProvider pccp, PropertyContainerClassType type, boolean showDetails, ExpansionFields expansions, IdProvider idProvider) {
-            dto = new PropertyContainerDTO(idProvider.createPropertyContainerId(pccp.getPropertyContainerClass(pc != null ? pc.getContainerClassContext() : null)));
+            dto = new PropertyContainerDTO(idProvider.createPropertyContainerId(pc != null ? pc.getId() : null, pccp.getPropertyContainerClass(pc != null ? pc.getContainerClassContext() : null)));
             if (showDetails && pc != null) {
                 dto.setName(pc.getName());
                 if (pc.getContainerClassContext() != null) {

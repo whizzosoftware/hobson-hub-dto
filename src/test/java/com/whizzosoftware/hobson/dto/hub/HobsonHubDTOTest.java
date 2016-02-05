@@ -14,6 +14,8 @@ import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.hub.HubManager;
 import com.whizzosoftware.hobson.api.hub.MockHubManager;
+import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
+import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
 import com.whizzosoftware.hobson.api.plugin.MockPluginManager;
 import com.whizzosoftware.hobson.api.plugin.PluginManager;
@@ -24,7 +26,6 @@ import com.whizzosoftware.hobson.api.task.TaskManager;
 import com.whizzosoftware.hobson.api.variable.MockVariableManager;
 import com.whizzosoftware.hobson.api.variable.VariableManager;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
-import com.whizzosoftware.hobson.dto.MockIdProvider;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -60,20 +61,7 @@ public class HobsonHubDTOTest {
         TaskManager taskManager = new MockTaskManager();
         PresenceManager presenceManager = new MockPresenceManager();
 
-        MockIdProvider idProvider = new MockIdProvider();
-        idProvider.setHubId("local");
-        idProvider.setActionClassesId("actionClasses");
-        idProvider.setConditionClassesId("conditionClasses");
-        idProvider.setConfigurationId("configuration");
-        idProvider.setConfigurationClassId("configurationClass");
-        idProvider.setDeviceId("device");
-        idProvider.setDevicesId("devices");
-        idProvider.setLocalPluginsId("localPlugins");
-        idProvider.setLogId("log");
-        idProvider.setPresenceEntitiesId("presenceEntities");
-        idProvider.setRemotePluginsId("remotePlugins");
-        idProvider.setTasksId("tasks");
-        idProvider.setPropertyContainerId("configuration");
+        IdProvider idProvider = new ContextPathIdProvider();
 
         // test with just ID
         HobsonHubDTO dto = new HobsonHubDTO.Builder(
@@ -89,7 +77,7 @@ public class HobsonHubDTOTest {
             hub,
             false
         ).build();
-        assertEquals("local", dto.getId());
+        assertEquals("users:local:hubs:local", dto.getId());
         assertNull(dto.getActionClasses());
         assertNull(dto.getConditionClasses());
         assertNull(dto.getConfiguration());
@@ -116,17 +104,17 @@ public class HobsonHubDTOTest {
             true
         ).build();
 
-        assertEquals("local", dto.getId());
-        assertEquals("actionClasses", dto.getActionClasses().getId());
-        assertEquals("conditionClasses", dto.getConditionClasses().getId());
-        assertEquals("configuration", dto.getConfiguration().getId());
-        assertEquals("configurationClass", dto.getConfigurationClass().getId());
-        assertEquals("devices", dto.getDevices().getId());
-        assertEquals("localPlugins", dto.getLocalPlugins().getId());
-        assertEquals("log", dto.getLog().getId());
-        assertEquals("presenceEntities", dto.getPresenceEntities().getId());
-        assertEquals("remotePlugins", dto.getRemotePlugins().getId());
-        assertEquals("tasks", dto.getTasks().getId());
+        assertEquals("users:local:hubs:local", dto.getId());
+        assertEquals("users:local:hubs:local:actionClasses", dto.getActionClasses().getId());
+        assertEquals("users:local:hubs:local:conditionClasses", dto.getConditionClasses().getId());
+        assertEquals("users:local:hubs:local:configuration", dto.getConfiguration().getId());
+        assertEquals("users:local:hubs:local:configurationClass", dto.getConfigurationClass().getId());
+        assertEquals("users:local:hubs:local:devices", dto.getDevices().getId());
+        assertEquals("users:local:hubs:local:localPlugins", dto.getLocalPlugins().getId());
+        assertEquals("users:local:hubs:local:log", dto.getLog().getId());
+        assertEquals("users:local:hubs:local:presenceEntities", dto.getPresenceEntities().getId());
+        assertEquals("users:local:hubs:local:remotePlugins", dto.getRemotePlugins().getId());
+        assertEquals("users:local:hubs:local:tasks", dto.getTasks().getId());
 
         // test with top-level and devices expansion
         MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
@@ -146,9 +134,9 @@ public class HobsonHubDTOTest {
             hub,
             true
         ).build();
-        assertEquals("local", dto.getId());
-        assertEquals("devices", dto.getDevices().getId());
+        assertEquals("users:local:hubs:local", dto.getId());
+        assertEquals("users:local:hubs:local:devices", dto.getDevices().getId());
         assertEquals(1, (int)dto.getDevices().getNumberOfItems());
-        assertEquals("device", dto.getDevices().getItemListElement().get(0).getItem().getId());
+        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getDevices().getItemListElement().get(0).getItem().getId());
     }
 }

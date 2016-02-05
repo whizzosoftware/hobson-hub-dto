@@ -9,6 +9,8 @@ package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
+import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
@@ -74,28 +76,28 @@ public class PropertyContainerDTOTest {
         props.add(new TypedProperty.Builder("name", "name", "name", TypedProperty.Type.STRING).build());
         final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(HubContext.createLocal(), "configuration"), "name", PropertyContainerClassType.HUB_CONFIG, "", props);
 
-        MockIdProvider idProvider = new MockIdProvider();
-        idProvider.setPropertyContainerClassId("/api/v1/users/local/hubs/local/configurationClass");
+        IdProvider idProvider = new ContextPathIdProvider();
 
         Map<String,Object> values = new HashMap<>();
         values.put("name", "My Name");
         values.put("device", DeviceContext.create(HubContext.createLocal(), "plugin2", "device2"));
-        PropertyContainer pc = new PropertyContainer(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "ccid"), values);
+        PropertyContainer pc = new PropertyContainer("cid", PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "ccid"), values);
 
         PropertyContainerDTO dto = new PropertyContainerDTO.Builder(
-                pc,
-                new PropertyContainerClassProvider() {
-                    @Override
-                    public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
-                        return pcc;
-                    }
-                },
-                PropertyContainerClassType.HUB_CONFIG,
-                true,
-                null,
-                idProvider
+            pc,
+            new PropertyContainerClassProvider() {
+                @Override
+                public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
+                    return pcc;
+                }
+            },
+            PropertyContainerClassType.HUB_CONFIG,
+            true,
+            null,
+            idProvider
         ).build();
-        assertEquals("/api/v1/users/local/hubs/local/configurationClass", dto.getContainerClass().getId());
+        assertEquals("users:local:hubs:local:configuration", dto.getId());
+        assertEquals("users:local:hubs:local:plugins:plugin1:containerClasses:ccid", dto.getContainerClass().getId());
         assertEquals("My Name", dto.getValues().get("name"));
     }
 

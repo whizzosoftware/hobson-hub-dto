@@ -284,7 +284,7 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createPropertyContainerId(PropertyContainerClass pcc) {
+    public String createPropertyContainerId(String id, PropertyContainerClass pcc) {
         return propertyContainerId;
     }
 
