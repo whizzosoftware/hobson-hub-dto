@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 	<groupId>com.whizzosoftware.hobson.hub</groupId>
     <artifactId>hobson-hub-dto</artifactId>
-    <version>0.8.0</version>
+    <version>0.8.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Hobson Hub DTOs</name>
     <description>DTOs and serializers for Hobson API interfaces.</description>
@@ -172,7 +172,7 @@
     <scm>
         <connection>scm:git:ssh://git@github.com/whizzosoftware/hobson-hub-dto.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/whizzosoftware/hobson-hub-dto.git</developerConnection>
-        <tag>hobson-hub-dto-0.8.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
