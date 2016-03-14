@@ -184,6 +184,16 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createHubSerialPortsId(HubContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createHubSerialPortId(HubContext ctx, String name) {
+        return null;
+    }
+
+    @Override
     public String createUserHubsId(String userId) {
         return null;
     }

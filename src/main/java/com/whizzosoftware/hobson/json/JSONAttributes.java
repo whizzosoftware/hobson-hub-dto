@@ -97,6 +97,7 @@ public class JSONAttributes {
     public static final String REPOSITORIES = "repositories";
     public static final String REPOSITORY_ID = "repositoryId";
     public static final String SECRET = "secret";
+    public static final String SERIAL_PORTS = "serialPorts";
     public static final String STATUS = "status";
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
     public static final String TASKS = "tasks";

@@ -52,6 +52,7 @@ public class HobsonHubDTO extends ThingDTO {
     private ItemListDTO presenceLocations;
     private ItemListDTO remotePlugins;
     private ItemListDTO repositories;
+    private ItemListDTO serialPorts;
     private ItemListDTO tasks;
     private String version;
 
@@ -155,6 +156,9 @@ public class HobsonHubDTO extends ThingDTO {
         }
         if (presenceLocations != null) {
             json.put(JSONAttributes.PRESENCE_LOCATIONS, presenceLocations.toJSON());
+        }
+        if (serialPorts != null) {
+            json.put(JSONAttributes.SERIAL_PORTS, serialPorts.toJSON());
         }
         json.put(JSONAttributes.VERSION, version);
         json.put(JSONAttributes.API_KEY, apiKey);
@@ -324,6 +328,9 @@ public class HobsonHubDTO extends ThingDTO {
                 // add repositories
                 expand = expansions.has(JSONAttributes.REPOSITORIES);
                 dto.repositories = new ItemListDTO(idProvider.createRepositoriesId(hub.getContext()), expand);
+
+                // add serial ports
+                dto.serialPorts = new ItemListDTO(idProvider.createHubSerialPortsId(hub.getContext()), expand);
 
                 // add tasks
                 expand = expansions.has(JSONAttributes.TASKS);
