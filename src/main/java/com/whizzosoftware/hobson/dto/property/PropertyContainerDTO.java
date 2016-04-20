@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.api.HobsonRuntimeException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.property.PropertyContainer;
@@ -21,6 +22,7 @@ import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.*;
 
 public class PropertyContainerDTO extends ThingDTO {
@@ -40,7 +42,12 @@ public class PropertyContainerDTO extends ThingDTO {
             JSONObject jp = json.getJSONObject(JSONAttributes.VALUES);
             for (Object o : jp.keySet()) {
                 String key = o.toString();
-                values.put(key, jp.get(key));
+                Object v = jp.get(key);
+                if (v instanceof Serializable) {
+                    values.put(key, v);
+                } else {
+                    throw new HobsonRuntimeException("Invalid property value for " + key + ": " + v);
+                }
             }
         }
     }
@@ -138,7 +145,7 @@ public class PropertyContainerDTO extends ThingDTO {
             return this;
         }
 
-        protected Object mapDTOValueObject(Object value, IdProvider idProvider) {
+        Object mapDTOValueObject(Object value, IdProvider idProvider) {
             if (value instanceof DeviceContext) {
                 DeviceContext dctx = (DeviceContext) value;
                 return new HobsonDeviceDTO.Builder(idProvider.createDeviceId(dctx)).build();

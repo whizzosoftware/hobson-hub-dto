@@ -7,14 +7,15 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.HobsonRuntimeException;
 import com.whizzosoftware.hobson.api.user.UserAccount;
 import org.json.JSONObject;
 
 public class UserAccountDTO {
-    private long expiration;
+    private Long expiration;
     private boolean hasAvailableHubs;
 
-    private UserAccountDTO(long expiration, boolean hasAvailableHubs) {
+    private UserAccountDTO(Long expiration, boolean hasAvailableHubs) {
         this.expiration = expiration;
         this.hasAvailableHubs = hasAvailableHubs;
     }
@@ -29,11 +30,14 @@ public class UserAccountDTO {
     public static class Builder {
         private UserAccountDTO dto;
 
-        public Builder(long expiration, boolean hasAvailableHubs) {
+        public Builder(Long expiration, boolean hasAvailableHubs) {
             dto = new UserAccountDTO(expiration, hasAvailableHubs);
         }
 
         public Builder(UserAccount userAccount) {
+            if (userAccount == null) {
+                throw new HobsonRuntimeException("No user account information");
+            }
             dto = new UserAccountDTO(userAccount.getExpiration(), userAccount.hasAvailableHubs());
         }
 
