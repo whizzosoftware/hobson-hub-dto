@@ -93,8 +93,8 @@ public class HobsonUserDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.HUBS);
                     boolean showHubDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (HubContext hctx : ctx.getHubs(user.getId())) {
-                        HobsonHub hub = ctx.getHub(hctx);
+                    for (String hubId : user.getAccount().getHubs()) {
+                        HobsonHub hub = ctx.getHub(HubContext.create(user.getId(), hubId));
                         dto.hubs.add(new HobsonHubDTO.Builder(ctx, hub, showHubDetails).build());
                     }
                     expansions.popContext();

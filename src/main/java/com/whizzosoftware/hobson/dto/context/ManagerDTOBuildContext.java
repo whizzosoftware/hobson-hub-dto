@@ -50,10 +50,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     TelemetryManager telemetryManager;
     IdProvider idProvider;
 
-    public Collection<HubContext> getHubs(String userId) {
-        return (hubManager != null) ? hubManager.getHubs(userId) : null;
-    }
-
     @Override
     public HobsonHub getHub(HubContext hctx) {
         return (hubManager != null) ? hubManager.getHub(hctx) : null;

@@ -51,7 +51,6 @@ public interface DTOBuildContext {
     Collection<HobsonVariable> getGlobalVariables(HubContext hctx);
     HobsonHub getHub(HubContext hctx);
     PropertyContainer getHubConfiguration(HubContext hctx);
-    Collection<HubContext> getHubs(String userId);
     IdProvider getIdProvider();
     PropertyContainer getLocalPluginConfiguration(PluginContext pctx);
     Collection<PluginDescriptor> getLocalPluginDescriptors(HubContext hctx);
