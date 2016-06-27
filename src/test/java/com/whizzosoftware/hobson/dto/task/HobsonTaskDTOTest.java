@@ -89,6 +89,12 @@ public class HobsonTaskDTOTest {
     }
 
     @Test
+    public void testJSONConstructor2() {
+        JSONObject json = new JSONObject(new JSONTokener("{\"name\":\"Turn on outlet\",\"conditions\":[{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-rules/conditionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/bulb\"}]}}],\"actionSet\":{\"actions\":[{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-actions/actionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/switch\"}]}}]}}"));
+        HobsonTaskDTO dto = new HobsonTaskDTO.Builder(json).build();
+    }
+
+    @Test
     public void testExpandActionSet() {
         HubContext hctx = HubContext.createLocal();
         ExpansionFields expansions = new ExpansionFields("actionSet");
@@ -104,10 +110,10 @@ public class HobsonTaskDTOTest {
         HobsonTask task = new HobsonTask(tctx, "Test", null, null, conditions, new PropertyContainerSet(actionSetId, actions));
         HobsonTaskDTO dto = new HobsonTaskDTO.Builder(ctx, task, true).build();
         assertEquals("Test", dto.getName());
-        assertTrue(dto.getActionSet().getId().startsWith("users:local:hubs:local:actionSets:"));
+        assertTrue(dto.getActionSet().getId().startsWith("hubs:local:actionSets:"));
         assertNotNull(dto.getActionSet().getContainers());
         assertEquals(1, dto.getActionSet().getContainers().size());
-        assertEquals("users:local:hubs:local:plugins:plugin1:containerClasses:cc1", dto.getActionSet().getContainers().get(0).getContainerClass().getId());
+        assertEquals("hubs:local:plugins:plugin1:containerClasses:cc1", dto.getActionSet().getContainers().get(0).getContainerClass().getId());
         assertEquals(1, dto.getActionSet().getContainers().get(0).getValues().size());
         assertEquals("bar", dto.getActionSet().getContainers().get(0).getValues().get("foo"));
     }

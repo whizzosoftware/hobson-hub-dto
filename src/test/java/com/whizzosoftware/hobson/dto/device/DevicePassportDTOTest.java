@@ -24,6 +24,6 @@ public class DevicePassportDTOTest {
         DTOBuildContext ctx = new ManagerDTOBuildContext.Builder().idProvider(idProvider).build();
         DevicePassport dp = new DevicePassport(hctx, "dp1", "device1", System.currentTimeMillis());
         DevicePassportDTO dto = new DevicePassportDTO.Builder(ctx, dp, false, false).build();
-        assertEquals("users:local:hubs:local:passports:dp1", dto.getId());
+        assertEquals("hubs:local:passports:dp1", dto.getId());
     }
 }

@@ -41,7 +41,7 @@ public class DataStreamDTOTest {
     @Test
     public void testDataStreamConstructorNoDetails() {
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).build(), false);
-        assertEquals("user1:dataStreams:ds1", dto.getId());
+        assertEquals("dataStreams:ds1", dto.getId());
         assertNull(dto.getName());
         assertNull(dto.getVariables());
         assertNull(dto.getLinks());
@@ -52,7 +52,7 @@ public class DataStreamDTOTest {
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).build(), true);
         assertNotNull(dto.getVariables());
         assertEquals(1, dto.getVariables().size());
-        assertEquals("user1:dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
+        assertEquals("dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
     }
 
     @Test
@@ -61,15 +61,15 @@ public class DataStreamDTOTest {
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).expansionFields(ef).build(), true);
         assertNotNull(dto.getVariables());
         assertEquals(1, dto.getVariables().size());
-        assertEquals("user1:dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
+        assertEquals("dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
     }
 
     private DataStreamDTO createDTO(DTOBuildContext ctx, boolean showDetails) {
         Collection<VariableContext> vars = new ArrayList<>();
         vars.add(VariableContext.create(DeviceContext.createLocal("plugin1", "device1"), "var1"));
-        DataStream ds = new DataStream("user1", "ds1", "My DS", vars);
+        DataStream ds = new DataStream("ds1", "My DS", vars);
         DataStreamDTO dto = new DataStreamDTO.Builder(ctx, ds, showDetails).build();
-        assertEquals("user1:dataStreams:ds1", dto.getId());
+        assertEquals("dataStreams:ds1", dto.getId());
         if (showDetails) {
             assertEquals("My DS", dto.getName());
         } else {

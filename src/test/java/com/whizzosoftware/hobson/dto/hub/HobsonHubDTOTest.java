@@ -77,7 +77,7 @@ public class HobsonHubDTOTest {
             hub,
             false
         ).build();
-        assertEquals("users:local:hubs:local", dto.getId());
+        assertEquals("hubs:local", dto.getId());
         assertNull(dto.getActionClasses());
         assertNull(dto.getConditionClasses());
         assertNull(dto.getConfiguration());
@@ -104,17 +104,17 @@ public class HobsonHubDTOTest {
             true
         ).build();
 
-        assertEquals("users:local:hubs:local", dto.getId());
-        assertEquals("users:local:hubs:local:actionClasses", dto.getActionClasses().getId());
-        assertEquals("users:local:hubs:local:conditionClasses", dto.getConditionClasses().getId());
-        assertEquals("users:local:hubs:local:configuration", dto.getConfiguration().getId());
-        assertEquals("users:local:hubs:local:configurationClass", dto.getConfigurationClass().getId());
-        assertEquals("users:local:hubs:local:devices", dto.getDevices().getId());
-        assertEquals("users:local:hubs:local:localPlugins", dto.getLocalPlugins().getId());
-        assertEquals("users:local:hubs:local:log", dto.getLog().getId());
-        assertEquals("users:local:hubs:local:presenceEntities", dto.getPresenceEntities().getId());
-        assertEquals("users:local:hubs:local:remotePlugins", dto.getRemotePlugins().getId());
-        assertEquals("users:local:hubs:local:tasks", dto.getTasks().getId());
+        assertEquals("hubs:local", dto.getId());
+        assertEquals("hubs:local:actionClasses", dto.getActionClasses().getId());
+        assertEquals("hubs:local:conditionClasses", dto.getConditionClasses().getId());
+        assertEquals("hubs:local:configuration", dto.getConfiguration().getId());
+        assertEquals("hubs:local:configurationClass", dto.getConfigurationClass().getId());
+        assertEquals("hubs:local:devices", dto.getDevices().getId());
+        assertEquals("hubs:local:localPlugins", dto.getLocalPlugins().getId());
+        assertEquals("hubs:local:log", dto.getLog().getId());
+        assertEquals("hubs:local:presenceEntities", dto.getPresenceEntities().getId());
+        assertEquals("hubs:local:remotePlugins", dto.getRemotePlugins().getId());
+        assertEquals("hubs:local:tasks", dto.getTasks().getId());
 
         // test with top-level and devices expansion
         MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
@@ -134,9 +134,9 @@ public class HobsonHubDTOTest {
             hub,
             true
         ).build();
-        assertEquals("users:local:hubs:local", dto.getId());
-        assertEquals("users:local:hubs:local:devices", dto.getDevices().getId());
+        assertEquals("hubs:local", dto.getId());
+        assertEquals("hubs:local:devices", dto.getDevices().getId());
         assertEquals(1, (int)dto.getDevices().getNumberOfItems());
-        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getDevices().getItemListElement().get(0).getItem().getId());
+        assertEquals("hubs:local:devices:plugin1:device1", dto.getDevices().getItemListElement().get(0).getItem().getId());
     }
 }

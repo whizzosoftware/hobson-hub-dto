@@ -41,7 +41,7 @@ public class PropertyContainerSetDTOTest {
         assertNotNull(dto.getContainers());
         assertEquals(1, dto.getContainers().size());
         assertNotNull(dto.getContainers().get(0).getContainerClass());
-        assertEquals("users:local:hubs:local:plugins:plugin1:containerClasses:cc1", dto.getContainers().get(0).getContainerClass().getId());
+        assertEquals("hubs:local:plugins:plugin1:containerClasses:cc1", dto.getContainers().get(0).getContainerClass().getId());
         assertNotNull(dto.getContainers().get(0).getValues());
         assertEquals(1, dto.getContainers().get(0).getValues().size());
         assertEquals("bar", dto.getContainers().get(0).getValues().get("prop1"));

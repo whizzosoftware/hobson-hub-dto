@@ -212,7 +212,7 @@ public class TypedPropertyValueSerializerTest {
     @Test
     public void testPresenceEntityObject() {
         JSONObject json = new JSONObject();
-        json.put("@id", "/api/v1/users/local/hubs/local/presence/entities/foo");
+        json.put("@id", "/api/v1/hubs/local/presence/entities/foo");
         Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.PRESENCE_ENTITY, json, new TypedPropertyValueSerializer.PropertyContextProvider() {
             @Override
             public DeviceContext createDeviceContext(String id) {
@@ -231,7 +231,6 @@ public class TypedPropertyValueSerializerTest {
         });
         assertTrue(o instanceof PresenceEntityContext);
         PresenceEntityContext pec = (PresenceEntityContext)o;
-        assertEquals("local", pec.getUserId());
         assertEquals("local", pec.getHubId());
         assertEquals("foo", pec.getEntityId());
     }

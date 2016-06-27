@@ -42,7 +42,7 @@ public class HobsonDeviceDTOTest {
             device,
             false
         ).build();
-        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getId());
+        assertEquals("hubs:local:devices:plugin1:device1", dto.getId());
     }
 
     @Test
@@ -72,14 +72,14 @@ public class HobsonDeviceDTOTest {
             true
         ).build();
 
-        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getId());
+        assertEquals("hubs:local:devices:plugin1:device1", dto.getId());
         assertEquals("deviceName", dto.getName());
         assertEquals("Mfg", dto.getManufacturerName());
         assertEquals("1.0", dto.getManufacturerVersion());
         assertEquals("model", dto.getModelName());
         assertEquals("LIGHTBULB", dto.getType().toString());
         assertEquals(100, (long)dto.getLastCheckIn());
-        assertEquals("users:local:hubs:local:variables:plugin1:device1", dto.getVariables().getId());
+        assertEquals("hubs:local:variables:plugin1:device1", dto.getVariables().getId());
     }
 
     @Test
@@ -109,13 +109,13 @@ public class HobsonDeviceDTOTest {
             true
         ).build();
 
-        assertEquals("users:local:hubs:local:devices:plugin1:device1", dto.getId());
+        assertEquals("hubs:local:devices:plugin1:device1", dto.getId());
         assertEquals("deviceName", dto.getName());
         assertEquals("LIGHTBULB", dto.getType().toString());
         assertEquals(100, (long)dto.getLastCheckIn());
-        assertEquals("users:local:hubs:local:variables:plugin1:device1", dto.getVariables().getId());
+        assertEquals("hubs:local:variables:plugin1:device1", dto.getVariables().getId());
         assertEquals(1, (int)dto.getVariables().getNumberOfItems());
-        assertEquals("users:local:hubs:local:variables:plugin1:device1:foo", dto.getVariables().getItemListElement().get(0).getItem().getId());
+        assertEquals("hubs:local:variables:plugin1:device1:foo", dto.getVariables().getItemListElement().get(0).getItem().getId());
     }
 
     @Test

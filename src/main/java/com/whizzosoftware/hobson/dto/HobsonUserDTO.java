@@ -15,6 +15,8 @@ import com.whizzosoftware.hobson.dto.hub.HobsonHubDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
+import java.util.Collection;
+
 public class HobsonUserDTO extends ThingDTO {
     private UserAccountDTO account;
     private ItemListDTO dataStreams;
@@ -87,15 +89,20 @@ public class HobsonUserDTO extends ThingDTO {
                 }
                 dto.hubs = new ItemListDTO(ctx.getIdProvider().createUserHubsId(user.getId()));
                 if (supportsDataStreams) {
-                    dto.dataStreams = new ItemListDTO(ctx.getIdProvider().createDataStreamsId(user.getId()));
+                    dto.dataStreams = new ItemListDTO(ctx.getIdProvider().createDataStreamsId());
                 }
                 if (expansions.has(JSONAttributes.HUBS)) {
                     expansions.pushContext(JSONAttributes.HUBS);
                     boolean showHubDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (String hubId : user.getAccount().getHubs()) {
-                        HobsonHub hub = ctx.getHub(HubContext.create(user.getId(), hubId));
-                        dto.hubs.add(new HobsonHubDTO.Builder(ctx, hub, showHubDetails).build());
+                    if (user.getAccount() != null) {
+                        Collection<String> hubs = user.getAccount().getHubs();
+                        if (hubs != null) {
+                            for (String hubId : hubs) {
+                                HobsonHub hub = ctx.getHub(HubContext.create(hubId));
+                                dto.hubs.add(new HobsonHubDTO.Builder(ctx, hub, showHubDetails).build());
+                            }
+                        }
                     }
                     expansions.popContext();
                     expansions.popContext();

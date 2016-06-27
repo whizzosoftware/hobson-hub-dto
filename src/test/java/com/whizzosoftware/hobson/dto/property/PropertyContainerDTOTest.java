@@ -38,6 +38,13 @@ public class PropertyContainerDTOTest {
     }
 
     @Test
+    public void testJSONConstructor2() {
+        JSONObject json = new JSONObject(new JSONTokener("{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-rules/conditionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/bulb\"}]}}"));
+        PropertyContainerDTO dto = new PropertyContainerDTO.Builder(json).build();
+        assertEquals(1, dto.getValues().size());
+    }
+
+    @Test
     public void testPropertyContainerConstructor() {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("prop1id", "prop1name", "prop1desc", TypedProperty.Type.STRING).build());
@@ -96,8 +103,8 @@ public class PropertyContainerDTOTest {
             null,
             idProvider
         ).build();
-        assertEquals("users:local:hubs:local:configuration", dto.getId());
-        assertEquals("users:local:hubs:local:plugins:plugin1:containerClasses:ccid", dto.getContainerClass().getId());
+        assertEquals("hubs:local:configuration", dto.getId());
+        assertEquals("hubs:local:plugins:plugin1:containerClasses:ccid", dto.getContainerClass().getId());
         assertEquals("My Name", dto.getValues().get("name"));
     }
 
@@ -114,9 +121,9 @@ public class PropertyContainerDTOTest {
         PropertyContainer pc = new PropertyContainer(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "ccid"), values);
 
         MockIdProvider idProvider = new MockIdProvider();
-        idProvider.setDeviceId("/api/v1/users/local/hubs/local/plugins/plugin2/devices/device2");
-        idProvider.setPropertyContainerId("/api/v1/users/local/hubs/local/plugins/local/plugin1/configuration");
-        idProvider.setPropertyContainerClassId("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass");
+        idProvider.setDeviceId("/api/v1/hubs/local/plugins/plugin2/devices/device2");
+        idProvider.setPropertyContainerId("/api/v1/hubs/local/plugins/local/plugin1/configuration");
+        idProvider.setPropertyContainerClassId("/api/v1/hubs/local/plugins/local/plugin1/configurationClass");
 
         PropertyContainerDTO dto = new PropertyContainerDTO.Builder(
             pc,
@@ -131,10 +138,19 @@ public class PropertyContainerDTOTest {
             null,
             idProvider
         ).build();
-        assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1/configuration", dto.getId());
-        assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", dto.getContainerClass().getId());
+        assertEquals("/api/v1/hubs/local/plugins/local/plugin1/configuration", dto.getId());
+        assertEquals("/api/v1/hubs/local/plugins/local/plugin1/configurationClass", dto.getContainerClass().getId());
         assertEquals("My Name", dto.getValues().get("name"));
         assertTrue(dto.getValues().get("device") instanceof HobsonDeviceDTO);
-        assertEquals("/api/v1/users/local/hubs/local/plugins/plugin2/devices/device2", ((HobsonDeviceDTO)dto.getValues().get("device")).getId());
+        assertEquals("/api/v1/hubs/local/plugins/plugin2/devices/device2", ((HobsonDeviceDTO)dto.getValues().get("device")).getId());
+    }
+
+    @Test
+    public void testNullValue() {
+        JSONObject json = new JSONObject(new JSONTokener("{\"cclass\":{\"@id\":\"/api/v1/users/local/hubs/local/plugins/plugin1/actionClasses/actionclass1\"},\"values\":{\"foo\":null}}"));
+        PropertyContainerDTO dto = new PropertyContainerDTO.Builder(json).build();
+        assertTrue(dto.hasPropertyValues());
+        assertEquals(1, dto.getValues().size());
+        assertNull(dto.getValues().get("foo"));
     }
 }
