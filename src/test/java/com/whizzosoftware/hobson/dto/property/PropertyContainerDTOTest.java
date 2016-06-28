@@ -45,6 +45,17 @@ public class PropertyContainerDTOTest {
     }
 
     @Test
+    public void testJSONConstructorWithJSONObjectValue() {
+        JSONObject json = new JSONObject(new JSONTokener("{\"id\":\"/api/v1/hubs/local/plugins/local/com.whizzosoftware.hobson.hub.hobson-hub-wunderground\",\"values\":{\"pwsPassword\":\"password\",\"pwsId\":\"MYID\",\"device\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-davis-vantage/devices/default\"},\"serial.hostname\":\"192.168.0.1\"},\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/local/com.whizzosoftware.hobson.hub.hobson-hub-wunderground/configurationClass\"},\"url\":\"/api/v1/hubs/local/plugins/local/com.whizzosoftware.hobson.hub.hobson-hub-wunderground/configuration\"}"));
+        PropertyContainerDTO dto = new PropertyContainerDTO.Builder(json).build();
+        assertEquals("password", dto.getValues().get("pwsPassword"));
+        assertEquals("MYID", dto.getValues().get("pwsId"));
+        assertEquals("192.168.0.1", dto.getValues().get("serial.hostname"));
+        assertTrue(dto.getValues().get("device") instanceof JSONObject);
+        assertEquals("/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-davis-vantage/devices/default", ((JSONObject)dto.getValues().get("device")).getString("@id"));
+    }
+
+    @Test
     public void testPropertyContainerConstructor() {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("prop1id", "prop1name", "prop1desc", TypedProperty.Type.STRING).build());

@@ -45,7 +45,7 @@ public class PropertyContainerDTO extends ThingDTO {
                 Object v = jp.get(key);
                 if (JSONObject.NULL.equals(v)) {
                     values.put(key, null);
-                } else if (v instanceof Serializable || v instanceof JSONArray) {
+                } else if (v instanceof Serializable || v instanceof JSONArray || v instanceof JSONObject) {
                     values.put(key, v);
                 } else {
                     throw new HobsonRuntimeException("Invalid property value for " + key + ": " + v);
