@@ -356,6 +356,7 @@ public class HobsonHubDTO extends ThingDTO {
                     dto.addLink("activityLog", idProvider.createActivityLogId(hub.getContext()));
                     dto.addLink("sendTestEmail", idProvider.createSendTestEmailId(hub.getContext()));
                     dto.addLink("password", idProvider.createHubPasswordId(hub.getContext()));
+                    dto.addLink("webSocket", hub.getWebSocketUri());
                 }
             }
 

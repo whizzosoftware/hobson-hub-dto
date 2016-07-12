@@ -115,4 +115,5 @@ public class JSONAttributes {
     public static final String VARIABLES = "variables";
     public static final String VARIABLE_NAME = "variableName";
     public static final String VERSION = "version";
+    public static final String WEB_SOCKET_URI = "webSocketUri";
 }
