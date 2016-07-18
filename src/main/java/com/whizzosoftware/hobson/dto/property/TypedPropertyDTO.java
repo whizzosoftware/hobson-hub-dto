@@ -60,6 +60,7 @@ public class TypedPropertyDTO extends ThingDTO {
             dto.setName(tp.getName());
             dto.setDescription(tp.getDescription());
             dto.type = tp.getType();
+            dto.constraints = tp.getConstraints();
         }
 
         public Builder description(String description) {
