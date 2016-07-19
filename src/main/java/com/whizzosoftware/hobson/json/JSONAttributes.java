@@ -55,6 +55,7 @@ public class JSONAttributes {
     public static final String EVENTS = "events";
     public static final String EXPAND = "expand";
     public static final String FAMILY_NAME = "familyName";
+    public static final String FIELDS = "fields";
     public static final String GIVEN_NAME = "givenName";
     public static final String GLOBAL_VARIABLES = "globalVariables";
     public static final String HUB_ID = "hubId";
@@ -112,6 +113,7 @@ public class JSONAttributes {
     public static final String USER_ID = "userId";
     public static final String VALUE = "value";
     public static final String VALUES = "values";
+    public static final String VARIABLE = "variable";
     public static final String VARIABLES = "variables";
     public static final String VARIABLE_NAME = "variableName";
     public static final String VERSION = "version";

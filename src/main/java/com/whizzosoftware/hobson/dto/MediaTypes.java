@@ -15,6 +15,7 @@ package com.whizzosoftware.hobson.dto;
 public class MediaTypes {
     public static final String DATA_STREAM = "application/vnd.hobson.dataStream";
     public static final String DATA_STREAM_DATA = "application/vnd.hobson.dataStreamData";
+    public static final String DATA_STREAM_FIELD= "application/vnd.hobson.dataStreamField";
     public static final String DEVICE = "application/vnd.hobson.device";
     public static final String DEVICE_PASSPORT = "application/vnd.hobson.devicePassport";
     public static final String ERROR = "application/vnd.hobson.error";

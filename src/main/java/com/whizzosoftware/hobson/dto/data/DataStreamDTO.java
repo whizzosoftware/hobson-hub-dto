@@ -5,14 +5,13 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.whizzosoftware.hobson.dto.telemetry;
+package com.whizzosoftware.hobson.dto.data;
 
-import com.whizzosoftware.hobson.api.telemetry.DataStream;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.data.DataStream;
+import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
-import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class DataStreamDTO extends ThingDTO {
-    private Collection<HobsonVariableDTO> variables;
+    private Collection<DataStreamFieldDTO> fields;
 
     private DataStreamDTO(String id) {
         super(id);
@@ -30,11 +29,11 @@ public class DataStreamDTO extends ThingDTO {
     private DataStreamDTO(JSONObject json) {
         super(json);
 
-        if (json.has(JSONAttributes.VARIABLES)) {
-            JSONArray jca = json.getJSONArray(JSONAttributes.VARIABLES);
-            this.variables = new ArrayList<>();
+        if (json.has(JSONAttributes.FIELDS)) {
+            JSONArray jca = json.getJSONArray(JSONAttributes.FIELDS);
+            this.fields = new ArrayList<>();
             for (int i=0; i < jca.length(); i++) {
-                variables.add(new HobsonVariableDTO.Builder(jca.getJSONObject(i)).build());
+                fields.add(new DataStreamFieldDTO.Builder(jca.getJSONObject(i)).build());
             }
         }
     }
@@ -44,23 +43,23 @@ public class DataStreamDTO extends ThingDTO {
         return MediaTypes.DATA_STREAM;
     }
 
-    public boolean hasVariables() {
-        return (variables != null && variables.size() > 0);
+    public boolean hasFields() {
+        return (fields != null && fields.size() > 0);
     }
 
-    public Collection<HobsonVariableDTO> getVariables() {
-        return variables;
+    public Collection<DataStreamFieldDTO> getFields() {
+        return fields;
     }
 
     @Override
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        if (variables != null) {
+        if (fields != null) {
             JSONArray vars = new JSONArray();
-            for (HobsonVariableDTO v : variables) {
-                vars.put(v.toJSON());
+            for (DataStreamFieldDTO f : fields) {
+                vars.put(f.toJSON());
             }
-            json.put(JSONAttributes.VARIABLES, vars);
+            json.put(JSONAttributes.FIELDS, vars);
         }
         return json;
     }
@@ -72,10 +71,10 @@ public class DataStreamDTO extends ThingDTO {
             dto = new DataStreamDTO(ctx.getIdProvider().createDataStreamId(ds.getId()));
             if (showDetails) {
                 dto.setName(ds.getName());
-                if (ds.hasVariables()) {
-                    dto.variables = new ArrayList<>();
-                    for (VariableContext v : ds.getVariables()) {
-                        dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(v)).build());
+                if (ds.hasFields()) {
+                    dto.fields = new ArrayList<>();
+                    for (DataStreamField f : ds.getFields()) {
+                        dto.fields.add(new DataStreamFieldDTO.Builder(ctx, ds.getId(), f, true).build());
                     }
                 }
                 dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(ds.getId()));

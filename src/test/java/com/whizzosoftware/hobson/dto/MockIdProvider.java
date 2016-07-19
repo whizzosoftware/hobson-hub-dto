@@ -99,7 +99,17 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createDataStreamVariablesId(String dataStreamId) {
+    public String createDataStreamFieldsId(String dataStreamId) {
+        return null;
+    }
+
+    @Override
+    public String createDataStreamTagsId(String dataStreamId) {
+        return null;
+    }
+
+    @Override
+    public String createDataStreamFieldId(String dataStreamId, String fieldId) {
         return null;
     }
 
