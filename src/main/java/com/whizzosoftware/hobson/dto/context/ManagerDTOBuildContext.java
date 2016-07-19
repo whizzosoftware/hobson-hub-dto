@@ -28,7 +28,7 @@ import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.api.task.TaskManager;
 import com.whizzosoftware.hobson.api.task.action.TaskActionClass;
 import com.whizzosoftware.hobson.api.task.condition.TaskConditionClass;
-import com.whizzosoftware.hobson.api.data.TelemetryManager;
+import com.whizzosoftware.hobson.api.data.DataStreamManager;
 import com.whizzosoftware.hobson.api.variable.*;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 
@@ -47,7 +47,7 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     PresenceManager presenceManager;
     VariableManager variableManager;
     ExpansionFields expansionFields;
-    TelemetryManager telemetryManager;
+    DataStreamManager dataStreamManager;
     IdProvider idProvider;
 
     @Override
@@ -129,8 +129,8 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     }
 
     @Override
-    public boolean hasTelemetryManager(HubContext hctx) {
-        return (telemetryManager != null);
+    public boolean hasDataStreamManager(HubContext hctx) {
+        return (dataStreamManager != null);
     }
 
     public PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx) {
@@ -195,8 +195,8 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
             return this;
         }
 
-        public Builder telemetryManager(TelemetryManager val) {
-            ctx.telemetryManager = val;
+        public Builder dataStreamManager(DataStreamManager val) {
+            ctx.dataStreamManager = val;
             return this;
         }
 

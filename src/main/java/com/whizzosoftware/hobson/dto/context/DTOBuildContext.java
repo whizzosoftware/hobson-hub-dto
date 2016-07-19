@@ -58,5 +58,5 @@ public interface DTOBuildContext {
     Collection<PluginDescriptor> getRemotePluginDescriptors(HubContext hctx);
     TaskActionClass getTaskActionClass(PropertyContainerClassContext ctx);
     TaskConditionClass getTaskConditionClass(PropertyContainerClassContext ctx);
-    boolean hasTelemetryManager(HubContext hctx);
+    boolean hasDataStreamManager(HubContext hctx);
 }

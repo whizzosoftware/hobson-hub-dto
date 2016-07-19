@@ -8,8 +8,8 @@
 package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStreamField;
-import com.whizzosoftware.hobson.api.data.TelemetryInterval;
-import com.whizzosoftware.hobson.api.data.TemporalValueSet;
+import com.whizzosoftware.hobson.api.data.DataStreamInterval;
+import com.whizzosoftware.hobson.api.data.DataStreamValueSet;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
@@ -22,11 +22,11 @@ import java.util.Map;
 
 public class DataStreamDataDTO extends ThingDTO {
     private long endTime;
-    private TelemetryInterval interval;
+    private DataStreamInterval interval;
     private Collection<DataStreamField> fields;
-    private Collection<TemporalValueSet> data;
+    private Collection<DataStreamValueSet> data;
 
-    public DataStreamDataDTO(String id, long endTime, TelemetryInterval interval) {
+    public DataStreamDataDTO(String id, long endTime, DataStreamInterval interval) {
         super(id);
         this.endTime = endTime;
         this.interval = interval;
@@ -52,7 +52,7 @@ public class DataStreamDataDTO extends ThingDTO {
 
         // build data set
         JSONArray a = new JSONArray();
-        for (TemporalValueSet tvs : data) {
+        for (DataStreamValueSet tvs : data) {
             JSONObject jtvs = new JSONObject();
             jtvs.put(JSONAttributes.TIMESTAMP, tvs.getTime());
             Map<String,Object> values = tvs.getValues();
@@ -68,7 +68,7 @@ public class DataStreamDataDTO extends ThingDTO {
     static public class Builder {
         DataStreamDataDTO dto;
 
-        public Builder(DTOBuildContext ctx, String dataStreamId, long endTime, TelemetryInterval inr) {
+        public Builder(DTOBuildContext ctx, String dataStreamId, long endTime, DataStreamInterval inr) {
             dto = new DataStreamDataDTO(ctx.getIdProvider().createDataStreamDataId(dataStreamId), endTime, inr);
         }
 
@@ -82,7 +82,7 @@ public class DataStreamDataDTO extends ThingDTO {
             return this;
         }
 
-        public DataStreamDataDTO.Builder data(Collection<TemporalValueSet> data) {
+        public DataStreamDataDTO.Builder data(Collection<DataStreamValueSet> data) {
             dto.data = data;
             return this;
         }

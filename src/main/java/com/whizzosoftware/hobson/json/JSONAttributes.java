@@ -104,7 +104,6 @@ public class JSONAttributes {
     public static final String TAGS = "tags";
     public static final String TASKS = "tasks";
     public static final String TASK_ID = "taskId";
-    public static final String TELEMETRY = "telemetry";
     public static final String TIME = "time";
     public static final String TIMESTAMP = "timestamp";
     public static final String TYPE = "type";
