@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -81,12 +82,19 @@ public class DataStreamDTOTest {
         assertEquals("test", f.getString("name"));
         assertNotNull(f.getJSONObject("variable"));
         assertEquals("hubs:local:variables:plugin1:device1:var1", f.getJSONObject("variable").getString("@id"));
+        fa = json.getJSONArray("tags");
+        assertTrue("tag1".equals(json.getJSONArray("tags").getString(0)) || "tag2".equals(json.getJSONArray("tags").getString(0)));
+        assertTrue("tag1".equals(json.getJSONArray("tags").getString(1)) || "tag2".equals(json.getJSONArray("tags").getString(1)));
+        assertEquals(2, fa.length());
     }
 
     private DataStreamDTO createDTO(DTOBuildContext ctx, boolean showDetails) {
         Collection<DataStreamField> vars = new ArrayList<>();
         vars.add(new DataStreamField("field1", "test", VariableContext.create(DeviceContext.createLocal("plugin1", "device1"), "var1")));
-        DataStream ds = new DataStream("ds1", "My DS", vars, null);
+        HashSet<String> tags = new HashSet<>();
+        tags.add("tag1");
+        tags.add("tag2");
+        DataStream ds = new DataStream("ds1", "My DS", vars, tags);
         DataStreamDTO dto = new DataStreamDTO.Builder(ctx, ds, showDetails).build();
         assertEquals("dataStreams:ds1", dto.getId());
         if (showDetails) {

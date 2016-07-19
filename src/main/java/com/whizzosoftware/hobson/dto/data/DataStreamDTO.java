@@ -18,9 +18,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 public class DataStreamDTO extends ThingDTO {
     private Collection<DataStreamFieldDTO> fields;
+    private Set<String> tags;
 
     private DataStreamDTO(String id) {
         super(id);
@@ -61,6 +63,9 @@ public class DataStreamDTO extends ThingDTO {
             }
             json.put(JSONAttributes.FIELDS, vars);
         }
+        if (tags != null) {
+            json.put(JSONAttributes.TAGS, tags);
+        }
         return json;
     }
 
@@ -77,6 +82,7 @@ public class DataStreamDTO extends ThingDTO {
                         dto.fields.add(new DataStreamFieldDTO.Builder(ctx, ds.getId(), f, true).build());
                     }
                 }
+                dto.tags = ds.getTags();
                 dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(ds.getId()));
             }
         }

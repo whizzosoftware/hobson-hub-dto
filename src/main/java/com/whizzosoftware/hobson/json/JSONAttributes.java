@@ -101,6 +101,7 @@ public class JSONAttributes {
     public static final String SERIAL_PORTS = "serialPorts";
     public static final String STATUS = "status";
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
+    public static final String TAGS = "tags";
     public static final String TASKS = "tasks";
     public static final String TASK_ID = "taskId";
     public static final String TELEMETRY = "telemetry";
