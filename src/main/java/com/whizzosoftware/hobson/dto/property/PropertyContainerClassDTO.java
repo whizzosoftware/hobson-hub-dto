@@ -71,10 +71,7 @@ public class PropertyContainerClassDTO extends ThingDTO {
                 if (pcc.hasSupportedProperties()) {
                     dto.supportedProperties = new ArrayList<>();
                     for (TypedProperty tp : pcc.getSupportedProperties()) {
-                        // only include a property if it is public
-                        if (tp.isPublic()) {
-                            dto.supportedProperties.add(new TypedPropertyDTO.Builder(tp).build());
-                        }
+                        dto.supportedProperties.add(new TypedPropertyDTO.Builder(tp).build());
                     }
                 }
             }

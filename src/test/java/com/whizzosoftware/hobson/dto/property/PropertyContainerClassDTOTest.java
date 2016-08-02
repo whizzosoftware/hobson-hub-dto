@@ -24,7 +24,6 @@ public class PropertyContainerClassDTOTest {
     public void testBuilderWithPCC() {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("id1", "name1", "desc1", TypedProperty.Type.STRING).build());
-        props.add(new TypedProperty.Builder("id2", "name2", "desc2", TypedProperty.Type.STRING).isPublic(false).build());
 
         PropertyContainerClass pcc = new PropertyContainerClass(
           PropertyContainerClassContext.create(HubContext.createLocal(), "cc1"),
