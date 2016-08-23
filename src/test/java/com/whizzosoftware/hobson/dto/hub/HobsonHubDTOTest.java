@@ -7,9 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.hub;
 
-import com.whizzosoftware.hobson.api.device.DeviceManager;
-import com.whizzosoftware.hobson.api.device.MockDeviceManager;
-import com.whizzosoftware.hobson.api.device.MockHobsonDevice;
+import com.whizzosoftware.hobson.api.device.*;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.hub.HubManager;
@@ -23,11 +21,10 @@ import com.whizzosoftware.hobson.api.presence.MockPresenceManager;
 import com.whizzosoftware.hobson.api.presence.PresenceManager;
 import com.whizzosoftware.hobson.api.task.MockTaskManager;
 import com.whizzosoftware.hobson.api.task.TaskManager;
-import com.whizzosoftware.hobson.api.variable.MockVariableManager;
-import com.whizzosoftware.hobson.api.variable.VariableManager;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
+import io.netty.util.concurrent.Future;
 import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -51,17 +48,15 @@ public class HobsonHubDTOTest {
     }
 
     @Test
-    public void testHubConstructor() {
+    public void testHubConstructor() throws Exception {
         HubContext hctx = HubContext.createLocal();
-        HobsonHub hub = new HobsonHub(hctx);
-        HubManager hubManager = new MockHubManager();
-        PluginManager pluginManager = new MockPluginManager();
-        DeviceManager deviceManager = new MockDeviceManager();
-        VariableManager varManager = new MockVariableManager();
-        TaskManager taskManager = new MockTaskManager();
-        PresenceManager presenceManager = new MockPresenceManager();
-
-        IdProvider idProvider = new ContextPathIdProvider();
+        final HobsonHub hub = new HobsonHub(hctx);
+        final HubManager hubManager = new MockHubManager();
+        final PluginManager pluginManager = new MockPluginManager();
+        final DeviceManager deviceManager = new MockDeviceManager();
+        final TaskManager taskManager = new MockTaskManager();
+        final PresenceManager presenceManager = new MockPresenceManager();
+        final IdProvider idProvider = new ContextPathIdProvider();
 
         // test with just ID
         HobsonHubDTO dto = new HobsonHubDTO.Builder(
@@ -69,7 +64,6 @@ public class HobsonHubDTOTest {
                 hubManager(hubManager).
                 pluginManager(pluginManager).
                 deviceManager(deviceManager).
-                variableManager(varManager).
                 taskManager(taskManager).
                 presenceManager(presenceManager).
                 idProvider(idProvider).
@@ -95,7 +89,6 @@ public class HobsonHubDTOTest {
                 hubManager(hubManager).
                 pluginManager(pluginManager).
                 deviceManager(deviceManager).
-                variableManager(varManager).
                 taskManager(taskManager).
                 presenceManager(presenceManager).
                 idProvider(idProvider).
@@ -119,20 +112,20 @@ public class HobsonHubDTOTest {
         // test with top-level and devices expansion
         MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
         plugin.setDeviceManager(new MockDeviceManager());
-        deviceManager.publishDevice(new MockHobsonDevice(plugin, "device1"));
+        Future f = deviceManager.publishDevice(plugin.getContext(), new MockDeviceProxy(plugin, "device1", DeviceType.LIGHTBULB), null).await();
+        assertTrue(f.isSuccess());
         dto = new HobsonHubDTO.Builder(
-            new ManagerDTOBuildContext.Builder().
-                hubManager(hubManager).
-                pluginManager(pluginManager).
-                deviceManager(deviceManager).
-                variableManager(varManager).
-                taskManager(taskManager).
-                presenceManager(presenceManager).
-                expansionFields(new ExpansionFields(JSONAttributes.DEVICES)).
-                idProvider(idProvider).
-                build(),
-            hub,
-            true
+                new ManagerDTOBuildContext.Builder().
+                        hubManager(hubManager).
+                        pluginManager(pluginManager).
+                        deviceManager(deviceManager).
+                        taskManager(taskManager).
+                        presenceManager(presenceManager).
+                        expansionFields(new ExpansionFields(JSONAttributes.DEVICES)).
+                        idProvider(idProvider).
+                        build(),
+                hub,
+                true
         ).build();
         assertEquals("hubs:local", dto.getId());
         assertEquals("hubs:local:devices", dto.getDevices().getId());

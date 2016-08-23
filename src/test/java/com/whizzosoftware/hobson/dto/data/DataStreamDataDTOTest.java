@@ -11,7 +11,7 @@ import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.data.DataStreamInterval;
 import com.whizzosoftware.hobson.api.data.DataStreamValueSet;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +25,7 @@ public class DataStreamDataDTOTest {
     @Test
     public void testToJSON() {
         DataStreamDataDTO dto = new DataStreamDataDTO.Builder(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).build(), "ds1", 2000, DataStreamInterval.HOURS_1).
-            fields(Collections.singletonList(new DataStreamField("field1", "fieldName1", VariableContext.createLocal("plugin1", "device1", "var1")))).
+            fields(Collections.singletonList(new DataStreamField("field1", "fieldName1", DeviceVariableContext.createLocal("plugin1", "device1", "var1")))).
             data(Collections.singletonList(new DataStreamValueSet(1000, Collections.singletonMap("field1", (Object)100)))).
             build();
 

@@ -19,6 +19,7 @@ import java.util.Collection;
 public class TypedPropertyDTO extends ThingDTO {
     public String id;
     public TypedProperty.Type type;
+    public Object[] enumeration;
     public Collection<TypedPropertyConstraint> constraints;
 
     private TypedPropertyDTO(String id) {
@@ -30,6 +31,10 @@ public class TypedPropertyDTO extends ThingDTO {
         return MediaTypes.PROPERTY;
     }
 
+    public Object[] getEnumeration() {
+        return enumeration;
+    }
+
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (id != null) {
@@ -37,6 +42,9 @@ public class TypedPropertyDTO extends ThingDTO {
         }
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
+        }
+        if (enumeration != null) {
+            json.put(JSONAttributes.ENUM, enumeration);
         }
         if (constraints != null) {
             JSONObject o = new JSONObject();
@@ -60,6 +68,7 @@ public class TypedPropertyDTO extends ThingDTO {
             dto.setName(tp.getName());
             dto.setDescription(tp.getDescription());
             dto.type = tp.getType();
+            dto.enumeration = tp.getEnumeration();
             dto.constraints = tp.getConstraints();
         }
 
@@ -75,6 +84,11 @@ public class TypedPropertyDTO extends ThingDTO {
 
         public Builder type(TypedProperty.Type type) {
             dto.type = type;
+            return this;
+        }
+
+        public Builder enumeration(Object[] enumeration) {
+            dto.enumeration = enumeration;
             return this;
         }
 

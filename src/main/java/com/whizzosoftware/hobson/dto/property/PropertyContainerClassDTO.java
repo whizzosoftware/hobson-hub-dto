@@ -65,7 +65,7 @@ public class PropertyContainerClassDTO extends ThingDTO {
 
         public Builder(String id, PropertyContainerClass pcc, boolean showDetails) {
             dto = new PropertyContainerClassDTO(id);
-            if (showDetails) {
+            if (showDetails && pcc != null) {
                 dto.setName(pcc.getName());
                 dto.descriptionTemplate = pcc.getDescriptionTemplate();
                 if (pcc.hasSupportedProperties()) {

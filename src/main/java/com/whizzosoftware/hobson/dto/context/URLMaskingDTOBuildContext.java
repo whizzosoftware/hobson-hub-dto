@@ -8,9 +8,7 @@
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
-import com.whizzosoftware.hobson.api.variable.HobsonVariable;
-import com.whizzosoftware.hobson.api.variable.ImmutableHobsonVariable;
+import com.whizzosoftware.hobson.api.variable.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,28 +22,22 @@ import java.util.List;
  */
 public class URLMaskingDTOBuildContext extends ManagerDTOBuildContext {
     @Override
-    public Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx) {
-        List<HobsonVariable> results = new ArrayList<>();
-        for (HobsonVariable v : variableManager.getDeviceVariables(dctx)) {
+    public Collection<DeviceVariable> getDeviceVariables(DeviceContext dctx) {
+        List<DeviceVariable> results = new ArrayList<>();
+        for (DeviceVariable v : deviceManager.getDeviceVariables(dctx)) {
             results.add(createStubVariableIfNecessary(v));
         }
         return results;
     }
 
     @Override
-    public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return createStubVariableIfNecessary(variableManager.getVariable(VariableContext.create(dctx, name)));
+    public DeviceVariable getDeviceVariable(DeviceVariableContext vctx) {
+        return createStubVariableIfNecessary(deviceManager.getDeviceVariable(vctx));
     }
 
-    private HobsonVariable createStubVariableIfNecessary(HobsonVariable v) {
-        if (v != null && v.hasMediaType()) {
-            return new ImmutableHobsonVariable(
-                v.getContext(),
-                v.getMask(),
-                "MASKED",
-                v.getLastUpdate(),
-                v.getMediaType()
-            );
+    private DeviceVariable createStubVariableIfNecessary(DeviceVariable v) {
+        if (v != null && v.getDescription().hasMediaType()) {
+            return new DeviceVariable(v.getDescription(), "MASKED", v.getLastUpdate());
         } else {
             return v;
         }

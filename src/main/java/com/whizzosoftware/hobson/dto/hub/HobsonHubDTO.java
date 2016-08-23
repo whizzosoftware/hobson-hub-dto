@@ -7,8 +7,8 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.hub;
 
+import com.whizzosoftware.hobson.api.device.DeviceDescription;
 import com.whizzosoftware.hobson.api.device.DevicePassport;
-import com.whizzosoftware.hobson.api.device.HobsonDevice;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.PluginDescriptor;
@@ -231,8 +231,8 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.DEVICES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (HobsonDevice device : ctx.getAllDevices(hub.getContext())) {
-                        dto.devices.add(new HobsonDeviceDTO.Builder(ctx, device, showDetails).build());
+                    for (DeviceDescription device : ctx.getAllDevices(hub.getContext())) {
+                        dto.devices.add(new HobsonDeviceDTO.Builder(ctx, device.getContext(), showDetails).build());
                     }
                     expansions.popContext();
                     expansions.popContext();
@@ -259,9 +259,9 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.GLOBAL_VARIABLES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (HobsonVariable v : ctx.getGlobalVariables(hub.getContext())) {
-                        dto.globalVariables.add(new HobsonVariableDTO.Builder(idProvider.createGlobalVariableId(hub.getContext(), v.getName()), v, showDetails).build());
-                    }
+//                    for (HobsonVariable v : ctx.getGlobalVariables(hub.getContext())) {
+//                        dto.globalVariables.add(new HobsonVariableDTO.Builder(idProvider.createGlobalVariableId(hub.getContext(), v.getName()), v, showDetails).build());
+//                    }
                     expansions.popContext();
                     expansions.popContext();
                 }

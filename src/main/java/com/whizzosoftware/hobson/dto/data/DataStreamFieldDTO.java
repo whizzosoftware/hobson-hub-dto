@@ -50,7 +50,7 @@ public class DataStreamFieldDTO extends ThingDTO {
             dto = new DataStreamFieldDTO(ctx.getIdProvider().createDataStreamFieldId(dataStreamId, df.getId()));
             if (showDetails) {
                 dto.setName(df.getName());
-                dto.variable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(df.getVariable())).build();
+                dto.variable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(df.getVariable())).build();
             }
         }
 

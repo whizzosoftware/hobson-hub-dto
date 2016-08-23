@@ -7,9 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.context;
 
-import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.device.DevicePassport;
-import com.whizzosoftware.hobson.api.device.HobsonDevice;
+import com.whizzosoftware.hobson.api.device.*;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
@@ -19,6 +17,7 @@ import com.whizzosoftware.hobson.api.presence.PresenceEntity;
 import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocation;
 import com.whizzosoftware.hobson.api.property.PropertyContainer;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.api.task.action.TaskActionClass;
@@ -36,19 +35,23 @@ import java.util.Collection;
  */
 public interface DTOBuildContext {
     boolean isDeviceAvailable(DeviceContext dctx);
-    Collection<HobsonDevice> getAllDevices(HubContext hctx);
+    Collection<DeviceDescription> getAllDevices(HubContext hctx);
     Collection<HobsonTask> getAllTasks(HubContext hctx);
     Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx);
     Collection<TaskConditionClass> getAllTaskConditionClasses(HubContext hctx);
     Collection<PresenceEntity> getAllPresenceEntities(HubContext hctx);
     Collection<PresenceLocation> getAllPresenceLocations(HubContext hctx);
     PropertyContainer getDeviceConfiguration(DeviceContext dctx);
+    PropertyContainerClass getDeviceConfigurationClass(DeviceContext dctx);
+    PropertyContainerClass getDeviceTypeConfigurationClass(PluginContext pctx, DeviceType type);
+    DeviceDescription getDeviceDescription(DeviceContext dctx);
     Long getDeviceLastCheckIn(DeviceContext dctx);
     Collection<DevicePassport> getDevicePassports(HubContext hctx);
-    HobsonVariable getDeviceVariable(DeviceContext dctx, String name);
-    Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx);
+    DeviceVariable getDeviceVariable(DeviceVariableContext vctx);
+    Collection<DeviceVariable> getDeviceVariables(DeviceContext dctx);
     ExpansionFields getExpansionFields();
-    Collection<HobsonVariable> getGlobalVariables(HubContext hctx);
+    GlobalVariable getGlobalVariable(GlobalVariableContext gvctx);
+    Collection<GlobalVariable> getGlobalVariables(HubContext hctx);
     HobsonHub getHub(HubContext hctx);
     PropertyContainer getHubConfiguration(HubContext hctx);
     IdProvider getIdProvider();
@@ -56,6 +59,7 @@ public interface DTOBuildContext {
     Collection<PluginDescriptor> getLocalPluginDescriptors(HubContext hctx);
     PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx);
     Collection<PluginDescriptor> getRemotePluginDescriptors(HubContext hctx);
+    Collection<DeviceType> getPluginDeviceTypes(PluginContext pctx);
     TaskActionClass getTaskActionClass(PropertyContainerClassContext ctx);
     TaskConditionClass getTaskConditionClass(PropertyContainerClassContext ctx);
     boolean hasDataStreamManager(HubContext hctx);

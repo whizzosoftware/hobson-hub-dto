@@ -17,7 +17,8 @@ import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
 import com.whizzosoftware.hobson.api.task.TaskContext;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
+import com.whizzosoftware.hobson.api.variable.GlobalVariableContext;
 
 public class MockIdProvider implements IdProvider {
     private String actionClassesId;
@@ -41,7 +42,6 @@ public class MockIdProvider implements IdProvider {
     private String remotePluginId;
     private String remotePluginsId;
     private String tasksId;
-    private String variableId;
 
     @Override
     public String createTaskActionSetId(HubContext ctx, String id) {
@@ -149,7 +149,27 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createDeviceVariableDescriptionId(DeviceVariableContext vctx) {
+        return null;
+    }
+
+    @Override
+    public String createDeviceVariableId(DeviceVariableContext vctx) {
+        return null;
+    }
+
+    @Override
     public String createDeviceConfigurationClassId(DeviceContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createPluginDeviceConfigurationClassesId(PluginContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createPluginDeviceConfigurationClassId(PluginContext pluginContext, String s) {
         return null;
     }
 
@@ -159,7 +179,7 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createGlobalVariableId(HubContext ctx, String name) {
+    public String createGlobalVariableId(GlobalVariableContext globalVariableContext) {
         return null;
     }
 
@@ -214,13 +234,8 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public VariableContext createVariableContext(String variableId) {
+    public DeviceVariableContext createDeviceVariableContext(String variableId) {
         return null;
-    }
-
-    @Override
-    public String createVariableId(VariableContext ctx) {
-        return variableId;
     }
 
     @Override
@@ -408,11 +423,6 @@ public class MockIdProvider implements IdProvider {
         return null;
     }
 
-    @Override
-    public String createVariablesId(HubContext ctx) {
-        return null;
-    }
-
     public String getDevicesId() {
         return devicesId;
     }
@@ -551,9 +561,5 @@ public class MockIdProvider implements IdProvider {
 
     public void setPropertyContainerClassId(String propertyContainerClassId) {
         this.propertyContainerClassId = propertyContainerClassId;
-    }
-
-    public void setVariableId(String variableId) {
-        this.variableId = variableId;
     }
 }

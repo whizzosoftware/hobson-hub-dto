@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.plugin;
 
+import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.plugin.*;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
@@ -29,6 +30,7 @@ public class HobsonPluginDTO extends ThingDTO {
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
     private ImageDTO image;
+    private ItemListDTO deviceConfigurationClasses;
 
     private HobsonPluginDTO(String id) {
         super(id, null);
@@ -85,6 +87,7 @@ public class HobsonPluginDTO extends ThingDTO {
         json.put(JSONAttributes.CCLASS, configurationClass != null ? configurationClass.toJSON() : null);
         json.put(JSONAttributes.CONFIGURATION, configuration != null ? configuration.toJSON() : null);
         json.put(JSONAttributes.IMAGE, image != null ? image.toJSON() : null);
+        json.put(JSONAttributes.DEVICE_CONFIGURATION_CLASSES, deviceConfigurationClasses != null ? deviceConfigurationClasses.toJSON() : null);
         if (status != null) {
             JSONObject psjson = new JSONObject();
             psjson.put(JSONAttributes.CODE, status.getCode().toString());
@@ -112,6 +115,20 @@ public class HobsonPluginDTO extends ThingDTO {
                 dto.version = plugin.getVersion();
                 dto.status = plugin.getStatus();
                 dto.configurable = plugin.isConfigurable();
+                // add device configuration classes
+                boolean dccsDetails = expansions != null && expansions.has(JSONAttributes.DEVICE_CONFIGURATION_CLASSES);
+                dto.deviceConfigurationClasses = new ItemListDTO(ctx.getIdProvider().createPluginDeviceConfigurationClassesId(plugin.getContext()), dccsDetails);
+                if (dccsDetails) {
+                    expansions.pushContext(JSONAttributes.DEVICE_CONFIGURATION_CLASSES);
+                    for (DeviceType dt : ctx.getPluginDeviceTypes(plugin.getContext())) {
+                        String name = dt.toString();
+                        boolean itemDetails = expansions.has(JSONAttributes.ITEM);
+                        expansions.pushContext(JSONAttributes.ITEM);
+                        dto.deviceConfigurationClasses.add(new PluginDeviceConfigurationClassDTO.Builder(ctx, plugin, name, ctx.getDeviceTypeConfigurationClass(plugin.getContext(), dt), itemDetails).build());
+                        expansions.popContext();
+                    }
+                    expansions.popContext();
+                }
                 if (dto.configurable) {
                     dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createLocalPluginConfigurationClassId(plugin.getContext()), plugin.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
                     dto.configuration = new PropertyContainerDTO.Builder(

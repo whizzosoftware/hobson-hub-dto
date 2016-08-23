@@ -11,7 +11,7 @@ import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.data.DataStream;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
@@ -90,7 +90,7 @@ public class DataStreamDTOTest {
 
     private DataStreamDTO createDTO(DTOBuildContext ctx, boolean showDetails) {
         Collection<DataStreamField> vars = new ArrayList<>();
-        vars.add(new DataStreamField("field1", "test", VariableContext.create(DeviceContext.createLocal("plugin1", "device1"), "var1")));
+        vars.add(new DataStreamField("field1", "test", DeviceVariableContext.create(DeviceContext.createLocal("plugin1", "device1"), "var1")));
         HashSet<String> tags = new HashSet<>();
         tags.add("tag1");
         tags.add("tag2");

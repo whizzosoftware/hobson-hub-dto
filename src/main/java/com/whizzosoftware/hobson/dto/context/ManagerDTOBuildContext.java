@@ -7,10 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.context;
 
-import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.device.DeviceManager;
-import com.whizzosoftware.hobson.api.device.DevicePassport;
-import com.whizzosoftware.hobson.api.device.HobsonDevice;
+import com.whizzosoftware.hobson.api.device.*;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.hub.HubManager;
@@ -23,6 +20,7 @@ import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocation;
 import com.whizzosoftware.hobson.api.presence.PresenceManager;
 import com.whizzosoftware.hobson.api.property.PropertyContainer;
+import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.api.task.TaskManager;
@@ -45,7 +43,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     TaskManager taskManager;
     PluginManager pluginManager;
     PresenceManager presenceManager;
-    VariableManager variableManager;
     ExpansionFields expansionFields;
     DataStreamManager dataStreamManager;
     IdProvider idProvider;
@@ -63,8 +60,23 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return (deviceManager != null) ? deviceManager.getDeviceConfiguration(dctx) : null;
     }
 
-    public Collection<HobsonDevice> getAllDevices(HubContext hctx) {
-        return (deviceManager != null) ? deviceManager.getAllDevices(hctx) : null;
+    @Override
+    public PropertyContainerClass getDeviceTypeConfigurationClass(PluginContext pctx, DeviceType type) {
+        return (deviceManager != null) ? deviceManager.getDeviceTypeConfigurationClass(pctx, type) : null;
+    }
+
+    @Override
+    public PropertyContainerClass getDeviceConfigurationClass(DeviceContext dctx) {
+        return (deviceManager != null) ? deviceManager.getDeviceConfigurationClass(dctx) : null;
+    }
+
+    @Override
+    public DeviceDescription getDeviceDescription(DeviceContext dctx) {
+        return (deviceManager != null) ? deviceManager.getDeviceDescription(dctx) : null;
+    }
+
+    public Collection<DeviceDescription> getAllDevices(HubContext hctx) {
+        return (deviceManager != null) ? deviceManager.getAllDeviceDescriptions(hctx) : null;
     }
 
     public Long getDeviceLastCheckIn(DeviceContext dctx) {
@@ -76,16 +88,18 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return (deviceManager != null) ? deviceManager.getDevicePassports(hctx) : null;
     }
 
-    public Collection<HobsonVariable> getGlobalVariables(HubContext hctx) {
-        return (variableManager != null) ? variableManager.getGlobalVariables(hctx) : null;
+    @Override
+    public DeviceVariable getDeviceVariable(DeviceVariableContext vctx) {
+        return (deviceManager != null) ? deviceManager.getDeviceVariable(vctx) : null;
     }
 
-    public Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx) {
-        return (variableManager != null) ? variableManager.getDeviceVariables(dctx) : null;
-    }
+//    public Collection<HobsonVariable> getGlobalVariables(HubContext hctx) {
+//        return (variableManager != null) ? variableManager.getGlobalVariables(hctx) : null;
+//    }
 
-    public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return (variableManager != null) ? variableManager.getVariable(VariableContext.create(dctx, name)) : null;
+    public Collection<DeviceVariable> getDeviceVariables(DeviceContext dctx) {
+        return (deviceManager != null) ? deviceManager.getDeviceVariables(dctx) : null;
+//        return (variableManager != null) ? variableManager.getDeviceVariableValues(dctx) : null;
     }
 
     public Collection<TaskActionClass> getAllTaskActionClasses(HubContext hctx) {
@@ -120,6 +134,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return (pluginManager != null) ? pluginManager.getRemotePluginDescriptors(hctx) : null;
     }
 
+    @Override
+    public Collection<DeviceType> getPluginDeviceTypes(PluginContext pctx) {
+        return (deviceManager != null) ? deviceManager.getPluginDeviceTypes(pctx) : null;
+    }
+
     public Collection<PresenceEntity> getAllPresenceEntities(HubContext hctx) {
         return (presenceManager != null) ? presenceManager.getAllPresenceEntities(hctx) : null;
     }
@@ -142,6 +161,16 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
             expansionFields = new ExpansionFields(null);
         }
         return expansionFields;
+    }
+
+    @Override
+    public GlobalVariable getGlobalVariable(GlobalVariableContext gvctx) {
+        return null;
+    }
+
+    @Override
+    public Collection<GlobalVariable> getGlobalVariables(HubContext hctx) {
+        return null;
     }
 
     public IdProvider getIdProvider() {
@@ -197,11 +226,6 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
         public Builder dataStreamManager(DataStreamManager val) {
             ctx.dataStreamManager = val;
-            return this;
-        }
-
-        public Builder variableManager(VariableManager val) {
-            ctx.variableManager = val;
             return this;
         }
 

@@ -8,25 +8,45 @@
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.device.DeviceType;
+import com.whizzosoftware.hobson.api.device.MockDeviceManager;
+import com.whizzosoftware.hobson.api.device.MockDeviceProxy;
+import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
 import com.whizzosoftware.hobson.api.variable.*;
+import io.netty.util.concurrent.Future;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class URLMaskingDTOBuildContextTest {
     @Test
-    public void testMasking() {
+    public void testMasking() throws Exception {
         DeviceContext dctx = DeviceContext.createLocal("plugin1", "device1");
-        MockVariableManager vm = new MockVariableManager();
-        vm.publishVariable(VariableContext.create(dctx, VariableConstants.OUTDOOR_TEMP_F), 57.0, HobsonVariable.Mask.READ_ONLY, null);
-        vm.publishVariable(VariableContext.create(dctx, VariableConstants.IMAGE_STATUS_URL), "http://www.foo.com", HobsonVariable.Mask.READ_ONLY, null, VariableMediaType.IMAGE_JPG);
+        final DeviceVariableContext vctx1 = DeviceVariableContext.create(dctx, VariableConstants.OUTDOOR_TEMP_F);
+        final DeviceVariableContext vctx2 = DeviceVariableContext.create(dctx, VariableConstants.IMAGE_STATUS_URL);
 
-        DTOBuildContext ctx = new URLMaskingDTOBuildContext.Builder().
-            variableManager(vm).
-            build();
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        final MockDeviceManager dm = new MockDeviceManager();
+        MockDeviceProxy proxy = new MockDeviceProxy(plugin, "device1", DeviceType.LIGHTBULB) {
+            public DeviceVariableDescription[] createVariableDescriptions() {
+                return new DeviceVariableDescription[]{
+                    new DeviceVariableDescription(vctx1, DeviceVariableDescription.Mask.READ_ONLY),
+                    new DeviceVariableDescription(vctx2, DeviceVariableDescription.Mask.READ_ONLY, null, VariableMediaType.IMAGE_JPG)
+                };
+            }
+        };
+        Future f = dm.publishDevice(plugin.getContext(), proxy, null).await();
+        assertTrue(f.isSuccess());
+        f = dm.setDeviceVariable(vctx1, 57.0).await();
+        assertTrue(f.isSuccess());
+        f = dm.setDeviceVariable(vctx2, "http://www.foo.com").await();
+        assertTrue(f.isSuccess());
+        DTOBuildContext ctx = new URLMaskingDTOBuildContext.Builder().deviceManager(dm).build();
 
-        HobsonVariable v = ctx.getDeviceVariable(dctx, VariableConstants.OUTDOOR_TEMP_F);
+        DeviceVariable v = ctx.getDeviceVariable(vctx1);
         assertEquals(57.0, v.getValue());
-        v = ctx.getDeviceVariable(dctx, VariableConstants.IMAGE_STATUS_URL);
+        v = ctx.getDeviceVariable(vctx2);
         assertEquals("MASKED", v.getValue());
     }
 }

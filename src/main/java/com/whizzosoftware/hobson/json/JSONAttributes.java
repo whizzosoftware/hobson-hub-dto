@@ -45,11 +45,13 @@ public class JSONAttributes {
     public static final String DESCRIPTION_TEMPLATE = "descriptionTemplate";
     public static final String DEVICE = "device";
     public static final String DEVICES = "devices";
+    public static final String DEVICE_CONFIGURATION_CLASSES = "deviceConfigurationClasses";
     public static final String DEVICE_ID = "deviceId";
     public static final String DEVICE_PASSPORTS = "devicePassports";
     public static final String ENABLED = "enabled";
     public static final String END_TIME = "endTime";
     public static final String ENTITY_ID = "entityId";
+    public static final String ENUM = "enum";
     public static final String ERRORS = "errors";
     public static final String EVENT_ID = "eventId";
     public static final String EVENTS = "events";
