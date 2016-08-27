@@ -13,6 +13,7 @@ import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;
@@ -52,6 +53,47 @@ public class TypedPropertyValueSerializerTest {
         o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.NUMBER, json.get("value"), null);
         assertTrue(o instanceof Double);
         assertEquals(21.5, o);
+    }
+
+    @Test
+    public void testCreateBooleanObject() {
+        // test that passing in a JSON array will fail
+        try {
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.BOOLEAN, new JSONArray(new JSONTokener("[]")), null);
+            fail("Should have thrown an exception");
+        } catch (HobsonInvalidRequestException ignored) {
+        }
+
+        // test that passing in a JSON boolean will succeed
+        JSONObject json = new JSONObject(new JSONTokener("{\"value\": true}"));
+        Object o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.BOOLEAN, json.get("value"), null);
+        assertTrue(o instanceof Boolean);
+        assertTrue((Boolean)o);
+
+        // test that passing in a JSON boolean will succeed
+        json = new JSONObject(new JSONTokener("{\"value\": false}"));
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.BOOLEAN, json.get("value"), null);
+        assertTrue(o instanceof Boolean);
+        assertFalse((Boolean)o);
+
+        // test that passing in a JSON string with a boolean value will succeed
+        json = new JSONObject(new JSONTokener("{\"value\": \"true\"}"));
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.BOOLEAN, json.get("value"), null);
+        assertTrue(o instanceof Boolean);
+        assertTrue((Boolean)o);
+
+        // test that passing in a JSON string with a boolean value will succeed
+        json = new JSONObject(new JSONTokener("{\"value\": \"false\"}"));
+        o = TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.BOOLEAN, json.get("value"), null);
+        assertTrue(o instanceof Boolean);
+        assertFalse((Boolean)o);
+
+        // test that passing in a JSON string with a randon value will not succeed
+        try {
+            json = new JSONObject(new JSONTokener("{\"value\": \"foo\"}"));
+            TypedPropertyValueSerializer.createValueObject(TypedProperty.Type.BOOLEAN, json.get("value"), null);
+            fail("Should have thrown an exception");
+        } catch (HobsonInvalidRequestException ignored) {}
     }
 
     @Test

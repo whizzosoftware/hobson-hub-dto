@@ -22,6 +22,18 @@ public class TypedPropertyValueSerializer {
 
     static public Object createValueObject(TypedProperty.Type type, Object jsonValue, PropertyContextProvider cp) {
         switch (type) {
+            case BOOLEAN:
+                if (jsonValue instanceof Boolean) {
+                    return jsonValue;
+                } else if (jsonValue instanceof String) {
+                    if ("true".equalsIgnoreCase((String)jsonValue) || "false".equalsIgnoreCase((String)jsonValue)) {
+                        return Boolean.parseBoolean((String)jsonValue);
+                    } else {
+                        throw new HobsonInvalidRequestException("Boolean property is not a JSON string with \"true\" or \"false\":" + jsonValue);
+                    }
+                } else {
+                    throw new HobsonInvalidRequestException("Boolean property is not a valid JSON boolean: " + jsonValue);
+                }
             case NUMBER:
                 if (jsonValue instanceof Double || jsonValue instanceof Integer) {
                     return jsonValue;
