@@ -1,9 +1,8 @@
 package com.whizzosoftware.hobson.dto.plugin;
 
-import com.whizzosoftware.hobson.api.plugin.HobsonPlugin;
+import com.whizzosoftware.hobson.api.plugin.HobsonLocalPluginDescriptor;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
-import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
@@ -36,7 +35,7 @@ public class PluginDeviceConfigurationClassDTO extends ThingDTO {
             dto = new PluginDeviceConfigurationClassDTO(id);
         }
 
-        public Builder(DTOBuildContext ctx, final HobsonPlugin plugin, final String name, final PropertyContainerClass pcc, boolean showDetails) {
+        public Builder(DTOBuildContext ctx, final HobsonLocalPluginDescriptor plugin, final String name, final PropertyContainerClass pcc, boolean showDetails) {
             dto = new PluginDeviceConfigurationClassDTO(ctx.getIdProvider().createPluginDeviceConfigurationClassId(plugin.getContext(), name));
             if (showDetails) {
                 dto.setName(name);

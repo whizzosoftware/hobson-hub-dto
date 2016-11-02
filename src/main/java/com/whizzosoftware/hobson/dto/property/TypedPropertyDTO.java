@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.TypedProperty;
@@ -15,11 +17,12 @@ import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class TypedPropertyDTO extends ThingDTO {
     public String id;
     public TypedProperty.Type type;
-    public Object[] enumeration;
+    public Map<String,String> enumeration;
     public Collection<TypedPropertyConstraint> constraints;
 
     private TypedPropertyDTO(String id) {
@@ -31,7 +34,7 @@ public class TypedPropertyDTO extends ThingDTO {
         return MediaTypes.PROPERTY;
     }
 
-    public Object[] getEnumeration() {
+    public Map<String,String> getEnumeration() {
         return enumeration;
     }
 
@@ -87,7 +90,7 @@ public class TypedPropertyDTO extends ThingDTO {
             return this;
         }
 
-        public Builder enumeration(Object[] enumeration) {
+        public Builder enumeration(Map<String,String> enumeration) {
             dto.enumeration = enumeration;
             return this;
         }

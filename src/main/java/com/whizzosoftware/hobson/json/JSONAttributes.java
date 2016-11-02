@@ -16,6 +16,7 @@ public class JSONAttributes {
     public static final String ACCOUNT = "account";
     public static final String ACTION_CLASSES = "actionClasses";
     public static final String ACTION_CLASS_ID = "actionClassId";
+    public static final String ACTION_ID = "actionId";
     public static final String ACTION_SET = "actionSet";
     public static final String ACTION_SET_ID = "actionSetId";
     public static final String ACTIONS = "actions";
@@ -67,6 +68,7 @@ public class JSONAttributes {
     public static final String INTERVAL = "interval";
     public static final String ITEM = "item";
     public static final String ITEM_LIST_ELEMENT = "itemListElement";
+    public static final String JOB_ID = "jobId";
     public static final String LAST_UPDATE = "lastUpdate";
     public static final String LATITUDE = "latitude";
     public static final String LINKS = "links";
@@ -105,6 +107,7 @@ public class JSONAttributes {
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
     public static final String TAGS = "tags";
     public static final String TASKS = "tasks";
+    public static final String TASK_ACTION = "taskAction";
     public static final String TASK_ID = "taskId";
     public static final String TIME = "time";
     public static final String TIMESTAMP = "timestamp";

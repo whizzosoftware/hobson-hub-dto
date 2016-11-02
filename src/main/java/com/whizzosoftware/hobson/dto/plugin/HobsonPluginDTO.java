@@ -1,13 +1,15 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.plugin;
 
-import com.whizzosoftware.hobson.api.device.DeviceType;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.plugin.*;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
@@ -30,7 +32,6 @@ public class HobsonPluginDTO extends ThingDTO {
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
     private ImageDTO image;
-    private ItemListDTO deviceConfigurationClasses;
 
     private HobsonPluginDTO(String id) {
         super(id, null);
@@ -87,7 +88,6 @@ public class HobsonPluginDTO extends ThingDTO {
         json.put(JSONAttributes.CCLASS, configurationClass != null ? configurationClass.toJSON() : null);
         json.put(JSONAttributes.CONFIGURATION, configuration != null ? configuration.toJSON() : null);
         json.put(JSONAttributes.IMAGE, image != null ? image.toJSON() : null);
-        json.put(JSONAttributes.DEVICE_CONFIGURATION_CLASSES, deviceConfigurationClasses != null ? deviceConfigurationClasses.toJSON() : null);
         if (status != null) {
             JSONObject psjson = new JSONObject();
             psjson.put(JSONAttributes.CODE, status.getCode().toString());
@@ -104,51 +104,43 @@ public class HobsonPluginDTO extends ThingDTO {
             dto = new HobsonPluginDTO(id);
         }
 
-        public Builder(DTOBuildContext ctx, final HobsonPlugin plugin, String description, String remoteVersion, boolean showDetails) {
-            dto = new HobsonPluginDTO(remoteVersion != null ? ctx.getIdProvider().createRemotePluginId(plugin.getContext(), remoteVersion) : ctx.getIdProvider().createLocalPluginId(plugin.getContext()));
+        public Builder(DTOBuildContext ctx, HubContext hubContext, final HobsonPluginDescriptor plugin, String description, String remoteVersion, boolean showDetails) {
+            PluginContext pctx = PluginContext.create(hubContext, plugin.getId());
+            dto = new HobsonPluginDTO(remoteVersion != null ? ctx.getIdProvider().createRemotePluginId(hubContext, plugin.getId(), remoteVersion) : ctx.getIdProvider().createLocalPluginId(pctx));
             ExpansionFields expansions = ctx.getExpansionFields();
             if (showDetails) {
                 dto.setName(plugin.getName());
                 dto.setDescription(description);
-                dto.pluginId = plugin.getContext().getPluginId();
+                dto.pluginId = plugin.getId();
                 dto.type = plugin.getType();
                 dto.version = plugin.getVersion();
                 dto.status = plugin.getStatus();
                 dto.configurable = plugin.isConfigurable();
-                // add device configuration classes
-                boolean dccsDetails = expansions != null && expansions.has(JSONAttributes.DEVICE_CONFIGURATION_CLASSES);
-                dto.deviceConfigurationClasses = new ItemListDTO(ctx.getIdProvider().createPluginDeviceConfigurationClassesId(plugin.getContext()), dccsDetails);
-                if (dccsDetails) {
-                    expansions.pushContext(JSONAttributes.DEVICE_CONFIGURATION_CLASSES);
-                    for (DeviceType dt : ctx.getPluginDeviceTypes(plugin.getContext())) {
-                        String name = dt.toString();
-                        boolean itemDetails = expansions.has(JSONAttributes.ITEM);
-                        expansions.pushContext(JSONAttributes.ITEM);
-                        dto.deviceConfigurationClasses.add(new PluginDeviceConfigurationClassDTO.Builder(ctx, plugin, name, ctx.getDeviceTypeConfigurationClass(plugin.getContext(), dt), itemDetails).build());
-                        expansions.popContext();
+                if (plugin.getImageUrl() != null) {
+                    dto.image = new ImageDTO.Builder(plugin.getImageUrl()).build();
+                }
+                if (plugin instanceof HobsonLocalPluginDescriptor) {
+                    final HobsonLocalPluginDescriptor lpd = (HobsonLocalPluginDescriptor)plugin;
+                    if (dto.configurable) {
+                        dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createLocalPluginConfigurationClassId(pctx), lpd.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
+                        dto.configuration = new PropertyContainerDTO.Builder(
+                                ctx.getLocalPluginConfiguration(pctx),
+                                new PropertyContainerClassProvider() {
+                                    @Override
+                                    public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
+                                        return lpd.getConfigurationClass();
+                                    }
+                                },
+                                PropertyContainerClassType.PLUGIN_CONFIG,
+                                expansions != null && expansions.has(JSONAttributes.CONFIGURATION),
+                                expansions,
+                                ctx.getIdProvider()
+                        ).build();
                     }
-                    expansions.popContext();
+                    if (remoteVersion == null) {
+                        dto.image = new ImageDTO.Builder(ctx.getIdProvider().createLocalPluginIconId(pctx)).build();
+                    }
                 }
-                if (dto.configurable) {
-                    dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createLocalPluginConfigurationClassId(plugin.getContext()), plugin.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
-                    dto.configuration = new PropertyContainerDTO.Builder(
-                            ctx.getLocalPluginConfiguration(plugin.getContext()),
-                            new PropertyContainerClassProvider() {
-                                @Override
-                                public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
-                                    return plugin.getConfigurationClass();
-                                }
-                            },
-                            PropertyContainerClassType.PLUGIN_CONFIG,
-                            expansions != null && expansions.has(JSONAttributes.CONFIGURATION),
-                            expansions,
-                            ctx.getIdProvider()
-                    ).build();
-                }
-                if (remoteVersion == null) {
-                    dto.image = new ImageDTO.Builder(ctx.getIdProvider().createLocalPluginIconId(plugin.getContext())).build();
-                }
-
             }
         }
 

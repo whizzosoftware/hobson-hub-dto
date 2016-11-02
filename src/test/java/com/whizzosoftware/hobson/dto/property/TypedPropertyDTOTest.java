@@ -44,14 +44,14 @@ public class TypedPropertyDTOTest {
 
     @Test
     public void testStringEnumeration() {
-        TypedProperty tp = new TypedProperty.Builder("id", "name", "desc", TypedProperty.Type.STRING).enumeration(new String[] {"value1", "value2"}).build();
+        TypedProperty tp = new TypedProperty.Builder("id", "name", "desc", TypedProperty.Type.STRING).enumerate("value1", "My First Value").enumerate("value2", "My Second Value").build();
         TypedPropertyDTO dto = new TypedPropertyDTO.Builder(tp).build();
+        System.out.println(dto.toJSON());
         assertEquals("id", dto.getId());
         assertEquals("name", dto.getName());
         assertEquals("desc", dto.getDescription());
-        assertTrue(dto.getEnumeration() instanceof String[]);
-        assertEquals(2, dto.getEnumeration().length);
-        assertEquals("value1", dto.getEnumeration()[0]);
-        assertEquals("value2", dto.getEnumeration()[1]);
+        assertEquals(2, dto.getEnumeration().size());
+        assertEquals("My First Value", dto.getEnumeration().get("value1"));
+        assertEquals("My Second Value", dto.getEnumeration().get("value2"));
     }
 }

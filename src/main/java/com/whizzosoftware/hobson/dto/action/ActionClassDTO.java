@@ -1,26 +1,31 @@
-/*******************************************************************************
- * Copyright (c) 2015 Whizzo Software, LLC.
+/*
+ *******************************************************************************
+ * Copyright (c) 2016 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
-package com.whizzosoftware.hobson.dto.task;
+ *******************************************************************************
+*/
+package com.whizzosoftware.hobson.dto.action;
 
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
+import com.whizzosoftware.hobson.dto.property.TypedPropertyDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
-public class TaskConditionClassDTO extends PropertyContainerClassDTO {
+import java.util.List;
+
+public class ActionClassDTO extends PropertyContainerClassDTO {
     private String name;
     private String descriptionTemplate;
-    private String type;
+    private boolean taskAction;
 
-    private TaskConditionClassDTO(String id) {
+    private ActionClassDTO(String id) {
         super(id);
     }
 
-    private TaskConditionClassDTO(JSONObject json) {
+    private ActionClassDTO(JSONObject json) {
         super(json);
     }
 
@@ -28,35 +33,36 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
         JSONObject json = super.toJSON();
         json.put(JSONAttributes.NAME, name);
         json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
-        json.put(JSONAttributes.TYPE, type);
+        json.put(JSONAttributes.TASK_ACTION, taskAction);
         return json;
     }
 
     public static class Builder extends PropertyContainerClassDTO.Builder {
-        private TaskConditionClassDTO dto;
+        private ActionClassDTO dto;
 
-        public Builder(String id) {
+        public Builder(String id, List<TypedPropertyDTO> props) {
             super(id);
-            dto = new TaskConditionClassDTO(id);
+            dto = new ActionClassDTO(id);
+            supportedProperties(props);
         }
 
         public Builder(JSONObject json) {
             super(json);
-            dto = new TaskConditionClassDTO(json);
+            dto = new ActionClassDTO(json);
         }
 
-        public TaskConditionClassDTO.Builder name(String name) {
+        public ActionClassDTO.Builder name(String name) {
             dto.name = name;
             return this;
         }
 
-        public TaskConditionClassDTO.Builder descriptionTemplate(String descriptionTemplate) {
+        public ActionClassDTO.Builder descriptionTemplate(String descriptionTemplate) {
             dto.descriptionTemplate = descriptionTemplate;
             return this;
         }
 
-        public Builder type(String type) {
-            dto.type = type;
+        public ActionClassDTO.Builder taskAction(boolean taskAction) {
+            dto.taskAction = taskAction;
             return this;
         }
 

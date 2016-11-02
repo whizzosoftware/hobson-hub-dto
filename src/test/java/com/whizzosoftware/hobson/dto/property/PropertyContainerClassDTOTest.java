@@ -27,9 +27,7 @@ public class PropertyContainerClassDTOTest {
 
         PropertyContainerClass pcc = new PropertyContainerClass(
           PropertyContainerClassContext.create(HubContext.createLocal(), "cc1"),
-          "name",
            PropertyContainerClassType.DEVICE_CONFIG,
-           "desc",
            props
         );
 
@@ -40,8 +38,6 @@ public class PropertyContainerClassDTOTest {
         ).build();
 
         assertEquals("id3", dto.getId());
-        assertEquals("name", dto.getName());
-        assertEquals("desc", dto.getDescriptionTemplate());
         assertEquals(1, dto.getSupportedProperties().size());
         assertEquals("id1", dto.getSupportedProperties().get(0).getId());
         assertEquals("name1", dto.getSupportedProperties().get(0).getName());

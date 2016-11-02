@@ -110,9 +110,9 @@ public class HobsonHubDTOTest {
         assertEquals("hubs:local:tasks", dto.getTasks().getId());
 
         // test with top-level and devices expansion
-        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1", "1.0.0", "");
         plugin.setDeviceManager(new MockDeviceManager());
-        Future f = deviceManager.publishDevice(plugin.getContext(), new MockDeviceProxy(plugin, "device1", DeviceType.LIGHTBULB), null).await();
+        Future f = deviceManager.publishDevice(new MockDeviceProxy(plugin, "device1", DeviceType.LIGHTBULB), null, null).await();
         assertTrue(f.isSuccess());
         dto = new HobsonHubDTO.Builder(
                 new ManagerDTOBuildContext.Builder().

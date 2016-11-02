@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
@@ -134,17 +136,12 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createDevicePassportId(HubContext ctx, String deviceId) {
-        return null;
-    }
-
-    @Override
-    public String createDevicePassportsId(HubContext ctx) {
-        return null;
-    }
-
-    @Override
     public String createDeviceConfigurationId(DeviceContext ctx) {
+        return null;
+    }
+
+    @Override
+    public String createDeviceNameId(DeviceContext ctx) {
         return null;
     }
 
@@ -244,6 +241,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createJobId(HubContext ctx, String jobId) {
+        return null;
+    }
+
+    @Override
     public String createLocalPluginConfigurationId(PluginContext ctx) {
         return localPluginConfigurationId;
     }
@@ -334,12 +336,12 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createRemotePluginId(PluginContext ctx, String version) {
+    public String createRemotePluginId(HubContext ctx, String pluginId, String version) {
         return remotePluginId;
     }
 
     @Override
-    public String createRemotePluginInstallId(PluginContext ctx, String version) {
+    public String createRemotePluginInstallId(HubContext ctx, String pluginId, String version) {
         return null;
     }
 
@@ -369,12 +371,12 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createTaskActionClassesId(HubContext ctx) {
+    public String createActionClassesId(HubContext ctx) {
         return actionClassesId;
     }
 
     @Override
-    public String createTaskActionClassId(PropertyContainerClassContext ctx) {
+    public String createActionClassId(PropertyContainerClassContext ctx) {
         return null;
     }
 

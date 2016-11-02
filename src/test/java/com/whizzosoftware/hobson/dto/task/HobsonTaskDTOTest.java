@@ -1,12 +1,15 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.task;
 
+import com.whizzosoftware.hobson.api.action.MockActionManager;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
@@ -91,7 +94,7 @@ public class HobsonTaskDTOTest {
     @Test
     public void testJSONConstructor2() {
         JSONObject json = new JSONObject(new JSONTokener("{\"name\":\"Turn on outlet\",\"conditions\":[{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-rules/conditionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/bulb\"}]}}],\"actionSet\":{\"actions\":[{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-actions/actionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/switch\"}]}}]}}"));
-        HobsonTaskDTO dto = new HobsonTaskDTO.Builder(json).build();
+        new HobsonTaskDTO.Builder(json).build();
     }
 
     @Test
@@ -99,10 +102,10 @@ public class HobsonTaskDTOTest {
         HubContext hctx = HubContext.createLocal();
         ExpansionFields expansions = new ExpansionFields("actionSet");
 
-        MockTaskManager tm = new MockTaskManager();
+        MockActionManager am = new MockActionManager();
         List<PropertyContainer> actions = new ArrayList<>();
         actions.add(new PropertyContainer(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "cc1"), Collections.singletonMap("foo", (Object)"bar")));
-        String actionSetId = tm.publishActionSet(hctx, null, actions).getId();
+        String actionSetId = am.publishActionSet(hctx, null, actions).getId();
 
         DTOBuildContext ctx = new ManagerDTOBuildContext.Builder().expansionFields(expansions).idProvider(new ContextPathIdProvider()).build();
         TaskContext tctx = TaskContext.createLocal("task1");

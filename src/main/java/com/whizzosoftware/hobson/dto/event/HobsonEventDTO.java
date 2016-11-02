@@ -7,7 +7,6 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.event;
 
-import com.whizzosoftware.hobson.api.event.HobsonEvent;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;

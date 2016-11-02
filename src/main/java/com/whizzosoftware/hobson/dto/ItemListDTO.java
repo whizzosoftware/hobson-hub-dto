@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.json.JSONAttributes;
+import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,7 +36,7 @@ public class ItemListDTO extends ThingDTO {
         return itemListElement.size();
     }
 
-    public void add(ThingDTO item) {
+    public void add(EntityDTO item) {
         add(new ListItemDTO(item));
     }
 

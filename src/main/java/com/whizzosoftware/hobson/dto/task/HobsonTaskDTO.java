@@ -163,7 +163,7 @@ public class HobsonTaskDTO extends ThingDTO {
                             new PropertyContainerClassProvider() {
                                 @Override
                                 public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext pcctx) {
-                                    return ctx.getTaskActionClass(pcctx);
+                                    return ctx.getActionClass(pcctx);
                                 }
                             },
                             showActionSetDetails

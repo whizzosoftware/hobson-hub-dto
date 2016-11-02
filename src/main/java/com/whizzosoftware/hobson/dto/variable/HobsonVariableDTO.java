@@ -7,17 +7,19 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.variable;
 
-import com.whizzosoftware.hobson.api.variable.DeviceVariable;
-import com.whizzosoftware.hobson.api.variable.DeviceVariableDescription;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableDescriptor;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableState;
+import com.whizzosoftware.hobson.api.variable.VariableMask;
 import com.whizzosoftware.hobson.api.variable.VariableMediaType;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class HobsonVariableDTO extends ThingDTO {
     private Long lastUpdate;
-    private DeviceVariableDescription.Mask mask;
+    private VariableMask mask;
     private Object value;
     private VariableMediaType valueMediaType;
 
@@ -35,7 +37,7 @@ public class HobsonVariableDTO extends ThingDTO {
             lastUpdate = json.getLong(JSONAttributes.LAST_UPDATE);
         }
         if (json.has(JSONAttributes.MASK)) {
-            mask = DeviceVariableDescription.Mask.valueOf(json.getString(JSONAttributes.MASK));
+            mask = VariableMask.valueOf(json.getString(JSONAttributes.MASK));
         }
         if (json.has(JSONAttributes.VALUE)) {
             value = json.get(JSONAttributes.VALUE);
@@ -49,7 +51,7 @@ public class HobsonVariableDTO extends ThingDTO {
         return MediaTypes.VARIABLE;
     }
 
-    public DeviceVariableDescription.Mask getMask() {
+    public VariableMask getMask() {
         return mask;
     }
 
@@ -89,15 +91,15 @@ public class HobsonVariableDTO extends ThingDTO {
             dto = new HobsonVariableDTO(id);
         }
 
-        public Builder(String id, DeviceVariable dv, boolean showDetails) {
+        public Builder(DTOBuildContext ctx, String id, DeviceVariableDescriptor dv, DeviceVariableState state, boolean showDetails) {
             dto = new HobsonVariableDTO(id);
             if (showDetails) {
                 if (dv != null) {
-                    dto.setName(dv.getDescription().getName());
-                    dto.mask = dv.getDescription().getMask();
-                    dto.valueMediaType = dv.getDescription().getMediaType();
-                    dto.value = dv.getValue();
-                    dto.lastUpdate = dv.getLastUpdate();
+                    dto.setName(dv.getContext().getName());
+                    dto.mask = dv.getMask();
+                    dto.valueMediaType = dv.getMediaType();
+                    dto.value = state.getValue();
+                    dto.lastUpdate = state.getLastUpdate();
                 }
             }
         }
@@ -116,7 +118,7 @@ public class HobsonVariableDTO extends ThingDTO {
             return this;
         }
 
-        public Builder mask(DeviceVariableDescription.Mask mask) {
+        public Builder mask(VariableMask mask) {
             dto.mask = mask;
             return this;
         }

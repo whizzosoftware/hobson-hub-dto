@@ -7,7 +7,7 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.event;
 
-import com.whizzosoftware.hobson.api.event.PresenceUpdateNotificationEvent;
+import com.whizzosoftware.hobson.api.event.presence.PresenceUpdateNotificationEvent;
 import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
 import org.json.JSONObject;

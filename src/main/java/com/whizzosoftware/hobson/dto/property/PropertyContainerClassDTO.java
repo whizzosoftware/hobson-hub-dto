@@ -9,8 +9,8 @@ package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
+import com.whizzosoftware.hobson.dto.EntityDTO;
 import com.whizzosoftware.hobson.dto.MediaTypes;
-import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,8 +18,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropertyContainerClassDTO extends ThingDTO {
-    private String descriptionTemplate;
+public class PropertyContainerClassDTO extends EntityDTO {
+//    private String descriptionTemplate;
+//    private String id;
     private List<TypedPropertyDTO> supportedProperties;
 
     protected PropertyContainerClassDTO(String id) {
@@ -35,9 +36,14 @@ public class PropertyContainerClassDTO extends ThingDTO {
         return MediaTypes.PROPERTY_CONTAINER_CLASS;
     }
 
-    public String getDescriptionTemplate() {
-        return descriptionTemplate;
+    @Override
+    public String getJSONMediaType() {
+        return null;
     }
+
+//    public String getDescriptionTemplate() {
+//        return descriptionTemplate;
+//    }
 
     public List<TypedPropertyDTO> getSupportedProperties() {
         return supportedProperties;
@@ -45,7 +51,7 @@ public class PropertyContainerClassDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
+//        json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
         if (supportedProperties != null) {
             JSONArray array = new JSONArray();
             for (TypedPropertyDTO p : supportedProperties) {
@@ -66,8 +72,8 @@ public class PropertyContainerClassDTO extends ThingDTO {
         public Builder(String id, PropertyContainerClass pcc, boolean showDetails) {
             dto = new PropertyContainerClassDTO(id);
             if (showDetails && pcc != null) {
-                dto.setName(pcc.getName());
-                dto.descriptionTemplate = pcc.getDescriptionTemplate();
+//                dto.setName(pcc.getName());
+//                dto.descriptionTemplate = pcc.getDescriptionTemplate();
                 if (pcc.hasSupportedProperties()) {
                     dto.supportedProperties = new ArrayList<>();
                     for (TypedProperty tp : pcc.getSupportedProperties()) {
@@ -85,15 +91,15 @@ public class PropertyContainerClassDTO extends ThingDTO {
             return dto;
         }
 
-        public Builder name(String name) {
-            getDto().setName(name);
-            return this;
-        }
-
-        public Builder descriptionTemplate(String descriptionTemplate) {
-            getDto().descriptionTemplate = descriptionTemplate;
-            return this;
-        }
+//        public Builder name(String name) {
+//            getDto().setName(name);
+//            return this;
+//        }
+//
+//        public Builder descriptionTemplate(String descriptionTemplate) {
+//            getDto().descriptionTemplate = descriptionTemplate;
+//            return this;
+//        }
 
         public Builder supportedProperties(List<TypedPropertyDTO> supportedProperties) {
             getDto().supportedProperties = supportedProperties;

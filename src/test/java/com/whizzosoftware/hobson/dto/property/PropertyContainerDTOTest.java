@@ -62,24 +62,18 @@ public class PropertyContainerDTOTest {
 
         PropertyContainerClass pcc = new PropertyContainerClass(
                 PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "configurationClass"),
-                "config",
                 PropertyContainerClassType.PLUGIN_CONFIG,
-                "template",
                 props
         );
 
         // test with no details
         PropertyContainerClassDTO dto = new PropertyContainerClassDTO.Builder("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", pcc, false).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", dto.getId());
-        assertNull(dto.getName());
-        assertNull(dto.getDescriptionTemplate());
         assertNull(dto.getSupportedProperties());
 
         // test with details
         dto = new PropertyContainerClassDTO.Builder("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", pcc, true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", dto.getId());
-        assertEquals("config", dto.getName());
-        assertEquals("template", dto.getDescriptionTemplate());
         assertNotNull(dto.getSupportedProperties());
         assertEquals(1, dto.getSupportedProperties().size());
         TypedPropertyDTO tpd = dto.getSupportedProperties().get(0);
@@ -92,7 +86,7 @@ public class PropertyContainerDTOTest {
     public void testMapPropertyContainerWithHubConfigContainerClass() {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("name", "name", "name", TypedProperty.Type.STRING).build());
-        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(HubContext.createLocal(), "configuration"), "name", PropertyContainerClassType.HUB_CONFIG, "", props);
+        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(HubContext.createLocal(), "configuration"), PropertyContainerClassType.HUB_CONFIG, props);
 
         IdProvider idProvider = new ContextPathIdProvider();
 
@@ -124,7 +118,7 @@ public class PropertyContainerDTOTest {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("name", "name", "name", TypedProperty.Type.STRING).build());
         props.add(new TypedProperty.Builder("device", "device", "device", TypedProperty.Type.DEVICE).build());
-        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "configuration"), "name", PropertyContainerClassType.PLUGIN_CONFIG, "", props);
+        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "configuration"), PropertyContainerClassType.PLUGIN_CONFIG, props);
 
         Map<String,Object> values = new HashMap<>();
         values.put("name", "My Name");

@@ -8,11 +8,14 @@
 package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.*;
+import com.whizzosoftware.hobson.api.event.MockEventManager;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
+import com.whizzosoftware.hobson.api.property.PropertyContainer;
+import com.whizzosoftware.hobson.api.variable.DeviceProxyVariable;
 import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
-import com.whizzosoftware.hobson.api.variable.DeviceVariableDescription;
+import com.whizzosoftware.hobson.api.variable.VariableMask;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
@@ -26,11 +29,11 @@ public class HobsonDeviceDTOTest {
     @Test
     public void testConstructorWithJustId() throws Exception {
         DeviceManager deviceManager = new MockDeviceManager();
-        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1", "1.0.0", "");
         plugin.setDeviceManager(deviceManager);
         DeviceContext dctx = DeviceContext.create(plugin.getContext(), "device1");
         MockDeviceProxy proxy = new MockDeviceProxy(plugin, dctx.getDeviceId(), DeviceType.LIGHTBULB);
-        Future f = deviceManager.publishDevice(plugin.getContext(), proxy, null).await();
+        Future f = deviceManager.publishDevice(proxy, null, null).await();
         assertTrue(f.isSuccess());
         IdProvider idProvider = new ContextPathIdProvider();
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
@@ -47,17 +50,17 @@ public class HobsonDeviceDTOTest {
     @Test
     public void testConstructorWithDetailsAndNoExpansions() throws Exception {
         final MockDeviceManager deviceManager = new MockDeviceManager();
-        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1", "1.0.0", "");
         plugin.setDeviceManager(deviceManager);
         final DeviceContext dctx = DeviceContext.create(plugin.getContext(), "device1");
         MockDeviceProxy proxy = new MockDeviceProxy(plugin, dctx.getDeviceId(), DeviceType.LIGHTBULB);
         proxy.setManufacturerName("Mfg");
         proxy.setManufacturerVersion("1.0");
         proxy.setModelName("model");
-        Future f = deviceManager.publishDevice(plugin.getContext(), proxy, null).await();
+        proxy.setLastCheckin(100L);
+        Future f = deviceManager.publishDevice(proxy, null, null).await();
         assertTrue(f.isSuccess());
 
-        deviceManager.setDeviceAvailability(dctx, true, 100L);
         IdProvider idProvider = new ContextPathIdProvider();
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
                 new ManagerDTOBuildContext.Builder().
@@ -74,6 +77,7 @@ public class HobsonDeviceDTOTest {
         assertEquals("1.0", dto.getManufacturerVersion());
         assertEquals("model", dto.getModelName());
         assertEquals("LIGHTBULB", dto.getType().toString());
+        assertNotNull(dto.getLastCheckIn());
         assertEquals(100, (long)dto.getLastCheckIn());
         assertEquals("hubs:local:variables:plugin1:device1", dto.getVariables().getId());
     }
@@ -81,31 +85,30 @@ public class HobsonDeviceDTOTest {
     @Test
     public void testConstructorWithDetailsAndVariablesExpansions() throws Exception {
         final MockDeviceManager deviceManager = new MockDeviceManager();
-        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1");
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1", "1.0.0", "");
         plugin.setDeviceManager(deviceManager);
+        plugin.setEventManager(new MockEventManager());
 
         final DeviceContext dctx = DeviceContext.create(plugin.getContext(), "device1");
         final DeviceVariableContext dvctx = DeviceVariableContext.create(dctx, "foo");
         MockDeviceProxy proxy = new MockDeviceProxy(plugin, dctx.getDeviceId(), DeviceType.LIGHTBULB) {
-            public DeviceVariableDescription[] createVariableDescriptions() {
-                return new DeviceVariableDescription[] {
-                    new DeviceVariableDescription(dvctx, DeviceVariableDescription.Mask.READ_WRITE)
-                };
+            public void onStartup(String name, PropertyContainer config) {
+                publishVariables(new DeviceProxyVariable(dvctx, VariableMask.READ_WRITE));
             }
         };
-        Future f = deviceManager.publishDevice(plugin.getContext(), proxy, null).await();
+        proxy.setLastCheckin(100L);
+        Future f = deviceManager.publishDevice(proxy, null, null).await();
         assertTrue(f.isSuccess());
         f = deviceManager.setDeviceVariable(dvctx, "bar").await();
         assertTrue(f.isSuccess());
-        deviceManager.setDeviceAvailability(dctx, true, 100L);
 
         IdProvider idProvider = new ContextPathIdProvider();
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
                 new ManagerDTOBuildContext.Builder().
-                        deviceManager(deviceManager).
-                        idProvider(idProvider).
-                        expansionFields(new ExpansionFields(JSONAttributes.VARIABLES)).
-                        build(),
+                    deviceManager(deviceManager).
+                    idProvider(idProvider).
+                    expansionFields(new ExpansionFields(JSONAttributes.VARIABLES)).
+                    build(),
                 dctx,
                 true
         ).build();
@@ -113,6 +116,7 @@ public class HobsonDeviceDTOTest {
         assertEquals("hubs:local:devices:plugin1:device1", dto.getId());
 //                        assertEquals("deviceName", dto.getName());
         assertEquals("LIGHTBULB", dto.getType().toString());
+        assertNotNull(dto.getLastCheckIn());
         assertEquals(100, (long)dto.getLastCheckIn());
         assertEquals("hubs:local:variables:plugin1:device1", dto.getVariables().getId());
         assertEquals(1, (int)dto.getVariables().getNumberOfItems());

@@ -7,28 +7,23 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.hub;
 
-import com.whizzosoftware.hobson.api.device.DeviceDescription;
-import com.whizzosoftware.hobson.api.device.DevicePassport;
+import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
-import com.whizzosoftware.hobson.api.plugin.PluginDescriptor;
+import com.whizzosoftware.hobson.api.plugin.HobsonPluginDescriptor;
 import com.whizzosoftware.hobson.api.presence.PresenceEntity;
 import com.whizzosoftware.hobson.api.presence.PresenceLocation;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
-import com.whizzosoftware.hobson.api.variable.HobsonVariable;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
-import com.whizzosoftware.hobson.dto.device.DevicePassportDTO;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.dto.plugin.HobsonPluginDTO;
-import com.whizzosoftware.hobson.dto.plugin.PluginDescriptorAdapter;
 import com.whizzosoftware.hobson.dto.presence.PresenceEntityDTO;
 import com.whizzosoftware.hobson.dto.presence.PresenceLocationDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.task.HobsonTaskDTO;
-import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -186,11 +181,11 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add action classes
                 boolean expand = expansions.has(JSONAttributes.ACTION_CLASSES);
-                dto.actionClasses = new ItemListDTO(idProvider.createTaskActionClassesId(hub.getContext()), expand);
+                dto.actionClasses = new ItemListDTO(idProvider.createActionClassesId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.ACTION_CLASSES);
-                    for (PropertyContainerClass tac : ctx.getAllTaskActionClasses(hub.getContext())) {
-                        dto.actionClasses.add(new PropertyContainerClassDTO.Builder(idProvider.createTaskActionClassId(tac.getContext()), tac, expansions.has(JSONAttributes.ITEM)).build());
+                    for (PropertyContainerClass tac : ctx.getAllActionClasses(hub.getContext())) {
+                        dto.actionClasses.add(new PropertyContainerClassDTO.Builder(idProvider.createActionClassId(tac.getContext()), tac, expansions.has(JSONAttributes.ITEM)).build());
                     }
                     expansions.popContext();
                 }
@@ -231,22 +226,8 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.DEVICES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (DeviceDescription device : ctx.getAllDevices(hub.getContext())) {
+                    for (HobsonDeviceDescriptor device : ctx.getAllDevices(hub.getContext())) {
                         dto.devices.add(new HobsonDeviceDTO.Builder(ctx, device.getContext(), showDetails).build());
-                    }
-                    expansions.popContext();
-                    expansions.popContext();
-                }
-
-                // add device passports
-                expand = expansions.has(JSONAttributes.DEVICE_PASSPORTS);
-                dto.devicePassports = new ItemListDTO(idProvider.createDevicePassportsId(hub.getContext()), expand);
-                if (expand) {
-                    expansions.pushContext(JSONAttributes.DEVICE_PASSPORTS);
-                    boolean showDetails = expansions.has(JSONAttributes.ITEM);
-                    expansions.pushContext(JSONAttributes.ITEM);
-                    for (DevicePassport dp : ctx.getDevicePassports(hub.getContext())) {
-                        dto.devicePassports.add(new DevicePassportDTO.Builder(ctx, dp, showDetails, false).build());
                     }
                     expansions.popContext();
                     expansions.popContext();
@@ -276,8 +257,8 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.LOCAL_PLUGINS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (PluginDescriptor pd : ctx.getLocalPluginDescriptors(hub.getContext())) {
-                        dto.localPlugins.add(new HobsonPluginDTO.Builder(ctx, new PluginDescriptorAdapter(pd, null), pd.getDescription(), null, showDetails).build());
+                    for (HobsonPluginDescriptor pd : ctx.getLocalPluginDescriptors(hub.getContext())) {
+                        dto.localPlugins.add(new HobsonPluginDTO.Builder(ctx, hub.getContext(), pd, pd.getDescription(), null, showDetails).build());
                     }
                     expansions.popContext();
                     expansions.popContext();
@@ -318,8 +299,8 @@ public class HobsonHubDTO extends ThingDTO {
                     expansions.pushContext(JSONAttributes.REMOTE_PLUGINS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
-                    for (PluginDescriptor pd : ctx.getRemotePluginDescriptors(hub.getContext())) {
-                        dto.remotePlugins.add(new HobsonPluginDTO.Builder(ctx, new PluginDescriptorAdapter(pd, null), pd.getDescription(), pd.getVersionString(), showDetails).build());
+                    for (HobsonPluginDescriptor pd : ctx.getRemotePluginDescriptors(hub.getContext())) {
+                        dto.remotePlugins.add(new HobsonPluginDTO.Builder(ctx, hub.getContext(), pd, pd.getDescription(), pd.getVersion(), showDetails).build());
                     }
                     expansions.popContext();
                     expansions.popContext();
