@@ -19,6 +19,7 @@ import java.util.List;
 public class ActionClassDTO extends PropertyContainerClassDTO {
     private String name;
     private String descriptionTemplate;
+    private boolean statusProvider;
     private boolean taskAction;
 
     private ActionClassDTO(String id) {
@@ -34,6 +35,7 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
         json.put(JSONAttributes.NAME, name);
         json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
         json.put(JSONAttributes.TASK_ACTION, taskAction);
+        json.put(JSONAttributes.STATUS_PROVIDER, statusProvider);
         return json;
     }
 
@@ -63,6 +65,11 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
 
         public ActionClassDTO.Builder taskAction(boolean taskAction) {
             dto.taskAction = taskAction;
+            return this;
+        }
+
+        public ActionClassDTO.Builder statusProvider(boolean statusProvider) {
+            dto.statusProvider = statusProvider;
             return this;
         }
 

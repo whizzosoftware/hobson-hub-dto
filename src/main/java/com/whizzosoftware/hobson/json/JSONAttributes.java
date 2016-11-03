@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.json;
 
 /**
@@ -104,6 +106,7 @@ public class JSONAttributes {
     public static final String SECRET = "secret";
     public static final String SERIAL_PORTS = "serialPorts";
     public static final String STATUS = "status";
+    public static final String STATUS_PROVIDER = "statusProvider";
     public static final String SUPPORTED_PROPERTIES = "supportedProperties";
     public static final String TAGS = "tags";
     public static final String TASKS = "tasks";

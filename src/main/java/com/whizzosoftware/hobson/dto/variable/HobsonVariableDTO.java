@@ -98,8 +98,8 @@ public class HobsonVariableDTO extends ThingDTO {
                     dto.setName(dv.getContext().getName());
                     dto.mask = dv.getMask();
                     dto.valueMediaType = dv.getMediaType();
-                    dto.value = state.getValue();
-                    dto.lastUpdate = state.getLastUpdate();
+                    dto.value = state != null ? state.getValue() : null;
+                    dto.lastUpdate = state != null ? state.getLastUpdate() : null;
                 }
             }
         }
