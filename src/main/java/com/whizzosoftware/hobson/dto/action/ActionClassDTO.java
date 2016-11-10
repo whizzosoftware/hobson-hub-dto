@@ -17,7 +17,6 @@ import org.json.JSONObject;
 public class ActionClassDTO extends PropertyContainerClassDTO {
     private String name;
     private String descriptionTemplate;
-    private boolean statusProvider;
     private boolean taskAction;
 
     private ActionClassDTO(String id) {
@@ -33,7 +32,6 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
         json.put(JSONAttributes.NAME, name);
         json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
         json.put(JSONAttributes.TASK_ACTION, taskAction);
-        json.put(JSONAttributes.STATUS_PROVIDER, statusProvider);
         return json;
     }
 
@@ -43,7 +41,6 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
             name(actionClass.getName());
             descriptionTemplate(actionClass.getDescription());
             taskAction(actionClass.isTaskAction());
-            statusProvider(actionClass.isStatusProvider());
         }
 
         public Builder(JSONObject json) {
@@ -51,7 +48,6 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
             name(json.getString(JSONAttributes.NAME));
             descriptionTemplate(json.getString(JSONAttributes.DESCRIPTION_TEMPLATE));
             taskAction(json.getBoolean(JSONAttributes.DESCRIPTION_TEMPLATE));
-            statusProvider(json.getBoolean(JSONAttributes.DESCRIPTION_TEMPLATE));
         }
 
         public ActionClassDTO.Builder name(String name) {
@@ -66,11 +62,6 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
 
         public ActionClassDTO.Builder taskAction(boolean taskAction) {
             ((ActionClassDTO)dto).taskAction = taskAction;
-            return this;
-        }
-
-        public ActionClassDTO.Builder statusProvider(boolean statusProvider) {
-            ((ActionClassDTO)dto).statusProvider = statusProvider;
             return this;
         }
 
