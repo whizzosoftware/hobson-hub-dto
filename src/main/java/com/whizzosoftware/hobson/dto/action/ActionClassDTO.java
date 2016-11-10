@@ -9,12 +9,10 @@
 */
 package com.whizzosoftware.hobson.dto.action;
 
+import com.whizzosoftware.hobson.api.action.ActionClass;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
-import com.whizzosoftware.hobson.dto.property.TypedPropertyDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class ActionClassDTO extends PropertyContainerClassDTO {
     private String name;
@@ -40,41 +38,44 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
     }
 
     public static class Builder extends PropertyContainerClassDTO.Builder {
-        private ActionClassDTO dto;
-
-        public Builder(String id, List<TypedPropertyDTO> props) {
-            super(id);
-            dto = new ActionClassDTO(id);
-            supportedProperties(props);
+        public Builder(String id, ActionClass actionClass, boolean showDetails) {
+            super(id, actionClass, showDetails);
+            name(actionClass.getName());
+            descriptionTemplate(actionClass.getDescription());
+            taskAction(actionClass.isTaskAction());
+            statusProvider(actionClass.isStatusProvider());
         }
 
         public Builder(JSONObject json) {
             super(json);
-            dto = new ActionClassDTO(json);
+            name(json.getString(JSONAttributes.NAME));
+            descriptionTemplate(json.getString(JSONAttributes.DESCRIPTION_TEMPLATE));
+            taskAction(json.getBoolean(JSONAttributes.DESCRIPTION_TEMPLATE));
+            statusProvider(json.getBoolean(JSONAttributes.DESCRIPTION_TEMPLATE));
         }
 
         public ActionClassDTO.Builder name(String name) {
-            dto.name = name;
+            ((ActionClassDTO)dto).name = name;
             return this;
         }
 
         public ActionClassDTO.Builder descriptionTemplate(String descriptionTemplate) {
-            dto.descriptionTemplate = descriptionTemplate;
+            ((ActionClassDTO)dto).descriptionTemplate = descriptionTemplate;
             return this;
         }
 
         public ActionClassDTO.Builder taskAction(boolean taskAction) {
-            dto.taskAction = taskAction;
+            ((ActionClassDTO)dto).taskAction = taskAction;
             return this;
         }
 
         public ActionClassDTO.Builder statusProvider(boolean statusProvider) {
-            dto.statusProvider = statusProvider;
+            ((ActionClassDTO)dto).statusProvider = statusProvider;
             return this;
         }
 
-        protected PropertyContainerClassDTO getDto() {
-            return dto;
+        protected PropertyContainerClassDTO createDTO(String id) {
+            return new ActionClassDTO(id);
         }
     }
 }

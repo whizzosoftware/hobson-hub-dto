@@ -246,6 +246,16 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createLocalPluginActionClassId(PluginContext ctx, String actionClassId) {
+        return null;
+    }
+
+    @Override
+    public String createLocalPluginActionClassesId(PluginContext ctx) {
+        return null;
+    }
+
+    @Override
     public String createLocalPluginConfigurationId(PluginContext ctx) {
         return localPluginConfigurationId;
     }

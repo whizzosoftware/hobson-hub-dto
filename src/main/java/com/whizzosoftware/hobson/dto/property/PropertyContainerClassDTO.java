@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
@@ -19,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyContainerClassDTO extends EntityDTO {
-//    private String descriptionTemplate;
-//    private String id;
     private List<TypedPropertyDTO> supportedProperties;
 
     protected PropertyContainerClassDTO(String id) {
@@ -41,17 +41,12 @@ public class PropertyContainerClassDTO extends EntityDTO {
         return null;
     }
 
-//    public String getDescriptionTemplate() {
-//        return descriptionTemplate;
-//    }
-
     public List<TypedPropertyDTO> getSupportedProperties() {
         return supportedProperties;
     }
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-//        json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
         if (supportedProperties != null) {
             JSONArray array = new JSONArray();
             for (TypedPropertyDTO p : supportedProperties) {
@@ -63,17 +58,15 @@ public class PropertyContainerClassDTO extends EntityDTO {
     }
 
     public static class Builder {
-        private PropertyContainerClassDTO dto;
+        protected PropertyContainerClassDTO dto;
 
         public Builder(String id) {
-            dto = new PropertyContainerClassDTO(id);
+            dto = createDTO(id);
         }
 
         public Builder(String id, PropertyContainerClass pcc, boolean showDetails) {
-            dto = new PropertyContainerClassDTO(id);
+            dto = createDTO(id);
             if (showDetails && pcc != null) {
-//                dto.setName(pcc.getName());
-//                dto.descriptionTemplate = pcc.getDescriptionTemplate();
                 if (pcc.hasSupportedProperties()) {
                     dto.supportedProperties = new ArrayList<>();
                     for (TypedProperty tp : pcc.getSupportedProperties()) {
@@ -87,35 +80,25 @@ public class PropertyContainerClassDTO extends EntityDTO {
             dto = new PropertyContainerClassDTO(json);
         }
 
-        protected PropertyContainerClassDTO getDto() {
-            return dto;
-        }
-
-//        public Builder name(String name) {
-//            getDto().setName(name);
-//            return this;
-//        }
-//
-//        public Builder descriptionTemplate(String descriptionTemplate) {
-//            getDto().descriptionTemplate = descriptionTemplate;
-//            return this;
-//        }
-
         public Builder supportedProperties(List<TypedPropertyDTO> supportedProperties) {
-            getDto().supportedProperties = supportedProperties;
+            dto.supportedProperties = supportedProperties;
             return this;
         }
 
         public Builder supportedProperty(TypedPropertyDTO supportedProperty) {
-            if (getDto().supportedProperties == null) {
-                getDto().supportedProperties = new ArrayList<>();
+            if (dto.supportedProperties == null) {
+                dto.supportedProperties = new ArrayList<>();
             }
-            getDto().supportedProperties.add(supportedProperty);
+            dto.supportedProperties.add(supportedProperty);
             return this;
         }
 
+        protected PropertyContainerClassDTO createDTO(String id) {
+            return new PropertyContainerClassDTO(id);
+        }
+
         public PropertyContainerClassDTO build() {
-            return getDto();
+            return dto;
         }
     }
 }

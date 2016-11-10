@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.hub;
 
 import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
@@ -39,7 +41,6 @@ public class HobsonHubDTO extends ThingDTO {
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
     private ItemListDTO devices;
-    private ItemListDTO devicePassports;
     private ItemListDTO globalVariables;
     private ItemListDTO localPlugins;
     private HubLogDTO log;
@@ -84,10 +85,6 @@ public class HobsonHubDTO extends ThingDTO {
         return devices;
     }
 
-    public ItemListDTO getDevicePassports() {
-        return devicePassports;
-    }
-
     public ItemListDTO getLocalPlugins() {
         return localPlugins;
     }
@@ -124,9 +121,6 @@ public class HobsonHubDTO extends ThingDTO {
         }
         if (devices != null) {
             json.put(JSONAttributes.DEVICES, devices.toJSON());
-        }
-        if (devicePassports != null) {
-            json.put(JSONAttributes.DEVICE_PASSPORTS, devicePassports.toJSON());
         }
         if (globalVariables != null) {
             json.put(JSONAttributes.GLOBAL_VARIABLES, globalVariables.toJSON());
