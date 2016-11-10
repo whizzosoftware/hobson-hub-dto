@@ -131,6 +131,16 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createDeviceActionClassId(DeviceContext ctx, String actionClassId) {
+        return null;
+    }
+
+    @Override
+    public String createDeviceActionClassesId(DeviceContext ctx) {
+        return null;
+    }
+
+    @Override
     public String createDeviceId(DeviceContext ctx) {
         return deviceId;
     }
