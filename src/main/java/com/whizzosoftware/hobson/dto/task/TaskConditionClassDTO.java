@@ -44,7 +44,7 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
             super(id, tcc, showDetails);
             name(tcc.getName());
             descriptionTemplate(tcc.getDescriptionTemplate());
-            type(tcc.getType().toString());
+            type(tcc.getConditionClassType().toString());
         }
 
         public Builder(JSONObject json) {

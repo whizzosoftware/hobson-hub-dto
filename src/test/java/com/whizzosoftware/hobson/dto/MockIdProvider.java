@@ -246,17 +246,7 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createHubUploadCredentialsId(HubContext ctx) {
-        return null;
-    }
-
-    @Override
     public String createJobId(HubContext ctx, String jobId) {
-        return null;
-    }
-
-    @Override
-    public String createLocalPluginActionClassId(PluginContext ctx, String actionClassId) {
         return null;
     }
 

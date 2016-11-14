@@ -269,7 +269,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                         expansions.pushContext(JSONAttributes.ACTION_CLASSES);
                         boolean expandItem = expansions.has(JSONAttributes.ITEM);
                         for (ActionClass ac : dd.getActionClasses()) {
-                            dto.actionClasses.add(new ActionClassDTO.Builder(bctx.getIdProvider().createLocalPluginActionClassId(ac.getContext().getPluginContext(), ac.getContext().getContainerClassId()), ac, expandItem).build());
+                            dto.actionClasses.add(new ActionClassDTO.Builder(bctx.getIdProvider().createActionClassId(ac.getContext()), ac, expandItem).build());
                         }
                         expansions.popContext();
                     }

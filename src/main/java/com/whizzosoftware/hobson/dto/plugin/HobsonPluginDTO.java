@@ -155,7 +155,7 @@ public class HobsonPluginDTO extends ThingDTO {
                         if (expand) {
                             expansions.pushContext(JSONAttributes.ACTION_CLASSES);
                             for (ActionClass ac : lpd.getActionClasses()) {
-                                dto.actionClasses.add(new ActionClassDTO.Builder(idProvider.createLocalPluginActionClassId(ac.getContext().getPluginContext(), ac.getContext().getContainerClassId()), ac, expansions.has(JSONAttributes.ITEM)).build());
+                                dto.actionClasses.add(new ActionClassDTO.Builder(idProvider.createActionClassId(ac.getContext()), ac, expansions.has(JSONAttributes.ITEM)).build());
                             }
                             expansions.popContext();
                         }
