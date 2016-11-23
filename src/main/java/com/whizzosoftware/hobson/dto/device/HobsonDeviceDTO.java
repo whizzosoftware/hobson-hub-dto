@@ -226,7 +226,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                                 state,
                                 expandItem
                             ).build());
-                            if (state.getLastUpdate() != null) {
+                            if (state != null && state.getLastUpdate() != null) {
                                 dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, state.getLastUpdate()) : state.getLastUpdate();
                             }
                         }
