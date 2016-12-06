@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
@@ -41,9 +43,9 @@ public class URLMaskingDTOBuildContextTest {
         };
         Future f = dm.publishDevice(proxy, null, null).await();
         assertTrue(f.isSuccess());
-        f = dm.setDeviceVariable(vctx1, 57.0).await();
+        dm.setDeviceVariable(vctx1, 57.0);
         assertTrue(f.isSuccess());
-        f = dm.setDeviceVariable(vctx2, "http://www.foo.com").await();
+        dm.setDeviceVariable(vctx2, "http://www.foo.com");
         assertTrue(f.isSuccess());
         DTOBuildContext ctx = new URLMaskingDTOBuildContext.Builder().deviceManager(dm).build();
 

@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.device;
 
 import com.whizzosoftware.hobson.api.device.*;
@@ -99,8 +101,7 @@ public class HobsonDeviceDTOTest {
         proxy.setLastCheckin(100L);
         Future f = deviceManager.publishDevice(proxy, null, null).await();
         assertTrue(f.isSuccess());
-        f = deviceManager.setDeviceVariable(dvctx, "bar").await();
-        assertTrue(f.isSuccess());
+        deviceManager.setDeviceVariable(dvctx, "bar");
 
         IdProvider idProvider = new ContextPathIdProvider();
         HobsonDeviceDTO dto = new HobsonDeviceDTO.Builder(
