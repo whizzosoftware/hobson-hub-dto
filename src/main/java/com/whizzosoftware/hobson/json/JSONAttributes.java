@@ -90,6 +90,7 @@ public class JSONAttributes {
     public static final String NEW_VALUE = "newValue";
     public static final String NUMBER_OF_ITEMS = "numberOfItems";
     public static final String OLD_VALUE = "oldValue";
+    public static final String PASSWORD = "password";
     public static final String PASSPORT_ID = "passportId";
     public static final String PLUGIN_ID = "pluginId";
     public static final String PLUGIN_VERSION = "pluginVersion";
@@ -98,6 +99,7 @@ public class JSONAttributes {
     public static final String PRESENCE_ENTITIES = "presenceEntities";
     public static final String PRESENCE_LOCATIONS = "presenceLocations";
     public static final String PROPERTIES = "properties";
+    public static final String ROLES = "roles";
     public static final String LAST_CHECK_IN = "lastCheckIn";
     public static final String RADIUS = "radius";
     public static final String REMOTE_PLUGINS = "remotePlugins";
