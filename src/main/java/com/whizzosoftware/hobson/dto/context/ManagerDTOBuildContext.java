@@ -34,6 +34,7 @@ import com.whizzosoftware.hobson.api.data.DataStreamManager;
 import com.whizzosoftware.hobson.api.variable.*;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -51,6 +52,7 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     ExpansionFields expansionFields;
     DataStreamManager dataStreamManager;
     IdProvider idProvider;
+    String requestDomain;
 
     @Override
     public HobsonHub getHub(HubContext hctx) {
@@ -162,8 +164,18 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return null;
     }
 
+    @Override
     public IdProvider getIdProvider() {
         return idProvider;
+    }
+
+    @Override
+    public String createURI(String protocol, int port, String path) throws IOException {
+        String domain = requestDomain;
+        if (domain == null) {
+            domain = hubManager.getLocalManager().getNetworkInfo().getInetAddress().getHostName();
+        }
+        return protocol + "://" + domain + ":" + port + (path != null ? path : "");
     }
 
     @Override
@@ -220,6 +232,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
         public Builder dataStreamManager(DataStreamManager val) {
             ctx.dataStreamManager = val;
+            return this;
+        }
+
+        public Builder requestDomain(String val) {
+            ctx.requestDomain = val;
             return this;
         }
 

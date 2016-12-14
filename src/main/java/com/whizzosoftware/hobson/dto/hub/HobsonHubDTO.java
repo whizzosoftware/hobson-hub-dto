@@ -11,6 +11,7 @@ package com.whizzosoftware.hobson.dto.hub;
 
 import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
+import com.whizzosoftware.hobson.api.hub.WebSocketInfo;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.HobsonPluginDescriptor;
 import com.whizzosoftware.hobson.api.presence.PresenceEntity;
@@ -28,6 +29,10 @@ import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.task.HobsonTaskDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * A DTO for HobsonHub model objects. This DTO allows for detailed in-line resource expansion.
@@ -35,6 +40,8 @@ import org.json.JSONObject;
  * @author Dan Noguerol
  */
 public class HobsonHubDTO extends ThingDTO {
+    private static final Logger logger = LoggerFactory.getLogger(HobsonHubDTO.class);
+
     private ItemListDTO actionClasses;
     private String apiKey;
     private ItemListDTO conditionClasses;
@@ -331,7 +338,14 @@ public class HobsonHubDTO extends ThingDTO {
                     dto.addLink("activityLog", idProvider.createActivityLogId(hub.getContext()));
                     dto.addLink("sendTestEmail", idProvider.createSendTestEmailId(hub.getContext()));
                     dto.addLink("password", idProvider.createHubPasswordId(hub.getContext()));
-                    dto.addLink("webSocket", hub.getWebSocketUri());
+                    if (hub.hasWebSocketInfo()) {
+                        WebSocketInfo wsi = hub.getWebSocketInfo();
+                        try {
+                            dto.addLink("webSocket", ctx.createURI(wsi.getProtocol(), wsi.getPort(), wsi.getPath()));
+                        } catch (IOException e) {
+                            logger.error("Unable to create local URI", e);
+                        }
+                    }
                 }
             }
 

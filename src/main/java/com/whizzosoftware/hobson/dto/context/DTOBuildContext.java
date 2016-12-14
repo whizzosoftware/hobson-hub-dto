@@ -26,6 +26,7 @@ import com.whizzosoftware.hobson.api.task.condition.TaskConditionClass;
 import com.whizzosoftware.hobson.api.variable.*;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -35,6 +36,7 @@ import java.util.Collection;
  * @author Dan Noguerol
  */
 public interface DTOBuildContext {
+    String createURI(String protocol, int port, String path) throws IOException;
     boolean isDeviceAvailable(DeviceContext dctx);
     Collection<HobsonDeviceDescriptor> getAllDevices(HubContext hctx);
     Collection<HobsonTask> getAllTasks(HubContext hctx);
