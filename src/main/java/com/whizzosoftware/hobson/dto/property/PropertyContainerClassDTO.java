@@ -38,7 +38,7 @@ public class PropertyContainerClassDTO extends EntityDTO {
 
     @Override
     public String getJSONMediaType() {
-        return null;
+        return getMediaType() + "+json";
     }
 
     public List<TypedPropertyDTO> getSupportedProperties() {

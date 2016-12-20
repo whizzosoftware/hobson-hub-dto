@@ -9,6 +9,7 @@
 */
 package com.whizzosoftware.hobson.dto.device;
 
+import com.whizzosoftware.hobson.api.HobsonNotFoundException;
 import com.whizzosoftware.hobson.api.action.ActionClass;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.device.DeviceType;
@@ -194,17 +195,24 @@ public class HobsonDeviceDTO extends ThingDTO {
                 dto.manufacturerName = dd.getManufacturerName();
                 dto.manufacturerVersion = dd.getManufacturerVersion();
                 dto.modelName = dd.getModelName();
-                dto.available = bctx.isDeviceAvailable(dd.getContext());
-                dto.lastCheckIn = bctx.getDeviceLastCheckIn(dd.getContext());
+
+                try {
+                    dto.available = bctx.isDeviceAvailable(dd.getContext());
+                    dto.lastCheckIn = bctx.getDeviceLastCheckIn(dd.getContext());
+                } catch (HobsonNotFoundException ignored) {}
 
                 // preferred variable
                 if (dd.hasPreferredVariableName()) {
                     DeviceVariableContext vctx = DeviceVariableContext.create(dd.getContext(), dd.getPreferredVariableName());
+                    DeviceVariableState state = null;
+                    try {
+                        state = bctx.getDeviceVariableState(vctx);
+                    } catch (HobsonNotFoundException ignored) {}
                     dto.preferredVariable = new HobsonVariableDTO.Builder(
                         bctx,
                         bctx.getIdProvider().createDeviceVariableId(vctx),
                         bctx.getDeviceVariable(vctx),
-                        bctx.getDeviceVariableState(vctx),
+                        state,
                         expansions.has(JSONAttributes.PREFERRED_VARIABLE)
                     ).build();
                 }
@@ -218,7 +226,10 @@ public class HobsonDeviceDTO extends ThingDTO {
                     Collection<DeviceVariableDescriptor> hvc = bctx.getDeviceVariables(dd.getContext());
                     if (hvc != null) {
                         for (DeviceVariableDescriptor v : hvc) {
-                            DeviceVariableState state = bctx.getDeviceVariableState(v.getContext());
+                            DeviceVariableState state = null;
+                            try {
+                                state = bctx.getDeviceVariableState(v.getContext());
+                            } catch (HobsonNotFoundException ignored) {}
                             dto.variables.add(new HobsonVariableDTO.Builder(
                                 bctx,
                                 bctx.getIdProvider().createDeviceVariableId(v.getContext()),
