@@ -171,6 +171,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public String createDeviceTagsId(DeviceContext ctx) {
+        return null;
+    }
+
+    @Override
     public String createPluginDeviceConfigurationClassesId(PluginContext ctx) {
         return null;
     }
