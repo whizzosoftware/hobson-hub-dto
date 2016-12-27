@@ -9,6 +9,7 @@
 */
 package com.whizzosoftware.hobson.dto.hub;
 
+import com.whizzosoftware.hobson.api.data.DataStream;
 import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.WebSocketInfo;
@@ -20,6 +21,7 @@ import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.data.DataStreamDTO;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.dto.plugin.HobsonPluginDTO;
 import com.whizzosoftware.hobson.dto.presence.PresenceEntityDTO;
@@ -47,6 +49,7 @@ public class HobsonHubDTO extends ThingDTO {
     private ItemListDTO conditionClasses;
     private PropertyContainerClassDTO configurationClass;
     private PropertyContainerDTO configuration;
+    private ItemListDTO dataStreams;
     private ItemListDTO devices;
     private ItemListDTO globalVariables;
     private ItemListDTO localPlugins;
@@ -125,6 +128,9 @@ public class HobsonHubDTO extends ThingDTO {
         }
         if (configuration != null) {
             json.put(JSONAttributes.CONFIGURATION, configuration.toJSON());
+        }
+        if (dataStreams != null) {
+            json.put(JSONAttributes.DATA_STREAMS, dataStreams.toJSON());
         }
         if (devices != null) {
             json.put(JSONAttributes.DEVICES, devices.toJSON());
@@ -219,6 +225,20 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add configurationClass
                 dto.configurationClass = new PropertyContainerClassDTO.Builder(idProvider.createHubConfigurationClassId(hub.getContext()), hub.getConfigurationClass(), expansions.has(JSONAttributes.CCLASS)).build();
+
+                // add data streams
+                expand = expansions.has(JSONAttributes.DATA_STREAMS);
+                dto.dataStreams = new ItemListDTO(ctx, idProvider.createDataStreamsId(hub.getContext()), expand);
+                if (expand) {
+                    expansions.pushContext(JSONAttributes.DATA_STREAMS);
+                    boolean showDetails = expansions.has(JSONAttributes.ITEM);
+                    expansions.pushContext(JSONAttributes.ITEM);
+                    for (DataStream ds : ctx.getDataStreams(hub.getContext())) {
+                        dto.dataStreams.add(new DataStreamDTO.Builder(ctx, hub.getContext(), ds, showDetails).build());
+                    }
+                    expansions.popContext();
+                    expansions.popContext();
+                }
 
                 // add devices
                 expand = expansions.has(JSONAttributes.DEVICES);
@@ -372,6 +392,11 @@ public class HobsonHubDTO extends ThingDTO {
 
         public Builder configuration(PropertyContainerDTO configuration) {
             dto.configuration = configuration;
+            return this;
+        }
+
+        public Builder dataStreams(ItemListDTO dataStreams) {
+            dto.dataStreams = dataStreams;
             return this;
         }
 

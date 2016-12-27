@@ -8,6 +8,7 @@
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.action.ActionClass;
+import com.whizzosoftware.hobson.api.data.DataStream;
 import com.whizzosoftware.hobson.api.device.*;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
@@ -44,6 +45,7 @@ public interface DTOBuildContext {
     Collection<TaskConditionClass> getAllTaskConditionClasses(HubContext hctx);
     Collection<PresenceEntity> getAllPresenceEntities(HubContext hctx);
     Collection<PresenceLocation> getAllPresenceLocations(HubContext hctx);
+    Collection<DataStream> getDataStreams(HubContext hctx);
     PropertyContainer getDeviceConfiguration(DeviceContext dctx);
     PropertyContainerClass getDeviceConfigurationClass(DeviceContext dctx);
     HobsonDeviceDescriptor getDevice(DeviceContext dctx);
@@ -51,6 +53,7 @@ public interface DTOBuildContext {
     DeviceVariableState getDeviceVariableState(DeviceVariableContext vctx);
     DeviceVariableDescriptor getDeviceVariable(DeviceVariableContext vctx);
     Collection<DeviceVariableDescriptor> getDeviceVariables(DeviceContext dctx);
+    boolean hasExpansionFields();
     ExpansionFields getExpansionFields();
     GlobalVariable getGlobalVariable(GlobalVariableContext gvctx);
     Collection<GlobalVariable> getGlobalVariables(HubContext hctx);

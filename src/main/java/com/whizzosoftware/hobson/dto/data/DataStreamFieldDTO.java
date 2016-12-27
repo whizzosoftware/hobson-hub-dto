@@ -1,13 +1,16 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2016 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStreamField;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
@@ -46,11 +49,11 @@ public class DataStreamFieldDTO extends ThingDTO {
     static public class Builder {
         DataStreamFieldDTO dto;
 
-        public Builder(DTOBuildContext ctx, String dataStreamId, DataStreamField df, boolean showDetails) {
-            dto = new DataStreamFieldDTO(ctx.getIdProvider().createDataStreamFieldId(dataStreamId, df.getId()));
+        public Builder(DTOBuildContext ctx, HubContext hctx, String dataStreamId, DataStreamField df, boolean showDetails) {
+            dto = new DataStreamFieldDTO(ctx.getIdProvider().createDataStreamFieldId(hctx, dataStreamId, df.getId()));
             if (showDetails) {
                 dto.setName(df.getName());
-                dto.variable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(df.getVariable())).build();
+                dto.variable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(df.getVariable()).getId()).build();
             }
         }
 

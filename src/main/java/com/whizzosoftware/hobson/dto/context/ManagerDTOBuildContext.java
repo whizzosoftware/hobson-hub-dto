@@ -98,6 +98,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
         return (deviceManager != null) ? deviceManager.getDevice(dctx).getVariables() : null;
     }
 
+    @Override
+    public boolean hasExpansionFields() {
+        return (expansionFields != null);
+    }
+
     public Collection<ActionClass> getAllActionClasses(HubContext hctx) {
         return (actionManager != null) ? actionManager.getActionClasses(hctx, false) : null;
     }
@@ -136,6 +141,11 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
     public Collection<PresenceLocation> getAllPresenceLocations(HubContext hctx) {
         return (presenceManager != null) ? presenceManager.getAllPresenceLocations(hctx) : null;
+    }
+
+    @Override
+    public Collection<DataStream> getDataStreams(HubContext hctx) {
+        return (dataStreamManager != null) ? dataStreamManager.getDataStreams(hctx) : null;
     }
 
     @Override

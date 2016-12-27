@@ -1,15 +1,18 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2016 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.data.DataStreamInterval;
 import com.whizzosoftware.hobson.api.data.DataStreamValueSet;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
@@ -68,8 +71,8 @@ public class DataStreamDataDTO extends ThingDTO {
     static public class Builder {
         DataStreamDataDTO dto;
 
-        public Builder(DTOBuildContext ctx, String dataStreamId, long endTime, DataStreamInterval inr) {
-            dto = new DataStreamDataDTO(ctx.getIdProvider().createDataStreamDataId(dataStreamId), endTime, inr);
+        public Builder(DTOBuildContext ctx, HubContext hctx, String dataStreamId, long endTime, DataStreamInterval inr) {
+            dto = new DataStreamDataDTO(ctx.getIdProvider().createDataStreamDataId(hctx, dataStreamId), endTime, inr);
         }
 
         public DataStreamDataDTO.Builder name(String name) {

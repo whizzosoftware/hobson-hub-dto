@@ -1,14 +1,17 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStream;
 import com.whizzosoftware.hobson.api.data.DataStreamField;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
@@ -72,18 +75,18 @@ public class DataStreamDTO extends ThingDTO {
     static public class Builder {
         DataStreamDTO dto;
 
-        public Builder(DTOBuildContext ctx, DataStream ds, boolean showDetails) {
-            dto = new DataStreamDTO(ctx.getIdProvider().createDataStreamId(ds.getId()));
+        public Builder(DTOBuildContext ctx, HubContext hctx, DataStream ds, boolean showDetails) {
+            dto = new DataStreamDTO(ctx.getIdProvider().createDataStreamId(hctx, ds.getId()));
             if (showDetails) {
                 dto.setName(ds.getName());
                 if (ds.hasFields()) {
                     dto.fields = new ArrayList<>();
                     for (DataStreamField f : ds.getFields()) {
-                        dto.fields.add(new DataStreamFieldDTO.Builder(ctx, ds.getId(), f, true).build());
+                        dto.fields.add(new DataStreamFieldDTO.Builder(ctx, hctx, ds.getId(), f, true).build());
                     }
                 }
                 dto.tags = ds.getTags();
-                dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(ds.getId()));
+                dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(hctx, ds.getId()));
             }
         }
 
