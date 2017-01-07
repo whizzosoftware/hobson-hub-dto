@@ -1,16 +1,21 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.presence;
 
 import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.presence.PresenceLocation;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -21,8 +26,8 @@ public class PresenceLocationDTO extends ThingDTO {
     private Integer beaconMajor;
     private Integer beaconMinor;
 
-    private PresenceLocationDTO(String id) {
-        super(id);
+    private PresenceLocationDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private PresenceLocationDTO(JSONObject json) {
@@ -83,12 +88,12 @@ public class PresenceLocationDTO extends ThingDTO {
     public static class Builder {
         private PresenceLocationDTO dto;
 
-        public Builder(String id) {
-            dto = new PresenceLocationDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = new PresenceLocationDTO(ctx, id);
         }
 
-        public Builder(PresenceLocation pl, IdProvider idProvider, boolean showDetails) {
-            dto = new PresenceLocationDTO(pl != null ? idProvider.createPresenceLocationId(pl.getContext()) : null);
+        public Builder(DTOBuildContext ctx, PresenceLocation pl, IdProvider idProvider, boolean showDetails) {
+            dto = new PresenceLocationDTO(ctx, pl != null ? idProvider.createPresenceLocationId(pl.getContext()) : new TemplatedId(null, null));
             if (pl != null && showDetails) {
                 dto.setName(pl.getName());
                 dto.latitude = pl.getLatitude();

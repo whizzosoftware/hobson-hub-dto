@@ -14,6 +14,7 @@ import com.whizzosoftware.hobson.api.action.ActionClass;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.device.DeviceType;
 import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
 import com.whizzosoftware.hobson.api.variable.DeviceVariableDescriptor;
@@ -21,6 +22,7 @@ import com.whizzosoftware.hobson.api.variable.DeviceVariableState;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.action.ActionClassDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 public class HobsonDeviceDTO extends ThingDTO {
     private ItemListDTO actionClasses;
@@ -44,11 +47,12 @@ public class HobsonDeviceDTO extends ThingDTO {
     private String modelName;
     private Long lastCheckIn;
     private HobsonVariableDTO preferredVariable;
+    private Set<String> tags;
     private DeviceType type;
     private ItemListDTO variables;
 
-    private HobsonDeviceDTO(String id) {
-        super(id);
+    private HobsonDeviceDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private HobsonDeviceDTO(JSONObject json) {
@@ -170,24 +174,24 @@ public class HobsonDeviceDTO extends ThingDTO {
         if (actionClasses != null) {
             json.put(JSONAttributes.ACTION_CLASSES, actionClasses.toJSON());
         }
+        if (tags != null) {
+            json.put(JSONAttributes.TAGS, tags);
+        }
         return json;
     }
 
     static public class Builder {
         private HobsonDeviceDTO dto;
 
-        public Builder(String id) {
-            dto = new HobsonDeviceDTO(id);
-        }
-
         public Builder(JSONObject json) {
             dto = new HobsonDeviceDTO(json);
         }
 
         public Builder(final DTOBuildContext bctx, DeviceContext dctx, boolean showDetails) {
-            final HobsonDeviceDescriptor dd = bctx.getDevice(dctx);
-            dto = new HobsonDeviceDTO(bctx.getIdProvider().createDeviceId(dd.getContext()));
+            TemplatedId tid = bctx.getIdProvider().createDeviceId(dctx);
+            dto = new HobsonDeviceDTO(bctx, tid);
             if (showDetails) {
+                final HobsonDeviceDescriptor dd = bctx.getDevice(dctx);
                 ExpansionFields expansions = bctx.getExpansionFields();
 
                 dto.setName(dd.getName());
@@ -219,7 +223,7 @@ public class HobsonDeviceDTO extends ThingDTO {
 
                 // variables
                 boolean expand = expansions.has(JSONAttributes.VARIABLES);
-                dto.variables = new ItemListDTO(bctx.getIdProvider().createDeviceVariablesId(dd.getContext()), expand);
+                dto.variables = new ItemListDTO(bctx, bctx.getIdProvider().createDeviceVariablesId(dd.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.VARIABLES);
                     boolean expandItem = expansions.has(JSONAttributes.ITEM);
@@ -246,12 +250,14 @@ public class HobsonDeviceDTO extends ThingDTO {
                 }
 
                 // configurationClass
-                dto.configurationClass = new PropertyContainerClassDTO.Builder(bctx.getIdProvider().createDeviceConfigurationClassId(dd.getContext()), bctx.getDeviceConfigurationClass(dd.getContext()), expansions.has(JSONAttributes.CCLASS)).build();
+                dto.configurationClass = new PropertyContainerClassDTO.Builder(bctx, bctx.getIdProvider().createDeviceConfigurationClassId(dd.getContext()), bctx.getDeviceConfigurationClass(dd.getContext()), expansions.has(JSONAttributes.CCLASS)).build();
 
                 // configuration
                 PropertyContainer pc = bctx.getDeviceConfiguration(dd.getContext());
                 if (pc != null) {
+                    expansions.pushContext(JSONAttributes.CONFIGURATION);
                     dto.configuration = new PropertyContainerDTO.Builder(
+                            bctx,
                             bctx.getDeviceConfiguration(dd.getContext()),
                             new PropertyContainerClassProvider() {
                                 @Override
@@ -260,30 +266,32 @@ public class HobsonDeviceDTO extends ThingDTO {
                                 }
                             },
                             PropertyContainerClassType.DEVICE_CONFIG,
-                            expansions.has(JSONAttributes.CONFIGURATION),
-                            expansions.pushContext(JSONAttributes.CONFIGURATION),
-                            bctx.getIdProvider()
+                            expansions.has(JSONAttributes.CONFIGURATION)
                     ).build();
                     expansions.popContext();
                 } else {
-                    dto.configuration = new PropertyContainerDTO.Builder(bctx.getIdProvider().createDeviceConfigurationId(dd.getContext())).build();
+                    dto.configuration = new PropertyContainerDTO.Builder(bctx.getIdProvider().createDeviceConfigurationId(dd.getContext()).getId()).build();
                 }
 
                 // links
-                dto.links = Collections.singletonMap("setName", bctx.getIdProvider().createDeviceNameId(dd.getContext()));
+                dto.links = Collections.singletonMap("setName", bctx.getIdProvider().createDeviceNameId(dd.getContext()).getId());
 
                 // add action classes
                 expand = expansions.has(JSONAttributes.ACTION_CLASSES);
-                dto.actionClasses = new ItemListDTO(bctx.getIdProvider().createDeviceActionClassesId(dctx), expand);
+                dto.actionClasses = new ItemListDTO(bctx, bctx.getIdProvider().createDeviceActionClassesId(dctx), expand);
                 if (expand) {
                     if (dd.hasActionClasses()) {
                         expansions.pushContext(JSONAttributes.ACTION_CLASSES);
                         boolean expandItem = expansions.has(JSONAttributes.ITEM);
                         for (ActionClass ac : dd.getActionClasses()) {
-                            dto.actionClasses.add(new ActionClassDTO.Builder(bctx.getIdProvider().createActionClassId(ac.getContext()), ac, expandItem).build());
+                            dto.actionClasses.add(new ActionClassDTO.Builder(bctx, bctx.getIdProvider().createActionClassId(ac.getContext()), ac, expandItem).build());
                         }
                         expansions.popContext();
                     }
+                }
+
+                if (dd.hasTags()) {
+                    dto.tags = dd.getTags();
                 }
             }
         }
@@ -355,6 +363,11 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder actionClasses(ItemListDTO actionClasses) {
             dto.actionClasses = actionClasses;
+            return this;
+        }
+
+        public Builder tags(Set<String> tags) {
+            dto.tags = tags;
             return this;
         }
 

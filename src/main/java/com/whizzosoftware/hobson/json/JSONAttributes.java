@@ -16,6 +16,7 @@ package com.whizzosoftware.hobson.json;
  */
 public class JSONAttributes {
     public static final String ACCOUNT = "account";
+    public static final String ACONTEXT = "@context";
     public static final String ACTION_CLASSES = "actionClasses";
     public static final String ACTION_CLASS_ID = "actionClassId";
     public static final String ACTION_ID = "actionId";
@@ -24,8 +25,10 @@ public class JSONAttributes {
     public static final String ACTIONS = "actions";
     public static final String ACTIVATION_TIME = "activationTime";
     public static final String AID = "@id";
+    public static final String AIDT = "@idt";
     public static final String API_KEY = "apiKey";
     public static final String AVAILABLE = "available";
+    public static final String AWAY = "away";
     public static final String BEACON_MAJOR = "beaconMajor";
     public static final String BEACON_MINOR = "beaconMinor";
     public static final String CAPABLE = "capable";
@@ -60,6 +63,7 @@ public class JSONAttributes {
     public static final String EVENTS = "events";
     public static final String EXPAND = "expand";
     public static final String FAMILY_NAME = "familyName";
+    public static final String FIELD_ID = "fieldId";
     public static final String FIELDS = "fields";
     public static final String GIVEN_NAME = "givenName";
     public static final String GLOBAL_VARIABLES = "globalVariables";
@@ -85,6 +89,7 @@ public class JSONAttributes {
     public static final String MASK = "mask";
     public static final String MEDIA_TYPE = "mediaType";
     public static final String MESSAGE = "message";
+    public static final String MESSAGES = "messages";
     public static final String NAME = "name";
     public static final String NEW_PASSWORD = "newPassword";
     public static final String NEW_VALUE = "newValue";

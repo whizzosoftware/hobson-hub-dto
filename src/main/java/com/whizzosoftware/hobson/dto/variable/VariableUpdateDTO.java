@@ -21,14 +21,14 @@ public class VariableUpdateDTO implements JSONProducer {
     private long timestamp;
 
     public VariableUpdateDTO(DeviceVariableUpdate vu, IdProvider idProvider) {
-        this.id = idProvider.createDeviceVariableId(vu.getContext());
+        this.id = idProvider.createDeviceVariableId(vu.getContext()).getId();
         this.name = vu.getName();
         this.newValue = vu.getNewValue();
         this.timestamp = vu.getTimestamp();
     }
 
     public VariableUpdateDTO(GlobalVariableUpdate vu, IdProvider idProvider) {
-        this.id = idProvider.createGlobalVariableId(vu.getContext());
+        this.id = idProvider.createGlobalVariableId(vu.getContext()).getId();
         this.name = vu.getName();
         this.newValue = vu.getNewValue();
         this.timestamp = vu.getTimestamp();

@@ -24,6 +24,7 @@ public class MediaTypes {
     public static final String HUB = "application/vnd.hobson.hub";
     public static final String IMAGE = "application/vnd.hobson.image";
     public static final String ITEM_LIST = "application/vnd.hobson.itemList";
+    public static final String JOB = "application/vnd.hobson.job";
     public static final String LIST_ITEM = "application/vnd.hobson.listItem";
     public static final String LOG = "application/vnd.hobson.log";
     public static final String PASSWORD_CHANGE = "application/vnd.hobson.passwordChange";

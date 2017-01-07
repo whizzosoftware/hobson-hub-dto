@@ -9,10 +9,12 @@
 */
 package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
 import com.whizzosoftware.hobson.dto.EntityDTO;
 import com.whizzosoftware.hobson.dto.MediaTypes;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,8 +25,8 @@ import java.util.List;
 public class PropertyContainerClassDTO extends EntityDTO {
     private List<TypedPropertyDTO> supportedProperties;
 
-    protected PropertyContainerClassDTO(String id) {
-        super(id);
+    protected PropertyContainerClassDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     protected PropertyContainerClassDTO(JSONObject json) {
@@ -60,12 +62,12 @@ public class PropertyContainerClassDTO extends EntityDTO {
     public static class Builder {
         protected PropertyContainerClassDTO dto;
 
-        public Builder(String id) {
-            dto = createDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = createDTO(ctx, id);
         }
 
-        public Builder(String id, PropertyContainerClass pcc, boolean showDetails) {
-            dto = createDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id, PropertyContainerClass pcc, boolean showDetails) {
+            dto = createDTO(ctx, id);
             if (showDetails && pcc != null) {
                 if (pcc.hasSupportedProperties()) {
                     dto.supportedProperties = new ArrayList<>();
@@ -93,8 +95,8 @@ public class PropertyContainerClassDTO extends EntityDTO {
             return this;
         }
 
-        protected PropertyContainerClassDTO createDTO(String id) {
-            return new PropertyContainerClassDTO(id);
+        protected PropertyContainerClassDTO createDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+            return new PropertyContainerClassDTO(ctx, id);
         }
 
         public PropertyContainerClassDTO build() {

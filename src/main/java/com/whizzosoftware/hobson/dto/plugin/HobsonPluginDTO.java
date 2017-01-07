@@ -12,6 +12,7 @@ package com.whizzosoftware.hobson.dto.plugin;
 import com.whizzosoftware.hobson.api.action.ActionClass;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.*;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
@@ -20,6 +21,7 @@ import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.action.ActionClassDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.image.ImageDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
@@ -37,8 +39,8 @@ public class HobsonPluginDTO extends ThingDTO {
     private PropertyContainerDTO configuration;
     private ImageDTO image;
 
-    private HobsonPluginDTO(String id) {
-        super(id, null);
+    private HobsonPluginDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     @Override
@@ -107,13 +109,13 @@ public class HobsonPluginDTO extends ThingDTO {
     public static class Builder {
         private HobsonPluginDTO dto;
 
-        public Builder(String id) {
-            dto = new HobsonPluginDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = new HobsonPluginDTO(ctx, id);
         }
 
         public Builder(DTOBuildContext ctx, HubContext hubContext, final HobsonPluginDescriptor plugin, String description, String remoteVersion, boolean showDetails) {
             PluginContext pctx = PluginContext.create(hubContext, plugin.getId());
-            dto = new HobsonPluginDTO(remoteVersion != null ? ctx.getIdProvider().createRemotePluginId(hubContext, plugin.getId(), remoteVersion) : ctx.getIdProvider().createLocalPluginId(pctx));
+            dto = new HobsonPluginDTO(ctx, remoteVersion != null ? ctx.getIdProvider().createRemotePluginId(hubContext, plugin.getId(), remoteVersion) : ctx.getIdProvider().createLocalPluginId(pctx));
             IdProvider idProvider = ctx.getIdProvider();
             ExpansionFields expansions = ctx.getExpansionFields();
             if (showDetails) {
@@ -130,8 +132,9 @@ public class HobsonPluginDTO extends ThingDTO {
                 if (plugin instanceof HobsonLocalPluginDescriptor) {
                     final HobsonLocalPluginDescriptor lpd = (HobsonLocalPluginDescriptor)plugin;
                     if (dto.configurable) {
-                        dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createLocalPluginConfigurationClassId(pctx), lpd.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
+                        dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx, ctx.getIdProvider().createLocalPluginConfigurationClassId(pctx), lpd.getConfigurationClass(), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
                         dto.configuration = new PropertyContainerDTO.Builder(
+                                ctx,
                                 ctx.getLocalPluginConfiguration(pctx),
                                 new PropertyContainerClassProvider() {
                                     @Override
@@ -140,22 +143,20 @@ public class HobsonPluginDTO extends ThingDTO {
                                     }
                                 },
                                 PropertyContainerClassType.PLUGIN_CONFIG,
-                                expansions != null && expansions.has(JSONAttributes.CONFIGURATION),
-                                expansions,
-                                ctx.getIdProvider()
+                                expansions != null && expansions.has(JSONAttributes.CONFIGURATION)
                         ).build();
                     }
                     if (remoteVersion == null) {
-                        dto.image = new ImageDTO.Builder(ctx.getIdProvider().createLocalPluginIconId(pctx)).build();
+                        dto.image = new ImageDTO.Builder(ctx.getIdProvider().createLocalPluginIconId(pctx).getId()).build();
                     }
                     // add action classes
                     boolean expand = expansions.has(JSONAttributes.ACTION_CLASSES);
                     if (lpd.hasActionClasses()) {
-                        dto.actionClasses = new ItemListDTO(idProvider.createLocalPluginActionClassesId(pctx), expand);
+                        dto.actionClasses = new ItemListDTO(idProvider.createLocalPluginActionClassesId(pctx).getId(), expand);
                         if (expand) {
                             expansions.pushContext(JSONAttributes.ACTION_CLASSES);
                             for (ActionClass ac : lpd.getActionClasses()) {
-                                dto.actionClasses.add(new ActionClassDTO.Builder(idProvider.createActionClassId(ac.getContext()), ac, expansions.has(JSONAttributes.ITEM)).build());
+                                dto.actionClasses.add(new ActionClassDTO.Builder(ctx, idProvider.createActionClassId(ac.getContext()), ac, expansions.has(JSONAttributes.ITEM)).build());
                             }
                             expansions.popContext();
                         }

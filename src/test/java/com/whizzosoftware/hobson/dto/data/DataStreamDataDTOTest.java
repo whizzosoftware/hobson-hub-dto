@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2016 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStreamField;
@@ -21,6 +23,7 @@ import org.junit.Test;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DataStreamDataDTOTest {
     @Test
@@ -37,6 +40,7 @@ public class DataStreamDataDTOTest {
         JSONArray a = json.getJSONArray("data");
         assertEquals(1, a.length());
         assertEquals(1000, a.getJSONObject(0).getInt("timestamp"));
-        assertEquals(100, a.getJSONObject(0).getInt("field1"));
+        assertTrue(a.getJSONObject(0).has("values"));
+        assertEquals(100, a.getJSONObject(0).getJSONObject("values").getInt("field1"));
     }
 }

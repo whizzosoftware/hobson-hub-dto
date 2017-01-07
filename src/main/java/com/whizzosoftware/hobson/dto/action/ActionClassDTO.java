@@ -10,6 +10,8 @@
 package com.whizzosoftware.hobson.dto.action;
 
 import com.whizzosoftware.hobson.api.action.ActionClass;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -17,10 +19,10 @@ import org.json.JSONObject;
 public class ActionClassDTO extends PropertyContainerClassDTO {
     private String name;
     private String descriptionTemplate;
-    private boolean taskAction;
+    private Boolean taskAction;
 
-    private ActionClassDTO(String id) {
-        super(id);
+    protected ActionClassDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private ActionClassDTO(JSONObject json) {
@@ -36,11 +38,13 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
     }
 
     public static class Builder extends PropertyContainerClassDTO.Builder {
-        public Builder(String id, ActionClass actionClass, boolean showDetails) {
-            super(id, actionClass, showDetails);
-            name(actionClass.getName());
-            descriptionTemplate(actionClass.getDescription());
-            taskAction(actionClass.isTaskAction());
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id, ActionClass actionClass, boolean showDetails) {
+            super(ctx, id, actionClass, showDetails);
+            if (showDetails) {
+                name(actionClass.getName());
+                descriptionTemplate(actionClass.getDescription());
+                taskAction(actionClass.isTaskAction());
+            }
         }
 
         public Builder(JSONObject json) {
@@ -65,8 +69,8 @@ public class ActionClassDTO extends PropertyContainerClassDTO {
             return this;
         }
 
-        protected PropertyContainerClassDTO createDTO(String id) {
-            return new ActionClassDTO(id);
+        protected PropertyContainerClassDTO createDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+            return new ActionClassDTO(ctx, id);
         }
     }
 }

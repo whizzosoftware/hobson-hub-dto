@@ -9,7 +9,9 @@
 */
 package com.whizzosoftware.hobson.dto.variable;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.variable.*;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -18,7 +20,7 @@ import static org.junit.Assert.*;
 public class HobsonVariableDTOTest {
     @Test
     public void testToJSON() {
-        HobsonVariableDTO dto = new HobsonVariableDTO.Builder("varLink").name("varName").mask(VariableMask.READ_WRITE).lastUpdate(1000L).valueMediaType(VariableMediaType.VIDEO_MP4).build();
+        HobsonVariableDTO dto = new HobsonVariableDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("varLink", null)).name("varName").mask(VariableMask.READ_WRITE).lastUpdate(1000L).valueMediaType(VariableMediaType.VIDEO_MP4).build();
         JSONObject json = dto.toJSON();
         assertEquals("varLink", json.getString("@id"));
         assertEquals("varName", json.getString("name"));
@@ -31,7 +33,7 @@ public class HobsonVariableDTOTest {
     public void testHobsonVariableConstructor() {
         DeviceVariableContext vctx = DeviceVariableContext.createLocal("plugin1", "device1", "name");
         DeviceProxyVariable vv = new DeviceProxyVariable(vctx, VariableMask.READ_ONLY, VariableMediaType.IMAGE_PNG, "foo", 0L);
-        HobsonVariableDTO dto = new HobsonVariableDTO.Builder(null, "id", vv.getDescriptor(), vv.getState(), true).build();
+        HobsonVariableDTO dto = new HobsonVariableDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("id", null), vv.getDescriptor(), vv.getState(), true).build();
         assertEquals("name", dto.getName());
         assertEquals(VariableMask.READ_ONLY, dto.getMask());
         assertEquals(0L, (long)dto.getLastUpdate());

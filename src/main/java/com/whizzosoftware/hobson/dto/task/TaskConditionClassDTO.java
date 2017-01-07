@@ -9,7 +9,9 @@
 */
 package com.whizzosoftware.hobson.dto.task;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.task.condition.TaskConditionClass;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -19,8 +21,8 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
     private String descriptionTemplate;
     private String type;
 
-    private TaskConditionClassDTO(String id) {
-        super(id);
+    private TaskConditionClassDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private TaskConditionClassDTO(JSONObject json) {
@@ -36,15 +38,17 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
     }
 
     public static class Builder extends PropertyContainerClassDTO.Builder {
-        public Builder(String id) {
-            super(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            super(ctx, id);
         }
 
-        public Builder(String id, TaskConditionClass tcc, boolean showDetails) {
-            super(id, tcc, showDetails);
-            name(tcc.getName());
-            descriptionTemplate(tcc.getDescriptionTemplate());
-            type(tcc.getConditionClassType().toString());
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id, TaskConditionClass tcc, boolean showDetails) {
+            super(ctx, id, tcc, showDetails);
+            if (showDetails) {
+                name(tcc.getName());
+                descriptionTemplate(tcc.getDescriptionTemplate());
+                type(tcc.getConditionClassType().toString());
+            }
         }
 
         public Builder(JSONObject json) {
@@ -69,8 +73,8 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
             return this;
         }
 
-        protected PropertyContainerClassDTO createDTO(String id) {
-            return new TaskConditionClassDTO(id);
+        protected PropertyContainerClassDTO createDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+            return new TaskConditionClassDTO(ctx, id);
         }
     }
 }

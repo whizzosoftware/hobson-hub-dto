@@ -14,9 +14,9 @@ import com.whizzosoftware.hobson.api.config.MockConfigurationManager;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.event.MockEventManager;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.*;
 import com.whizzosoftware.hobson.api.property.*;
-import com.whizzosoftware.hobson.api.task.MockTaskManager;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 public class HobsonPluginDTOTest {
     @Test
     public void testToJSON() {
-        HobsonPluginDTO dto = new HobsonPluginDTO.Builder("pluginLink")
+        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("pluginLink", null))
             .name("pluginName")
             .description("pluginDesc")
             .configurable(true)
@@ -42,7 +42,7 @@ public class HobsonPluginDTOTest {
             .type(PluginType.PLUGIN)
             .addLink("foo", "bar")
             .configuration(new PropertyContainerDTO.Builder("configLink").build())
-            .configurationClass(new PropertyContainerClassDTO.Builder("cclassLink").build())
+            .configurationClass(new PropertyContainerClassDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("cclassLink", null)).build())
             .build();
 
         JSONObject json = dto.toJSON();

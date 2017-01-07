@@ -1,14 +1,17 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
-import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,12 +22,21 @@ public class ItemListDTO extends ThingDTO {
     private List<ListItemDTO> itemListElement = new ArrayList<>();
     private boolean forceDetails;
 
+    public ItemListDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
+    }
+
+    public ItemListDTO(TemplatedIdBuildContext ctx, TemplatedId id, boolean forceDetails) {
+        super(ctx, id);
+        this.forceDetails = forceDetails;
+    }
+
     public ItemListDTO(String id) {
-        super(id);
+        this(id, false);
     }
 
     public ItemListDTO(String id, boolean forceDetails) {
-        this(id);
+        super(id);
         this.forceDetails = forceDetails;
     }
 

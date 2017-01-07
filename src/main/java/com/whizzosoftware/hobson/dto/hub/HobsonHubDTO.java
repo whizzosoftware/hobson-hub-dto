@@ -14,6 +14,7 @@ import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.WebSocketInfo;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.HobsonPluginDescriptor;
 import com.whizzosoftware.hobson.api.presence.PresenceEntity;
 import com.whizzosoftware.hobson.api.presence.PresenceLocation;
@@ -21,6 +22,7 @@ import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.dto.*;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.data.DataStreamDTO;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.dto.plugin.HobsonPluginDTO;
@@ -61,9 +63,10 @@ public class HobsonHubDTO extends ThingDTO {
     private ItemListDTO serialPorts;
     private ItemListDTO tasks;
     private String version;
+    private boolean away;
 
-    private HobsonHubDTO(String id) {
-        super(id);
+    private HobsonHubDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private HobsonHubDTO(JSONObject json) {
@@ -171,12 +174,12 @@ public class HobsonHubDTO extends ThingDTO {
     public static class Builder {
         private HobsonHubDTO dto;
 
-        public Builder(String id) {
-            dto = new HobsonHubDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = new HobsonHubDTO(ctx, id);
         }
 
         public Builder(DTOBuildContext ctx, final HobsonHub hub, boolean expandItem) {
-            dto = new HobsonHubDTO(ctx.getIdProvider().createHubId(hub.getContext()));
+            dto = new HobsonHubDTO(ctx, ctx.getIdProvider().createHubId(hub.getContext()));
 
             IdProvider idProvider = ctx.getIdProvider();
             ExpansionFields expansions = ctx.getExpansionFields();
@@ -188,28 +191,29 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add action classes
                 boolean expand = expansions.has(JSONAttributes.ACTION_CLASSES);
-                dto.actionClasses = new ItemListDTO(idProvider.createActionClassesId(hub.getContext()), expand);
+                dto.actionClasses = new ItemListDTO(ctx, idProvider.createActionClassesId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.ACTION_CLASSES);
                     for (PropertyContainerClass tac : ctx.getAllActionClasses(hub.getContext())) {
-                        dto.actionClasses.add(new PropertyContainerClassDTO.Builder(idProvider.createActionClassId(tac.getContext()), tac, expansions.has(JSONAttributes.ITEM)).build());
+                        dto.actionClasses.add(new PropertyContainerClassDTO.Builder(ctx, idProvider.createActionClassId(tac.getContext()), tac, expansions.has(JSONAttributes.ITEM)).build());
                     }
                     expansions.popContext();
                 }
 
                 // add conditionClasses
                 expand = expansions.has(JSONAttributes.CONDITION_CLASSES);
-                dto.conditionClasses = new ItemListDTO(idProvider.createTaskConditionClassesId(hub.getContext()), expand);
+                dto.conditionClasses = new ItemListDTO(ctx, idProvider.createTaskConditionClassesId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.CONDITION_CLASSES);
                     for (PropertyContainerClass tcc : ctx.getAllTaskConditionClasses(hub.getContext())) {
-                        dto.conditionClasses.add(new PropertyContainerClassDTO.Builder(idProvider.createTaskConditionClassId(tcc.getContext()), tcc, expansions.has(JSONAttributes.ITEM)).build());
+                        dto.conditionClasses.add(new PropertyContainerClassDTO.Builder(ctx, idProvider.createTaskConditionClassId(tcc.getContext()), tcc, expansions.has(JSONAttributes.ITEM)).build());
                     }
                     expansions.popContext();
                 }
 
                 // add configuration
                 dto.configuration = new PropertyContainerDTO.Builder(
+                        ctx,
                         ctx.getHubConfiguration(hub.getContext()),
                         new PropertyContainerClassProvider() {
                             @Override
@@ -218,31 +222,31 @@ public class HobsonHubDTO extends ThingDTO {
                             }
                         },
                         PropertyContainerClassType.HUB_CONFIG,
-                        expansions.has(JSONAttributes.CONFIGURATION),
-                        expansions,
-                        idProvider
+                        expansions.has(JSONAttributes.CONFIGURATION)
                 ).build();
 
                 // add configurationClass
-                dto.configurationClass = new PropertyContainerClassDTO.Builder(idProvider.createHubConfigurationClassId(hub.getContext()), hub.getConfigurationClass(), expansions.has(JSONAttributes.CCLASS)).build();
+                dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx, idProvider.createHubConfigurationClassId(hub.getContext()), hub.getConfigurationClass(), expansions.has(JSONAttributes.CCLASS)).build();
 
                 // add data streams
-                expand = expansions.has(JSONAttributes.DATA_STREAMS);
-                dto.dataStreams = new ItemListDTO(ctx, idProvider.createDataStreamsId(hub.getContext()), expand);
-                if (expand) {
-                    expansions.pushContext(JSONAttributes.DATA_STREAMS);
-                    boolean showDetails = expansions.has(JSONAttributes.ITEM);
-                    expansions.pushContext(JSONAttributes.ITEM);
-                    for (DataStream ds : ctx.getDataStreams(hub.getContext())) {
-                        dto.dataStreams.add(new DataStreamDTO.Builder(ctx, hub.getContext(), ds, showDetails).build());
+                if (ctx.hasDataStreamManager(hub.getContext())) {
+                    expand = expansions.has(JSONAttributes.DATA_STREAMS);
+                    dto.dataStreams = new ItemListDTO(ctx, idProvider.createDataStreamsId(hub.getContext()), expand);
+                    if (expand) {
+                        expansions.pushContext(JSONAttributes.DATA_STREAMS);
+                        boolean showDetails = expansions.has(JSONAttributes.ITEM);
+                        expansions.pushContext(JSONAttributes.ITEM);
+                        for (DataStream ds : ctx.getDataStreams(hub.getContext())) {
+                            dto.dataStreams.add(new DataStreamDTO.Builder(ctx, hub.getContext(), ds, showDetails).build());
+                        }
+                        expansions.popContext();
+                        expansions.popContext();
                     }
-                    expansions.popContext();
-                    expansions.popContext();
                 }
 
                 // add devices
                 expand = expansions.has(JSONAttributes.DEVICES);
-                dto.devices = new ItemListDTO(idProvider.createDevicesId(hub.getContext()), expand);
+                dto.devices = new ItemListDTO(ctx, idProvider.createDevicesId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.DEVICES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
@@ -256,7 +260,7 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add globalVariables
                 expand = expansions.has(JSONAttributes.GLOBAL_VARIABLES);
-                dto.globalVariables = new ItemListDTO(idProvider.createGlobalVariablesId(hub.getContext()), expand);
+                dto.globalVariables = new ItemListDTO(ctx, idProvider.createGlobalVariablesId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.GLOBAL_VARIABLES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
@@ -269,11 +273,11 @@ public class HobsonHubDTO extends ThingDTO {
                 }
 
                 // add log
-                dto.log = new HubLogDTO(idProvider.createHubLogId(hub.getContext()));
+                dto.log = new HubLogDTO(ctx, idProvider.createHubLogId(hub.getContext()));
 
                 // add localPlugins
                 expand = expansions.has(JSONAttributes.LOCAL_PLUGINS);
-                dto.localPlugins = new ItemListDTO(idProvider.createLocalPluginsId(hub.getContext()), expand);
+                dto.localPlugins = new ItemListDTO(ctx, idProvider.createLocalPluginsId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.LOCAL_PLUGINS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
@@ -287,7 +291,7 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add presence entities
                 expand = expansions.has(JSONAttributes.PRESENCE_ENTITIES);
-                dto.presenceEntities = new ItemListDTO(idProvider.createPresenceEntitiesId(hub.getContext()), expand);
+                dto.presenceEntities = new ItemListDTO(ctx, idProvider.createPresenceEntitiesId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.PRESENCE_ENTITIES);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
@@ -301,13 +305,13 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add presence locations
                 expand = expansions.has(JSONAttributes.PRESENCE_LOCATIONS);
-                dto.presenceLocations = new ItemListDTO(idProvider.createPresenceLocationsId(hub.getContext()), expand);
+                dto.presenceLocations = new ItemListDTO(ctx, idProvider.createPresenceLocationsId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.PRESENCE_LOCATIONS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
                     expansions.pushContext(JSONAttributes.ITEM);
                     for (PresenceLocation loc : ctx.getAllPresenceLocations(hub.getContext())) {
-                        dto.presenceLocations.add(new PresenceLocationDTO.Builder(loc, idProvider, showDetails).build());
+                        dto.presenceLocations.add(new PresenceLocationDTO.Builder(ctx, loc, idProvider, showDetails).build());
                     }
                     expansions.popContext();
                     expansions.popContext();
@@ -315,7 +319,7 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add remotePlugins
                 expand = expansions.has(JSONAttributes.REMOTE_PLUGINS);
-                dto.remotePlugins = new ItemListDTO(idProvider.createRemotePluginsId(hub.getContext()), expand);
+                dto.remotePlugins = new ItemListDTO(ctx, idProvider.createRemotePluginsId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.REMOTE_PLUGINS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
@@ -329,14 +333,14 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add repositories
                 expand = expansions.has(JSONAttributes.REPOSITORIES);
-                dto.repositories = new ItemListDTO(idProvider.createRepositoriesId(hub.getContext()), expand);
+                dto.repositories = new ItemListDTO(ctx, idProvider.createRepositoriesId(hub.getContext()), expand);
 
                 // add serial ports
-                dto.serialPorts = new ItemListDTO(idProvider.createHubSerialPortsId(hub.getContext()), expand);
+                dto.serialPorts = new ItemListDTO(ctx, idProvider.createHubSerialPortsId(hub.getContext()), expand);
 
                 // add tasks
                 expand = expansions.has(JSONAttributes.TASKS);
-                dto.tasks = new ItemListDTO(idProvider.createTasksId(hub.getContext()), expand);
+                dto.tasks = new ItemListDTO(ctx, idProvider.createTasksId(hub.getContext()), expand);
                 if (expand) {
                     expansions.pushContext(JSONAttributes.TASKS);
                     boolean showDetails = expansions.has(JSONAttributes.ITEM);
@@ -354,10 +358,10 @@ public class HobsonHubDTO extends ThingDTO {
 
                 // add local links
                 if (hub.isLocal()) {
-                    dto.addLink("powerOff", idProvider.createShutdownId(hub.getContext()));
-                    dto.addLink("activityLog", idProvider.createActivityLogId(hub.getContext()));
-                    dto.addLink("sendTestEmail", idProvider.createSendTestEmailId(hub.getContext()));
-                    dto.addLink("password", idProvider.createHubPasswordId(hub.getContext()));
+                    dto.addLink("powerOff", idProvider.createShutdownId(hub.getContext()).getId());
+                    dto.addLink("activityLog", idProvider.createActivityLogId(hub.getContext()).getId());
+                    dto.addLink("sendTestEmail", idProvider.createSendTestEmailId(hub.getContext()).getId());
+                    dto.addLink("password", idProvider.createHubPasswordId(hub.getContext()).getId());
                     if (hub.hasWebSocketInfo()) {
                         WebSocketInfo wsi = hub.getWebSocketInfo();
                         try {

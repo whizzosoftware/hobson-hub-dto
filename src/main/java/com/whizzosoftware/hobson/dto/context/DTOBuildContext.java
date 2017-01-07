@@ -29,6 +29,7 @@ import com.whizzosoftware.hobson.dto.ExpansionFields;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * A context that is used when creating DTOs to allow them to obtain classes needed to perform mappings and in-line
@@ -36,7 +37,7 @@ import java.util.Collection;
  *
  * @author Dan Noguerol
  */
-public interface DTOBuildContext {
+public interface DTOBuildContext extends TemplatedIdBuildContext {
     String createURI(String protocol, int port, String path) throws IOException;
     boolean isDeviceAvailable(DeviceContext dctx);
     Collection<HobsonDeviceDescriptor> getAllDevices(HubContext hctx);
@@ -67,4 +68,6 @@ public interface DTOBuildContext {
     ActionClass getActionClass(PropertyContainerClassContext ctx);
     TaskConditionClass getTaskConditionClass(PropertyContainerClassContext ctx);
     boolean hasDataStreamManager(HubContext hctx);
+    String addIdTemplate(String template);
+    Map<String,String> getIdTemplateMap();
 }

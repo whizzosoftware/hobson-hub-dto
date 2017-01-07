@@ -1,16 +1,20 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.presence;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.presence.PresenceEntity;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
@@ -18,8 +22,8 @@ public class PresenceEntityDTO extends ThingDTO {
     private PresenceLocationDTO location;
     private Long lastUpdate;
 
-    private PresenceEntityDTO(String id) {
-        super(id);
+    private PresenceEntityDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     @Override
@@ -51,16 +55,16 @@ public class PresenceEntityDTO extends ThingDTO {
         private PresenceEntityDTO dto;
 
         public Builder(DTOBuildContext ctx, PresenceEntity entity, boolean showDetails) {
-            dto = new PresenceEntityDTO(ctx.getIdProvider().createPresenceEntityId(entity.getContext()));
+            dto = new PresenceEntityDTO(ctx, ctx.getIdProvider().createPresenceEntityId(entity.getContext()));
             if (showDetails) {
                 dto.setName(entity.getName());
                 dto.lastUpdate = entity.getLastUpdate();
-                dto.location = new PresenceLocationDTO.Builder(ctx.getPresenceEntityLocation(entity.getContext()), ctx.getIdProvider(), ctx.getExpansionFields().has(JSONAttributes.LOCATION)).build();
+                dto.location = new PresenceLocationDTO.Builder(ctx, ctx.getPresenceEntityLocation(entity.getContext()), ctx.getIdProvider(), ctx.getExpansionFields().has(JSONAttributes.LOCATION)).build();
             }
         }
 
-        public Builder(String id) {
-            dto = new PresenceEntityDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = new PresenceEntityDTO(ctx, id);
         }
 
         public Builder name(String name) {

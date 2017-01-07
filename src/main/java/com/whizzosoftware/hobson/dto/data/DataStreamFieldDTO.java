@@ -11,9 +11,11 @@ package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
@@ -21,8 +23,8 @@ import org.json.JSONObject;
 public class DataStreamFieldDTO extends ThingDTO {
     private HobsonVariableDTO variable;
 
-    public DataStreamFieldDTO(String id) {
-        super(id, null);
+    public DataStreamFieldDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     public DataStreamFieldDTO(JSONObject json) {
@@ -50,10 +52,10 @@ public class DataStreamFieldDTO extends ThingDTO {
         DataStreamFieldDTO dto;
 
         public Builder(DTOBuildContext ctx, HubContext hctx, String dataStreamId, DataStreamField df, boolean showDetails) {
-            dto = new DataStreamFieldDTO(ctx.getIdProvider().createDataStreamFieldId(hctx, dataStreamId, df.getId()));
+            dto = new DataStreamFieldDTO(ctx, ctx.getIdProvider().createDataStreamFieldId(hctx, dataStreamId, df.getId()));
             if (showDetails) {
                 dto.setName(df.getName());
-                dto.variable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createDeviceVariableId(df.getVariable()).getId()).build();
+                dto.variable = new HobsonVariableDTO.Builder(ctx, ctx.getIdProvider().createDeviceVariableId(df.getVariable())).build();
             }
         }
 

@@ -12,9 +12,11 @@ package com.whizzosoftware.hobson.dto.data;
 import com.whizzosoftware.hobson.api.data.DataStream;
 import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,8 +29,8 @@ public class DataStreamDTO extends ThingDTO {
     private Collection<DataStreamFieldDTO> fields;
     private Set<String> tags;
 
-    private DataStreamDTO(String id) {
-        super(id);
+    private DataStreamDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private DataStreamDTO(JSONObject json) {
@@ -76,7 +78,7 @@ public class DataStreamDTO extends ThingDTO {
         DataStreamDTO dto;
 
         public Builder(DTOBuildContext ctx, HubContext hctx, DataStream ds, boolean showDetails) {
-            dto = new DataStreamDTO(ctx.getIdProvider().createDataStreamId(hctx, ds.getId()));
+            dto = new DataStreamDTO(ctx, ctx.getIdProvider().createDataStreamId(hctx, ds.getId()));
             if (showDetails) {
                 dto.setName(ds.getName());
                 if (ds.hasFields()) {
@@ -86,7 +88,7 @@ public class DataStreamDTO extends ThingDTO {
                     }
                 }
                 dto.tags = ds.getTags();
-                dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(hctx, ds.getId()));
+                dto.addLink(JSONAttributes.DATA, ctx.getIdProvider().createDataStreamDataId(hctx, ds.getId()).getId());
             }
         }
 

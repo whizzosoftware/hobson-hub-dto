@@ -11,6 +11,7 @@ package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.action.ActionClass;
 import com.whizzosoftware.hobson.api.action.ActionManager;
+import com.whizzosoftware.hobson.api.data.DataStream;
 import com.whizzosoftware.hobson.api.device.*;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
@@ -53,6 +54,7 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
     DataStreamManager dataStreamManager;
     IdProvider idProvider;
     String requestDomain;
+    List<String> idTemplates = new ArrayList<>();
 
     @Override
     public HobsonHub getHub(HubContext hctx) {
@@ -150,7 +152,29 @@ public class ManagerDTOBuildContext implements DTOBuildContext {
 
     @Override
     public boolean hasDataStreamManager(HubContext hctx) {
-        return (dataStreamManager != null);
+        return (dataStreamManager != null && !dataStreamManager.isStub());
+    }
+
+    @Override
+    public String addIdTemplate(String template) {
+        int ix = -1;
+        if (template != null) {
+            ix = idTemplates.indexOf(template);
+            if (ix == -1) {
+                ix = idTemplates.size();
+                idTemplates.add(template);
+            }
+        }
+        return Integer.toString(ix);
+    }
+
+    @Override
+    public Map<String,String> getIdTemplateMap() {
+        Map<String,String> results = new HashMap<>();
+        for (int i=0; i < idTemplates.size(); i++) {
+            results.put(Integer.toString(i), idTemplates.get(i));
+        }
+        return results;
     }
 
     public PresenceLocation getPresenceEntityLocation(PresenceEntityContext pctx) {

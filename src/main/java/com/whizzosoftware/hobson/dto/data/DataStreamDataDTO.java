@@ -13,9 +13,11 @@ import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.data.DataStreamInterval;
 import com.whizzosoftware.hobson.api.data.DataStreamValueSet;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,8 +31,8 @@ public class DataStreamDataDTO extends ThingDTO {
     private Collection<DataStreamField> fields;
     private Collection<DataStreamValueSet> data;
 
-    public DataStreamDataDTO(String id, long endTime, DataStreamInterval interval) {
-        super(id);
+    public DataStreamDataDTO(TemplatedIdBuildContext ctx, TemplatedId id, long endTime, DataStreamInterval interval) {
+        super(ctx, id);
         this.endTime = endTime;
         this.interval = interval;
     }
@@ -58,9 +60,11 @@ public class DataStreamDataDTO extends ThingDTO {
         for (DataStreamValueSet tvs : data) {
             JSONObject jtvs = new JSONObject();
             jtvs.put(JSONAttributes.TIMESTAMP, tvs.getTime());
+            JSONObject jvalues = new JSONObject();
+            jtvs.put(JSONAttributes.VALUES, jvalues);
             Map<String,Object> values = tvs.getValues();
             for (String key : values.keySet()) {
-                jtvs.put(key, values.get(key));
+                jvalues.put(key, values.get(key));
             }
             a.put(jtvs);
         }
@@ -72,7 +76,7 @@ public class DataStreamDataDTO extends ThingDTO {
         DataStreamDataDTO dto;
 
         public Builder(DTOBuildContext ctx, HubContext hctx, String dataStreamId, long endTime, DataStreamInterval inr) {
-            dto = new DataStreamDataDTO(ctx.getIdProvider().createDataStreamDataId(hctx, dataStreamId), endTime, inr);
+            dto = new DataStreamDataDTO(ctx, ctx.getIdProvider().createDataStreamDataId(hctx, dataStreamId), endTime, inr);
         }
 
         public DataStreamDataDTO.Builder name(String name) {

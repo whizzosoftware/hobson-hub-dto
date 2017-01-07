@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.hub;
 
 import com.whizzosoftware.hobson.api.device.*;
@@ -14,6 +16,7 @@ import com.whizzosoftware.hobson.api.hub.HubManager;
 import com.whizzosoftware.hobson.api.hub.MockHubManager;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
 import com.whizzosoftware.hobson.api.plugin.MockPluginManager;
 import com.whizzosoftware.hobson.api.plugin.PluginManager;
@@ -22,6 +25,7 @@ import com.whizzosoftware.hobson.api.presence.PresenceManager;
 import com.whizzosoftware.hobson.api.task.MockTaskManager;
 import com.whizzosoftware.hobson.api.task.TaskManager;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import io.netty.util.concurrent.Future;
@@ -40,7 +44,8 @@ public class HobsonHubDTOTest {
 
     @Test
     public void testToJSON() {
-        HobsonHubDTO dto = new HobsonHubDTO.Builder("hubLink").name("hubName").version("hubVersion").build();
+        DTOBuildContext ctx = new ManagerDTOBuildContext();
+        HobsonHubDTO dto = new HobsonHubDTO.Builder(ctx, new TemplatedId("hubLink", null)).name("hubName").version("hubVersion").build();
         JSONObject json = dto.toJSON();
         assertEquals("hubLink", json.getString("@id"));
         assertEquals("hubName", json.getString("name"));

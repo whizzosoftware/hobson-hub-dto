@@ -7,6 +7,8 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -26,6 +28,10 @@ abstract public class ThingDTO extends EntityDTO {
 
     public ThingDTO(JSONObject json) {
         this(json.has("@id") ? json.getString("@id") : null, json.has("name") ? json.getString("name") : null);
+    }
+
+    public ThingDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     public ThingDTO(String id) {

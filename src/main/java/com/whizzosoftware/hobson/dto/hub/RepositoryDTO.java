@@ -7,16 +7,18 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto.hub;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 public class RepositoryDTO extends ThingDTO {
     private String uri;
 
-    public RepositoryDTO(String id, String uri) {
-        super(id);
+    public RepositoryDTO(TemplatedIdBuildContext ctx, TemplatedId id, String uri) {
+        super(ctx, id);
         this.uri = uri;
     }
 

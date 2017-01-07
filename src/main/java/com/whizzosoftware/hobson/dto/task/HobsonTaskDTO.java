@@ -1,18 +1,22 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.task;
 
 import com.whizzosoftware.hobson.api.HobsonInvalidRequestException;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerMappingContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerSetDTO;
@@ -29,8 +33,8 @@ public class HobsonTaskDTO extends ThingDTO {
     private PropertyContainerSetDTO actionSet;
     private Map<String,Object> properties;
 
-    private HobsonTaskDTO(String id) {
-        super(id);
+    private HobsonTaskDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private HobsonTaskDTO(JSONObject json) {
@@ -119,12 +123,12 @@ public class HobsonTaskDTO extends ThingDTO {
     static public class Builder {
         HobsonTaskDTO dto;
 
-        public Builder(String id) {
-            dto = new HobsonTaskDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = new HobsonTaskDTO(ctx, id);
         }
 
         public Builder(final DTOBuildContext ctx, HobsonTask task, boolean showDetails) {
-            dto = new HobsonTaskDTO(ctx.getIdProvider().createTaskId(task.getContext()));
+            dto = new HobsonTaskDTO(ctx, ctx.getIdProvider().createTaskId(task.getContext()));
 
             if (showDetails) {
                 dto.setName(task.getName());
@@ -136,6 +140,7 @@ public class HobsonTaskDTO extends ThingDTO {
                     ctx.getExpansionFields().pushContext(JSONAttributes.CONDITIONS);
                     for (PropertyContainer pc : task.getConditions()) {
                         dto.conditions.add(new PropertyContainerDTO.Builder(
+                                ctx,
                                 pc,
                                 new PropertyContainerClassProvider() {
                                     @Override
@@ -144,9 +149,7 @@ public class HobsonTaskDTO extends ThingDTO {
                                     }
                                 },
                                 PropertyContainerClassType.CONDITION,
-                                showConditionDetails,
-                                ctx.getExpansionFields(),
-                                ctx.getIdProvider()
+                                showConditionDetails
                         ).build());
                     }
                     ctx.getExpansionFields().popContext();
