@@ -52,8 +52,10 @@ public class HobsonDeviceDTOTest {
     @Test
     public void testConstructorWithDetailsAndNoExpansions() throws Exception {
         final MockDeviceManager deviceManager = new MockDeviceManager();
+        final MockEventManager eventManager = new MockEventManager();
         MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1", "1.0.0", "");
         plugin.setDeviceManager(deviceManager);
+        plugin.setEventManager(eventManager);
         final DeviceContext dctx = DeviceContext.create(plugin.getContext(), "device1");
         MockDeviceProxy proxy = new MockDeviceProxy(plugin, dctx.getDeviceId(), DeviceType.LIGHTBULB);
         proxy.setManufacturerName("Mfg");
