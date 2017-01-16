@@ -1,21 +1,23 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.HobsonRuntimeException;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.PropertyContainer;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
-import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
@@ -28,6 +30,10 @@ import java.util.*;
 public class PropertyContainerDTO extends ThingDTO {
     private PropertyContainerClassDTO containerClass;
     private Map<String,Object> values;
+
+    private PropertyContainerDTO(DTOBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
+    }
 
     private PropertyContainerDTO(String id) {
         super(id);
@@ -112,17 +118,17 @@ public class PropertyContainerDTO extends ThingDTO {
             dto = new PropertyContainerDTO(id);
         }
 
-        public Builder(PropertyContainer pc, PropertyContainerClassProvider pccp, PropertyContainerClassType type, boolean showDetails, ExpansionFields expansions, IdProvider idProvider) {
-            dto = new PropertyContainerDTO(idProvider.createPropertyContainerId(pc != null ? pc.getId() : null, pccp.getPropertyContainerClass(pc != null ? pc.getContainerClassContext() : null)));
+        public Builder(DTOBuildContext bctx, PropertyContainer pc, PropertyContainerClassProvider pccp, PropertyContainerClassType type, boolean showDetails) {
+            dto = new PropertyContainerDTO(bctx, bctx.getIdProvider().createPropertyContainerId(pc != null ? pc.getId() : null, pccp.getPropertyContainerClass(pc != null ? pc.getContainerClassContext() : null)));
             if (showDetails && pc != null) {
                 dto.setName(pc.getName());
                 if (pc.getContainerClassContext() != null) {
-                    dto.containerClass = new PropertyContainerClassDTO.Builder(idProvider.createPropertyContainerClassId(pc.getContainerClassContext(), type), pccp.getPropertyContainerClass(pc.getContainerClassContext()), expansions != null && expansions.has(JSONAttributes.CCLASS)).build();
+                    dto.containerClass = new PropertyContainerClassDTO.Builder(bctx, bctx.getIdProvider().createPropertyContainerClassId(pc.getContainerClassContext(), type), pccp.getPropertyContainerClass(pc.getContainerClassContext()), bctx.hasExpansionFields() && bctx.getExpansionFields().has(JSONAttributes.CCLASS)).build();
                 }
                 if (pc.hasPropertyValues()) {
                     dto.values = new HashMap<>();
                     for (String key : pc.getPropertyValues().keySet()) {
-                        dto.values.put(key, mapDTOValueObject(pc.getPropertyValue(key), idProvider));
+                        dto.values.put(key, mapDTOValueObject(bctx, pc.getPropertyValue(key)));
                     }
                 }
             }
@@ -147,14 +153,14 @@ public class PropertyContainerDTO extends ThingDTO {
             return this;
         }
 
-        Object mapDTOValueObject(Object value, IdProvider idProvider) {
+        Object mapDTOValueObject(DTOBuildContext ctx, Object value) {
             if (value instanceof DeviceContext) {
                 DeviceContext dctx = (DeviceContext) value;
-                return new HobsonDeviceDTO.Builder(idProvider.createDeviceId(dctx)).build();
+                return new HobsonDeviceDTO.Builder(ctx, dctx, false).build();
             } else if (value instanceof List) {
                 List<Object> mappedList = new ArrayList<>();
                 for (Object o : ((List)value)) {
-                    mappedList.add(mapDTOValueObject(o, idProvider));
+                    mappedList.add(mapDTOValueObject(ctx, o));
                 }
                 return mappedList;
             } else {

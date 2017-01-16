@@ -1,19 +1,28 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.device;
 
+import com.whizzosoftware.hobson.api.HobsonNotFoundException;
+import com.whizzosoftware.hobson.api.action.ActionClass;
+import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.device.DeviceType;
-import com.whizzosoftware.hobson.api.device.HobsonDevice;
+import com.whizzosoftware.hobson.api.device.HobsonDeviceDescriptor;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.*;
-import com.whizzosoftware.hobson.api.variable.HobsonVariable;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableDescriptor;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableState;
 import com.whizzosoftware.hobson.dto.*;
+import com.whizzosoftware.hobson.dto.action.ActionClassDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
 import com.whizzosoftware.hobson.dto.variable.HobsonVariableDTO;
@@ -22,26 +31,32 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 public class HobsonDeviceDTO extends ThingDTO {
-    private DeviceType type;
-    private String manufacturerName;
-    private String modelName;
-    private String manufacturerVersion;
+    private ItemListDTO actionClasses;
     private Boolean available;
+    private PropertyContainerDTO configuration;
+    private PropertyContainerClassDTO configurationClass;
+    private Long lastVariableUpdate;
+    private Map<String,String> links;
+    private String manufacturerName;
+    private String manufacturerVersion;
+    private String modelName;
     private Long lastCheckIn;
     private HobsonVariableDTO preferredVariable;
+    private Set<String> tags;
+    private DeviceType type;
     private ItemListDTO variables;
-    private PropertyContainerClassDTO configurationClass;
-    private PropertyContainerDTO configuration;
-    private Long lastVariableUpdate;
 
-    private HobsonDeviceDTO(String id) {
-        super(id);
+    private HobsonDeviceDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private HobsonDeviceDTO(JSONObject json) {
-        super(json.getString(JSONAttributes.AID));
+        super(json.has(JSONAttributes.AID) ? json.getString(JSONAttributes.AID) : null);
 
         setName(json.getString(JSONAttributes.NAME));
         if (json.has(JSONAttributes.TYPE)) {
@@ -65,7 +80,9 @@ public class HobsonDeviceDTO extends ThingDTO {
         if (json.has(JSONAttributes.PREFERRED_VARIABLE)) {
             this.preferredVariable = new HobsonVariableDTO.Builder(json.getJSONObject(JSONAttributes.PREFERRED_VARIABLE)).build();
         }
-
+        if (json.has(JSONAttributes.CONFIGURATION)) {
+            configuration = new PropertyContainerDTO.Builder(json.getJSONObject(JSONAttributes.CONFIGURATION)).build();
+        }
         if (json.has(JSONAttributes.VARIABLES)) {
             JSONObject jvaril = json.getJSONObject(JSONAttributes.VARIABLES);
             variables = new ItemListDTO(jvaril.getString(JSONAttributes.AID));
@@ -151,76 +168,130 @@ public class HobsonDeviceDTO extends ThingDTO {
         if (variables != null) {
             json.put(JSONAttributes.VARIABLES, variables.toJSON());
         }
+        if (links != null) {
+            json.put(JSONAttributes.LINKS, links);
+        }
+        if (actionClasses != null) {
+            json.put(JSONAttributes.ACTION_CLASSES, actionClasses.toJSON());
+        }
+        if (tags != null) {
+            json.put(JSONAttributes.TAGS, tags);
+        }
         return json;
     }
 
     static public class Builder {
         private HobsonDeviceDTO dto;
 
-        public Builder(String id) {
-            dto = new HobsonDeviceDTO(id);
-        }
-
         public Builder(JSONObject json) {
             dto = new HobsonDeviceDTO(json);
         }
 
-        public Builder(DTOBuildContext ctx, final HobsonDevice device, boolean showDetails) {
-            dto = new HobsonDeviceDTO(ctx.getIdProvider().createDeviceId(device.getContext()));
+        public Builder(final DTOBuildContext bctx, DeviceContext dctx, boolean showDetails) {
+            TemplatedId tid = bctx.getIdProvider().createDeviceId(dctx);
+            dto = new HobsonDeviceDTO(bctx, tid);
             if (showDetails) {
-                dto.setName(device.getName());
-                dto.type = device.getType();
-                dto.manufacturerName = device.getManufacturerName();
-                dto.manufacturerVersion = device.getManufacturerVersion();
-                dto.modelName = device.getModelName();
-                dto.available = ctx.isDeviceAvailable(device.getContext());
-                dto.lastCheckIn = ctx.getDeviceLastCheckIn(device.getContext());
+                final HobsonDeviceDescriptor dd = bctx.getDevice(dctx);
+                ExpansionFields expansions = bctx.getExpansionFields();
+
+                dto.setName(dd.getName());
+                dto.type = dd.getType();
+                dto.manufacturerName = dd.getManufacturerName();
+                dto.manufacturerVersion = dd.getManufacturerVersion();
+                dto.modelName = dd.getModelName();
+
+                try {
+                    dto.available = bctx.isDeviceAvailable(dd.getContext());
+                    dto.lastCheckIn = bctx.getDeviceLastCheckIn(dd.getContext());
+                } catch (HobsonNotFoundException ignored) {}
 
                 // preferred variable
-                if (device.hasPreferredVariableName()) {
-                    dto.preferredVariable = new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(VariableContext.create(device.getContext(), device.getPreferredVariableName())), ctx.getDeviceVariable(device.getContext(), device.getPreferredVariableName()), ctx.getExpansionFields().has(JSONAttributes.PREFERRED_VARIABLE)).build();
+                if (dd.hasPreferredVariableName()) {
+                    DeviceVariableContext vctx = DeviceVariableContext.create(dd.getContext(), dd.getPreferredVariableName());
+                    DeviceVariableState state = null;
+                    try {
+                        state = bctx.getDeviceVariableState(vctx);
+                    } catch (HobsonNotFoundException ignored) {}
+                    dto.preferredVariable = new HobsonVariableDTO.Builder(
+                        bctx,
+                        bctx.getIdProvider().createDeviceVariableId(vctx),
+                        bctx.getDeviceVariable(vctx),
+                        state,
+                        expansions.has(JSONAttributes.PREFERRED_VARIABLE)
+                    ).build();
                 }
 
                 // variables
-                boolean expand = ctx.getExpansionFields().has(JSONAttributes.VARIABLES);
-                dto.variables = new ItemListDTO(ctx.getIdProvider().createDeviceVariablesId(device.getContext()), expand);
+                boolean expand = expansions.has(JSONAttributes.VARIABLES);
+                dto.variables = new ItemListDTO(bctx, bctx.getIdProvider().createDeviceVariablesId(dd.getContext()), expand);
                 if (expand) {
-                    ctx.getExpansionFields().pushContext(JSONAttributes.VARIABLES);
-                    boolean expandItem = ctx.getExpansionFields().has(JSONAttributes.ITEM);
-                    Collection<HobsonVariable> hvc = ctx.getDeviceVariables(device.getContext());
+                    expansions.pushContext(JSONAttributes.VARIABLES);
+                    boolean expandItem = expansions.has(JSONAttributes.ITEM);
+                    Collection<DeviceVariableDescriptor> hvc = bctx.getDeviceVariables(dd.getContext());
                     if (hvc != null) {
-                        for (HobsonVariable v : hvc) {
-                            dto.variables.add(new HobsonVariableDTO.Builder(ctx.getIdProvider().createVariableId(v.getContext()), v, expandItem).build());
-                            if (v.getLastUpdate() != null) {
-                                dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, v.getLastUpdate()) : v.getLastUpdate();
+                        for (DeviceVariableDescriptor v : hvc) {
+                            DeviceVariableState state = null;
+                            try {
+                                state = bctx.getDeviceVariableState(v.getContext());
+                            } catch (HobsonNotFoundException ignored) {}
+                            dto.variables.add(new HobsonVariableDTO.Builder(
+                                bctx,
+                                bctx.getIdProvider().createDeviceVariableId(v.getContext()),
+                                v,
+                                state,
+                                expandItem
+                            ).build());
+                            if (state != null && state.getLastUpdate() != null) {
+                                dto.lastVariableUpdate = dto.lastVariableUpdate != null ? Math.max(dto.lastVariableUpdate, state.getLastUpdate()) : state.getLastUpdate();
                             }
                         }
                     }
-                    ctx.getExpansionFields().popContext();
+                    expansions.popContext();
                 }
 
                 // configurationClass
-                dto.configurationClass = new PropertyContainerClassDTO.Builder(ctx.getIdProvider().createDeviceConfigurationClassId(device.getContext()), device.getConfigurationClass(), ctx.getExpansionFields().has(JSONAttributes.CCLASS)).build();
+                dto.configurationClass = new PropertyContainerClassDTO.Builder(bctx, bctx.getIdProvider().createDeviceConfigurationClassId(dd.getContext()), bctx.getDeviceConfigurationClass(dd.getContext()), expansions.has(JSONAttributes.CCLASS)).build();
 
                 // configuration
-                PropertyContainer pc = ctx.getDeviceConfiguration(device.getContext());
+                PropertyContainer pc = bctx.getDeviceConfiguration(dd.getContext());
                 if (pc != null) {
+                    expansions.pushContext(JSONAttributes.CONFIGURATION);
                     dto.configuration = new PropertyContainerDTO.Builder(
-                        ctx.getDeviceConfiguration(device.getContext()),
-                        new PropertyContainerClassProvider() {
-                            @Override
-                            public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
-                                return device.getConfigurationClass();
-                            }
-                        },
-                        PropertyContainerClassType.DEVICE_CONFIG,
-                        ctx.getExpansionFields().has(JSONAttributes.CONFIGURATION),
-                        ctx.getExpansionFields().pushContext(JSONAttributes.CONFIGURATION),
-                        ctx.getIdProvider()
+                            bctx,
+                            bctx.getDeviceConfiguration(dd.getContext()),
+                            new PropertyContainerClassProvider() {
+                                @Override
+                                public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
+                                    return bctx.getDeviceConfigurationClass(dd.getContext());
+                                }
+                            },
+                            PropertyContainerClassType.DEVICE_CONFIG,
+                            expansions.has(JSONAttributes.CONFIGURATION)
                     ).build();
-                    ctx.getExpansionFields().popContext();
+                    expansions.popContext();
                 } else {
-                    dto.configuration = new PropertyContainerDTO.Builder(ctx.getIdProvider().createDeviceConfigurationId(device.getContext())).build();
+                    dto.configuration = new PropertyContainerDTO.Builder(bctx.getIdProvider().createDeviceConfigurationId(dd.getContext()).getId()).build();
+                }
+
+                // links
+                dto.links = Collections.singletonMap("setName", bctx.getIdProvider().createDeviceNameId(dd.getContext()).getId());
+
+                // add action classes
+                expand = expansions.has(JSONAttributes.ACTION_CLASSES);
+                dto.actionClasses = new ItemListDTO(bctx, bctx.getIdProvider().createDeviceActionClassesId(dctx), expand);
+                if (expand) {
+                    if (dd.hasActionClasses()) {
+                        expansions.pushContext(JSONAttributes.ACTION_CLASSES);
+                        boolean expandItem = expansions.has(JSONAttributes.ITEM);
+                        for (ActionClass ac : dd.getActionClasses()) {
+                            dto.actionClasses.add(new ActionClassDTO.Builder(bctx, bctx.getIdProvider().createActionClassId(ac.getContext()), ac, expandItem).build());
+                        }
+                        expansions.popContext();
+                    }
+                }
+
+                if (dd.hasTags()) {
+                    dto.tags = dd.getTags();
                 }
             }
         }
@@ -282,6 +353,21 @@ public class HobsonDeviceDTO extends ThingDTO {
 
         public Builder configuration(PropertyContainerDTO configuration) {
             dto.configuration = configuration;
+            return this;
+        }
+
+        public Builder links(Map<String,String> links) {
+            dto.links = links;
+            return this;
+        }
+
+        public Builder actionClasses(ItemListDTO actionClasses) {
+            dto.actionClasses = actionClasses;
+            return this;
+        }
+
+        public Builder tags(Set<String> tags) {
+            dto.tags = tags;
             return this;
         }
 

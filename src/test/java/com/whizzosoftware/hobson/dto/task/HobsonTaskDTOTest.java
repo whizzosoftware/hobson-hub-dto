@@ -1,20 +1,24 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.task;
 
+import com.whizzosoftware.hobson.api.action.ActionClass;
+import com.whizzosoftware.hobson.api.action.MockActionManager;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.property.PropertyContainer;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.property.PropertyContainerSet;
 import com.whizzosoftware.hobson.api.task.HobsonTask;
-import com.whizzosoftware.hobson.api.task.MockTaskManager;
 import com.whizzosoftware.hobson.api.task.TaskContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
@@ -36,18 +40,19 @@ import static org.junit.Assert.*;
 public class HobsonTaskDTOTest {
     @Test
     public void testToJSON() {
-        HobsonTaskDTO dto = new HobsonTaskDTO.Builder("taskLink")
+        ManagerDTOBuildContext bctx = new ManagerDTOBuildContext();
+        HobsonTaskDTO dto = new HobsonTaskDTO.Builder(bctx, new TemplatedId("taskLink", null))
             .name("My Task")
             .description("Task Desc")
             .conditions(
                     Collections.singletonList(
                             new PropertyContainerDTO.Builder("conditionclass1")
-                                    .containerClass(new PropertyContainerClassDTO.Builder("conditionClassLink").build())
-                                    .values(Collections.singletonMap("foo", (Object) "bar"))
-                                    .build()
+                                .containerClass(new PropertyContainerClassDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("conditionClassLink", null)).build())
+                                .values(Collections.singletonMap("foo", (Object) "bar"))
+                                .build()
                     )
             )
-            .actionSet(new PropertyContainerSetDTO.Builder("actionSetLink").
+            .actionSet(new PropertyContainerSetDTO.Builder(bctx, new TemplatedId("actionSetLink", null)).
                 containers(Collections.singletonList(
                     new PropertyContainerDTO.Builder("pc1").
                         build())
@@ -91,7 +96,7 @@ public class HobsonTaskDTOTest {
     @Test
     public void testJSONConstructor2() {
         JSONObject json = new JSONObject(new JSONTokener("{\"name\":\"Turn on outlet\",\"conditions\":[{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-rules/conditionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/bulb\"}]}}],\"actionSet\":{\"actions\":[{\"cclass\":{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-actions/actionClasses/turnOn\"},\"values\":{\"devices\":[{\"@id\":\"/api/v1/hubs/local/plugins/com.whizzosoftware.hobson.hub.hobson-hub-sample/devices/switch\"}]}}]}}"));
-        HobsonTaskDTO dto = new HobsonTaskDTO.Builder(json).build();
+        new HobsonTaskDTO.Builder(json).build();
     }
 
     @Test
@@ -99,12 +104,13 @@ public class HobsonTaskDTOTest {
         HubContext hctx = HubContext.createLocal();
         ExpansionFields expansions = new ExpansionFields("actionSet");
 
-        MockTaskManager tm = new MockTaskManager();
+        MockActionManager am = new MockActionManager();
+        am.publishActionClass(new ActionClass(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "cc1"), "", "", true, 2000));
         List<PropertyContainer> actions = new ArrayList<>();
         actions.add(new PropertyContainer(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "cc1"), Collections.singletonMap("foo", (Object)"bar")));
-        String actionSetId = tm.publishActionSet(hctx, null, actions).getId();
+        String actionSetId = am.publishActionSet(hctx, null, actions).getId();
 
-        DTOBuildContext ctx = new ManagerDTOBuildContext.Builder().expansionFields(expansions).idProvider(new ContextPathIdProvider()).build();
+        DTOBuildContext ctx = new ManagerDTOBuildContext.Builder().actionManager(am).expansionFields(expansions).idProvider(new ContextPathIdProvider()).build();
         TaskContext tctx = TaskContext.createLocal("task1");
         List<PropertyContainer> conditions = new ArrayList<>();
         HobsonTask task = new HobsonTask(tctx, "Test", null, null, conditions, new PropertyContainerSet(actionSetId, actions));

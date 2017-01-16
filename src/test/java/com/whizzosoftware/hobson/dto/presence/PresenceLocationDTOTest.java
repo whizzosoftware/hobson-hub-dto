@@ -1,12 +1,16 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.presence;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -14,7 +18,8 @@ import static org.junit.Assert.*;
 public class PresenceLocationDTOTest {
     @Test
     public void testBuildWithMapLocation() {
-        PresenceLocationDTO.Builder builder = new PresenceLocationDTO.Builder("foo");
+        ManagerDTOBuildContext bctx = new ManagerDTOBuildContext();
+        PresenceLocationDTO.Builder builder = new PresenceLocationDTO.Builder(bctx, new TemplatedId("foo", null));
         builder.name("name").latitude(1.0).longitude(2.0).radius(3.0);
         PresenceLocationDTO dto = builder.build();
         assertEquals("foo", dto.getId());
@@ -28,7 +33,8 @@ public class PresenceLocationDTOTest {
 
     @Test
     public void testBuildWithBeaconLocation() {
-        PresenceLocationDTO.Builder builder = new PresenceLocationDTO.Builder("bar");
+        ManagerDTOBuildContext bctx = new ManagerDTOBuildContext();
+        PresenceLocationDTO.Builder builder = new PresenceLocationDTO.Builder(bctx, new TemplatedId("bar", null));
         builder.name("beacon").beaconMajor(1).beaconMinor(2);
         PresenceLocationDTO dto = builder.build();
         assertEquals("beacon", dto.getName());
@@ -41,7 +47,8 @@ public class PresenceLocationDTOTest {
 
     @Test
     public void testBuildWithEmptyLocation() {
-        PresenceLocationDTO.Builder builder = new PresenceLocationDTO.Builder((String)null);
+        ManagerDTOBuildContext bctx = new ManagerDTOBuildContext();
+        PresenceLocationDTO.Builder builder = new PresenceLocationDTO.Builder(bctx, new TemplatedId(null, null));
         PresenceLocationDTO dto = builder.build();
         assertNull(dto.getId());
     }

@@ -1,17 +1,20 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.data;
 
 import com.whizzosoftware.hobson.api.data.DataStreamField;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.data.DataStream;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
 import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
@@ -45,7 +48,7 @@ public class DataStreamDTOTest {
     @Test
     public void testDataStreamConstructorNoDetails() {
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).build(), false);
-        assertEquals("dataStreams:ds1", dto.getId());
+        assertEquals("hubs:local:dataStreams:ds1", dto.getId());
         assertNull(dto.getName());
         assertNull(dto.getFields());
         assertNull(dto.getLinks());
@@ -56,7 +59,7 @@ public class DataStreamDTOTest {
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).build(), true);
         assertNotNull(dto.getFields());
         assertEquals(1, dto.getFields().size());
-        assertEquals("dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
+        assertEquals("hubs:local:dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
     }
 
     @Test
@@ -65,7 +68,7 @@ public class DataStreamDTOTest {
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).expansionFields(ef).build(), true);
         assertNotNull(dto.getFields());
         assertEquals(1, dto.getFields().size());
-        assertEquals("dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
+        assertEquals("hubs:local:dataStreams:ds1:data", dto.getLinks().get(JSONAttributes.DATA));
     }
 
     @Test
@@ -73,12 +76,12 @@ public class DataStreamDTOTest {
         ExpansionFields ef = new ExpansionFields(JSONAttributes.DATA);
         DataStreamDTO dto = createDTO(new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).expansionFields(ef).build(), true);
         JSONObject json = dto.toJSON();
-        assertEquals("dataStreams:ds1", json.getString("@id"));
+        assertEquals("hubs:local:dataStreams:ds1", json.getString("@id"));
         assertEquals("My DS", json.getString("name"));
         JSONArray fa = json.getJSONArray("fields");
         assertEquals(1, fa.length());
         JSONObject f = fa.getJSONObject(0);
-        assertEquals("dataStreams:ds1:fields:field1", f.getString("@id"));
+        assertEquals("hubs:local:dataStreams:ds1:fields:field1", f.getString("@id"));
         assertEquals("test", f.getString("name"));
         assertNotNull(f.getJSONObject("variable"));
         assertEquals("hubs:local:variables:plugin1:device1:var1", f.getJSONObject("variable").getString("@id"));
@@ -90,13 +93,13 @@ public class DataStreamDTOTest {
 
     private DataStreamDTO createDTO(DTOBuildContext ctx, boolean showDetails) {
         Collection<DataStreamField> vars = new ArrayList<>();
-        vars.add(new DataStreamField("field1", "test", VariableContext.create(DeviceContext.createLocal("plugin1", "device1"), "var1")));
+        vars.add(new DataStreamField("field1", "test", DeviceVariableContext.create(DeviceContext.createLocal("plugin1", "device1"), "var1")));
         HashSet<String> tags = new HashSet<>();
         tags.add("tag1");
         tags.add("tag2");
         DataStream ds = new DataStream("ds1", "My DS", vars, tags);
-        DataStreamDTO dto = new DataStreamDTO.Builder(ctx, ds, showDetails).build();
-        assertEquals("dataStreams:ds1", dto.getId());
+        DataStreamDTO dto = new DataStreamDTO.Builder(ctx, HubContext.createLocal(), ds, showDetails).build();
+        assertEquals("hubs:local:dataStreams:ds1", dto.getId());
         if (showDetails) {
             assertEquals("My DS", dto.getName());
         } else {

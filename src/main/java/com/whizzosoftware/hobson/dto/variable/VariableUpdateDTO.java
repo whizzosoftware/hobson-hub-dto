@@ -8,7 +8,8 @@
 package com.whizzosoftware.hobson.dto.variable;
 
 import com.whizzosoftware.hobson.api.persist.IdProvider;
-import com.whizzosoftware.hobson.api.variable.VariableUpdate;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableUpdate;
+import com.whizzosoftware.hobson.api.variable.GlobalVariableUpdate;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
@@ -16,20 +17,27 @@ import org.json.JSONObject;
 public class VariableUpdateDTO implements JSONProducer {
     private String id;
     private String name;
-    private Object value;
+    private Object newValue;
     private long timestamp;
 
-    public VariableUpdateDTO(VariableUpdate vu, IdProvider idProvider) {
-        this.id = idProvider.createDeviceId(vu.getContext().getDeviceContext());
+    public VariableUpdateDTO(DeviceVariableUpdate vu, IdProvider idProvider) {
+        this.id = idProvider.createDeviceVariableId(vu.getContext()).getId();
         this.name = vu.getName();
-        this.value = vu.getValue();
+        this.newValue = vu.getNewValue();
+        this.timestamp = vu.getTimestamp();
+    }
+
+    public VariableUpdateDTO(GlobalVariableUpdate vu, IdProvider idProvider) {
+        this.id = idProvider.createGlobalVariableId(vu.getContext()).getId();
+        this.name = vu.getName();
+        this.newValue = vu.getNewValue();
         this.timestamp = vu.getTimestamp();
     }
 
     public VariableUpdateDTO(JSONObject json) {
         this.id = json.getString(JSONAttributes.AID);
         this.name = json.getString(JSONAttributes.NAME);
-        this.value = json.get(JSONAttributes.VALUE);
+        this.newValue = json.get(JSONAttributes.VALUE);
         this.timestamp = json.getLong(JSONAttributes.TIMESTAMP);
     }
 
@@ -41,8 +49,8 @@ public class VariableUpdateDTO implements JSONProducer {
         return name;
     }
 
-    public Object getValue() {
-        return value;
+    public Object getNewValue() {
+        return newValue;
     }
 
     public long getTimestamp() {
@@ -64,7 +72,7 @@ public class VariableUpdateDTO implements JSONProducer {
         JSONObject json = new JSONObject();
         json.put(JSONAttributes.AID, id);
         json.put(JSONAttributes.NAME, name);
-        json.put(JSONAttributes.VALUE, value);
+        json.put(JSONAttributes.VALUE, newValue);
         json.put(JSONAttributes.TIMESTAMP, timestamp);
         return json;
     }

@@ -1,31 +1,31 @@
 /*
  *******************************************************************************
- * Copyright (c) 2015 Whizzo Software, LLC.
+ * Copyright (c) 2016 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************
 */
-package com.whizzosoftware.hobson.dto.task;
+package com.whizzosoftware.hobson.dto.action;
 
+import com.whizzosoftware.hobson.api.action.ActionClass;
 import com.whizzosoftware.hobson.api.persist.TemplatedId;
-import com.whizzosoftware.hobson.api.task.condition.TaskConditionClass;
 import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
-public class TaskConditionClassDTO extends PropertyContainerClassDTO {
+public class ActionClassDTO extends PropertyContainerClassDTO {
     private String name;
     private String descriptionTemplate;
-    private String type;
+    private Boolean taskAction;
 
-    private TaskConditionClassDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+    protected ActionClassDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
         super(ctx, id);
     }
 
-    private TaskConditionClassDTO(JSONObject json) {
+    private ActionClassDTO(JSONObject json) {
         super(json);
     }
 
@@ -33,21 +33,17 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
         JSONObject json = super.toJSON();
         json.put(JSONAttributes.NAME, name);
         json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
-        json.put(JSONAttributes.TYPE, type);
+        json.put(JSONAttributes.TASK_ACTION, taskAction);
         return json;
     }
 
     public static class Builder extends PropertyContainerClassDTO.Builder {
-        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
-            super(ctx, id);
-        }
-
-        public Builder(TemplatedIdBuildContext ctx, TemplatedId id, TaskConditionClass tcc, boolean showDetails) {
-            super(ctx, id, tcc, showDetails);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id, ActionClass actionClass, boolean showDetails) {
+            super(ctx, id, actionClass, showDetails);
             if (showDetails) {
-                name(tcc.getName());
-                descriptionTemplate(tcc.getDescriptionTemplate());
-                type(tcc.getConditionClassType().toString());
+                name(actionClass.getName());
+                descriptionTemplate(actionClass.getDescription());
+                taskAction(actionClass.isTaskAction());
             }
         }
 
@@ -55,26 +51,26 @@ public class TaskConditionClassDTO extends PropertyContainerClassDTO {
             super(json);
             name(json.getString(JSONAttributes.NAME));
             descriptionTemplate(json.getString(JSONAttributes.DESCRIPTION_TEMPLATE));
-            type(json.getString(JSONAttributes.TYPE));
+            taskAction(json.getBoolean(JSONAttributes.DESCRIPTION_TEMPLATE));
         }
 
-        public TaskConditionClassDTO.Builder name(String name) {
-            ((TaskConditionClassDTO)dto).name = name;
+        public ActionClassDTO.Builder name(String name) {
+            ((ActionClassDTO)dto).name = name;
             return this;
         }
 
-        public TaskConditionClassDTO.Builder descriptionTemplate(String descriptionTemplate) {
-            ((TaskConditionClassDTO)dto).descriptionTemplate = descriptionTemplate;
+        public ActionClassDTO.Builder descriptionTemplate(String descriptionTemplate) {
+            ((ActionClassDTO)dto).descriptionTemplate = descriptionTemplate;
             return this;
         }
 
-        public Builder type(String type) {
-            ((TaskConditionClassDTO)dto).type = type;
+        public ActionClassDTO.Builder taskAction(boolean taskAction) {
+            ((ActionClassDTO)dto).taskAction = taskAction;
             return this;
         }
 
         protected PropertyContainerClassDTO createDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
-            return new TaskConditionClassDTO(ctx, id);
+            return new ActionClassDTO(ctx, id);
         }
     }
 }

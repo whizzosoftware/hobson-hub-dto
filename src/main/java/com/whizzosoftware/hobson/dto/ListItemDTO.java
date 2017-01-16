@@ -8,21 +8,22 @@
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.json.JSONAttributes;
+import com.whizzosoftware.hobson.json.JSONProducer;
 import org.json.JSONObject;
 
 public class ListItemDTO extends ThingDTO {
-    private ThingDTO item;
+    private EntityDTO item;
     private Integer position;
 
-    public ListItemDTO(ThingDTO item) {
+    public ListItemDTO(EntityDTO item) {
         this.item = item;
     }
 
-    public ThingDTO getItem() {
+    public EntityDTO getItem() {
         return item;
     }
 
-    public void setItem(ThingDTO item) {
+    public void setItem(EntityDTO item) {
         this.item = item;
     }
 

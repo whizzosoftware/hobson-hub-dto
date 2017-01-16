@@ -33,7 +33,7 @@ public class PropertyContainerSetDTOTest {
         PropertyContainerClassProvider pccp  = new PropertyContainerClassProvider() {
             @Override
             public PropertyContainerClass getPropertyContainerClass(PropertyContainerClassContext ctx) {
-                return new PropertyContainerClass(ctx, "pcc1", PropertyContainerClassType.ACTION, "desc1", Collections.singletonList(new TypedProperty.Builder("prop1", "prop1name", "prop1desc", TypedProperty.Type.STRING).build()));
+                return new PropertyContainerClass(ctx, PropertyContainerClassType.ACTION, Collections.singletonList(new TypedProperty.Builder("prop1", "prop1name", "prop1desc", TypedProperty.Type.STRING).build()));
             }
         };
 

@@ -75,11 +75,11 @@ public class PresenceEntityDTOTest {
 
     @Test
     public void testConstructorWithNoLocation() {
-        PresenceEntity pe = new PresenceEntity(PresenceEntityContext.createLocal("entity1"), "entity");
         MockPresenceManager manager = new MockPresenceManager();
+        PresenceEntityContext ctx = manager.addPresenceEntity(HubContext.createLocal(), "entity");
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setPresenceEntityId("entityId1");
-        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(new ManagerDTOBuildContext.Builder().presenceManager(manager).expansionFields(new ExpansionFields("")).idProvider(idProvider).build(), pe, true).build();
+        PresenceEntityDTO dto = new PresenceEntityDTO.Builder(new ManagerDTOBuildContext.Builder().presenceManager(manager).expansionFields(new ExpansionFields("")).idProvider(idProvider).build(), manager.getPresenceEntity(ctx), true).build();
         assertEquals("entityId1", dto.getId());
         assertEquals("entity", dto.getName());
         assertNotNull(dto.getLocation());

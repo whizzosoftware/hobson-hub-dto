@@ -32,4 +32,26 @@ public class TypedPropertyDTOTest {
         assertEquals("on", json.getJSONObject("constraints").getString("deviceVariable"));
         assertEquals("SECURE_STRING", json.getString("type"));
     }
+
+    @Test
+    public void testString() {
+        TypedProperty tp = new TypedProperty.Builder("id1", "name", "desc", TypedProperty.Type.STRING).build();
+        TypedPropertyDTO dto = new TypedPropertyDTO.Builder(tp).build();
+        assertEquals("id1", dto.getId());
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDescription());
+    }
+
+    @Test
+    public void testStringEnumeration() {
+        TypedProperty tp = new TypedProperty.Builder("id", "name", "desc", TypedProperty.Type.STRING).enumerate("value1", "My First Value").enumerate("value2", "My Second Value").build();
+        TypedPropertyDTO dto = new TypedPropertyDTO.Builder(tp).build();
+        System.out.println(dto.toJSON());
+        assertEquals("id", dto.getId());
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDescription());
+        assertEquals(2, dto.getEnumeration().size());
+        assertEquals("My First Value", dto.getEnumeration().get("value1"));
+        assertEquals("My Second Value", dto.getEnumeration().get("value2"));
+    }
 }

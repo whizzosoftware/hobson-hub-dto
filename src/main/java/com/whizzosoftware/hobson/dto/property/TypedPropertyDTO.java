@@ -1,10 +1,12 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.property.TypedProperty;
@@ -15,10 +17,12 @@ import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class TypedPropertyDTO extends ThingDTO {
     public String id;
     public TypedProperty.Type type;
+    public Map<String,String> enumeration;
     public Collection<TypedPropertyConstraint> constraints;
 
     private TypedPropertyDTO(String id) {
@@ -30,6 +34,10 @@ public class TypedPropertyDTO extends ThingDTO {
         return MediaTypes.PROPERTY;
     }
 
+    public Map<String,String> getEnumeration() {
+        return enumeration;
+    }
+
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         if (id != null) {
@@ -37,6 +45,9 @@ public class TypedPropertyDTO extends ThingDTO {
         }
         if (type != null) {
             json.put(JSONAttributes.TYPE, type.toString());
+        }
+        if (enumeration != null) {
+            json.put(JSONAttributes.ENUM, enumeration);
         }
         if (constraints != null) {
             JSONObject o = new JSONObject();
@@ -60,6 +71,7 @@ public class TypedPropertyDTO extends ThingDTO {
             dto.setName(tp.getName());
             dto.setDescription(tp.getDescription());
             dto.type = tp.getType();
+            dto.enumeration = tp.getEnumeration();
             dto.constraints = tp.getConstraints();
         }
 
@@ -75,6 +87,11 @@ public class TypedPropertyDTO extends ThingDTO {
 
         public Builder type(TypedProperty.Type type) {
             dto.type = type;
+            return this;
+        }
+
+        public Builder enumeration(Map<String,String> enumeration) {
+            dto.enumeration = enumeration;
             return this;
         }
 

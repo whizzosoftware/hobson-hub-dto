@@ -1,22 +1,24 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.hub.HubContext;
-import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.PropertyContainer;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassProvider;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
 import com.whizzosoftware.hobson.api.property.PropertyContainerSet;
-import com.whizzosoftware.hobson.dto.ExpansionFields;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,8 +29,8 @@ import java.util.List;
 public class PropertyContainerSetDTO extends ThingDTO {
     private List<PropertyContainerDTO> containers;
 
-    private PropertyContainerSetDTO(String id) {
-        super(id);
+    private PropertyContainerSetDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     private PropertyContainerSetDTO(JSONObject json, PropertyContainerMappingContext context) {
@@ -79,12 +81,12 @@ public class PropertyContainerSetDTO extends ThingDTO {
     public static class Builder {
         public PropertyContainerSetDTO dto;
 
-        public Builder(String id) {
-            dto = new PropertyContainerSetDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = new PropertyContainerSetDTO(ctx, id);
         }
 
         public Builder(DTOBuildContext ctx, HubContext hctx, PropertyContainerSet pcs, PropertyContainerClassType type, PropertyContainerClassProvider pccp, boolean showDetails) {
-            dto = new PropertyContainerSetDTO(ctx.getIdProvider().createTaskActionSetId(hctx, pcs.getId()));
+            dto = new PropertyContainerSetDTO(ctx, ctx.getIdProvider().createTaskActionSetId(hctx, pcs.getId()));
 
             if (showDetails) {
                 dto.setName(pcs.getName());
@@ -92,12 +94,11 @@ public class PropertyContainerSetDTO extends ThingDTO {
                     dto.containers = new ArrayList<>();
                     for (PropertyContainer pc : pcs.getProperties()) {
                         dto.containers.add(new PropertyContainerDTO.Builder(
+                            ctx,
                             pc,
                             pccp,
                             type,
-                            true,
-                            ctx.getExpansionFields(),
-                            ctx.getIdProvider()
+                            true
                         ).build());
                     }
                 }

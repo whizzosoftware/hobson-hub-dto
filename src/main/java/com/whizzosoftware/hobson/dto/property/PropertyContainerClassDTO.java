@@ -1,16 +1,20 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.TypedProperty;
+import com.whizzosoftware.hobson.dto.EntityDTO;
 import com.whizzosoftware.hobson.dto.MediaTypes;
-import com.whizzosoftware.hobson.dto.ThingDTO;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,12 +22,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropertyContainerClassDTO extends ThingDTO {
-    private String descriptionTemplate;
+public class PropertyContainerClassDTO extends EntityDTO {
     private List<TypedPropertyDTO> supportedProperties;
 
-    protected PropertyContainerClassDTO(String id) {
-        super(id);
+    protected PropertyContainerClassDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
     }
 
     protected PropertyContainerClassDTO(JSONObject json) {
@@ -35,8 +38,9 @@ public class PropertyContainerClassDTO extends ThingDTO {
         return MediaTypes.PROPERTY_CONTAINER_CLASS;
     }
 
-    public String getDescriptionTemplate() {
-        return descriptionTemplate;
+    @Override
+    public String getJSONMediaType() {
+        return getMediaType() + "+json";
     }
 
     public List<TypedPropertyDTO> getSupportedProperties() {
@@ -45,7 +49,6 @@ public class PropertyContainerClassDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
-        json.put(JSONAttributes.DESCRIPTION_TEMPLATE, descriptionTemplate);
         if (supportedProperties != null) {
             JSONArray array = new JSONArray();
             for (TypedPropertyDTO p : supportedProperties) {
@@ -57,17 +60,15 @@ public class PropertyContainerClassDTO extends ThingDTO {
     }
 
     public static class Builder {
-        private PropertyContainerClassDTO dto;
+        protected PropertyContainerClassDTO dto;
 
-        public Builder(String id) {
-            dto = new PropertyContainerClassDTO(id);
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id) {
+            dto = createDTO(ctx, id);
         }
 
-        public Builder(String id, PropertyContainerClass pcc, boolean showDetails) {
-            dto = new PropertyContainerClassDTO(id);
-            if (showDetails) {
-                dto.setName(pcc.getName());
-                dto.descriptionTemplate = pcc.getDescriptionTemplate();
+        public Builder(TemplatedIdBuildContext ctx, TemplatedId id, PropertyContainerClass pcc, boolean showDetails) {
+            dto = createDTO(ctx, id);
+            if (showDetails && pcc != null) {
                 if (pcc.hasSupportedProperties()) {
                     dto.supportedProperties = new ArrayList<>();
                     for (TypedProperty tp : pcc.getSupportedProperties()) {
@@ -81,35 +82,25 @@ public class PropertyContainerClassDTO extends ThingDTO {
             dto = new PropertyContainerClassDTO(json);
         }
 
-        protected PropertyContainerClassDTO getDto() {
-            return dto;
-        }
-
-        public Builder name(String name) {
-            getDto().setName(name);
-            return this;
-        }
-
-        public Builder descriptionTemplate(String descriptionTemplate) {
-            getDto().descriptionTemplate = descriptionTemplate;
-            return this;
-        }
-
         public Builder supportedProperties(List<TypedPropertyDTO> supportedProperties) {
-            getDto().supportedProperties = supportedProperties;
+            dto.supportedProperties = supportedProperties;
             return this;
         }
 
         public Builder supportedProperty(TypedPropertyDTO supportedProperty) {
-            if (getDto().supportedProperties == null) {
-                getDto().supportedProperties = new ArrayList<>();
+            if (dto.supportedProperties == null) {
+                dto.supportedProperties = new ArrayList<>();
             }
-            getDto().supportedProperties.add(supportedProperty);
+            dto.supportedProperties.add(supportedProperty);
             return this;
         }
 
+        protected PropertyContainerClassDTO createDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+            return new PropertyContainerClassDTO(ctx, id);
+        }
+
         public PropertyContainerClassDTO build() {
-            return getDto();
+            return dto;
         }
     }
 }

@@ -1,19 +1,22 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto.property;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
-import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.property.*;
 import com.whizzosoftware.hobson.dto.MockIdProvider;
+import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -62,24 +65,18 @@ public class PropertyContainerDTOTest {
 
         PropertyContainerClass pcc = new PropertyContainerClass(
                 PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "configurationClass"),
-                "config",
                 PropertyContainerClassType.PLUGIN_CONFIG,
-                "template",
                 props
         );
 
         // test with no details
-        PropertyContainerClassDTO dto = new PropertyContainerClassDTO.Builder("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", pcc, false).build();
+        PropertyContainerClassDTO dto = new PropertyContainerClassDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", null), pcc, false).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", dto.getId());
-        assertNull(dto.getName());
-        assertNull(dto.getDescriptionTemplate());
         assertNull(dto.getSupportedProperties());
 
         // test with details
-        dto = new PropertyContainerClassDTO.Builder("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", pcc, true).build();
+        dto = new PropertyContainerClassDTO.Builder(new ManagerDTOBuildContext(), new TemplatedId("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", null), pcc, true).build();
         assertEquals("/api/v1/users/local/hubs/local/plugins/local/plugin1/configurationClass", dto.getId());
-        assertEquals("config", dto.getName());
-        assertEquals("template", dto.getDescriptionTemplate());
         assertNotNull(dto.getSupportedProperties());
         assertEquals(1, dto.getSupportedProperties().size());
         TypedPropertyDTO tpd = dto.getSupportedProperties().get(0);
@@ -92,9 +89,7 @@ public class PropertyContainerDTOTest {
     public void testMapPropertyContainerWithHubConfigContainerClass() {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("name", "name", "name", TypedProperty.Type.STRING).build());
-        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(HubContext.createLocal(), "configuration"), "name", PropertyContainerClassType.HUB_CONFIG, "", props);
-
-        IdProvider idProvider = new ContextPathIdProvider();
+        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(HubContext.createLocal(), "configuration"), PropertyContainerClassType.HUB_CONFIG, props);
 
         Map<String,Object> values = new HashMap<>();
         values.put("name", "My Name");
@@ -102,6 +97,7 @@ public class PropertyContainerDTOTest {
         PropertyContainer pc = new PropertyContainer("cid", PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "ccid"), values);
 
         PropertyContainerDTO dto = new PropertyContainerDTO.Builder(
+            new ManagerDTOBuildContext.Builder().idProvider(new ContextPathIdProvider()).build(),
             pc,
             new PropertyContainerClassProvider() {
                 @Override
@@ -110,9 +106,7 @@ public class PropertyContainerDTOTest {
                 }
             },
             PropertyContainerClassType.HUB_CONFIG,
-            true,
-            null,
-            idProvider
+            true
         ).build();
         assertEquals("hubs:local:configuration", dto.getId());
         assertEquals("hubs:local:plugins:plugin1:containerClasses:ccid", dto.getContainerClass().getId());
@@ -124,7 +118,7 @@ public class PropertyContainerDTOTest {
         List<TypedProperty> props = new ArrayList<>();
         props.add(new TypedProperty.Builder("name", "name", "name", TypedProperty.Type.STRING).build());
         props.add(new TypedProperty.Builder("device", "device", "device", TypedProperty.Type.DEVICE).build());
-        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "configuration"), "name", PropertyContainerClassType.PLUGIN_CONFIG, "", props);
+        final PropertyContainerClass pcc = new PropertyContainerClass(PropertyContainerClassContext.create(PluginContext.createLocal("plugin1"), "configuration"), PropertyContainerClassType.PLUGIN_CONFIG, props);
 
         Map<String,Object> values = new HashMap<>();
         values.put("name", "My Name");
@@ -137,6 +131,7 @@ public class PropertyContainerDTOTest {
         idProvider.setPropertyContainerClassId("/api/v1/hubs/local/plugins/local/plugin1/configurationClass");
 
         PropertyContainerDTO dto = new PropertyContainerDTO.Builder(
+            new ManagerDTOBuildContext.Builder().idProvider(idProvider).build(),
             pc,
             new PropertyContainerClassProvider() {
                 @Override
@@ -145,9 +140,7 @@ public class PropertyContainerDTOTest {
                 }
             },
             PropertyContainerClassType.HUB_CONFIG,
-            true,
-            null,
-            idProvider
+            true
         ).build();
         assertEquals("/api/v1/hubs/local/plugins/local/plugin1/configuration", dto.getId());
         assertEquals("/api/v1/hubs/local/plugins/local/plugin1/configurationClass", dto.getContainerClass().getId());

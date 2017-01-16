@@ -1,15 +1,18 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright (c) 2015 Whizzo Software, LLC.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *******************************************************************************
+*/
 package com.whizzosoftware.hobson.dto;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.PluginContext;
 import com.whizzosoftware.hobson.api.presence.PresenceEntityContext;
 import com.whizzosoftware.hobson.api.presence.PresenceLocationContext;
@@ -17,7 +20,8 @@ import com.whizzosoftware.hobson.api.property.PropertyContainerClass;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassContext;
 import com.whizzosoftware.hobson.api.property.PropertyContainerClassType;
 import com.whizzosoftware.hobson.api.task.TaskContext;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
+import com.whizzosoftware.hobson.api.variable.GlobalVariableContext;
 
 public class MockIdProvider implements IdProvider {
     private String actionClassesId;
@@ -41,81 +45,80 @@ public class MockIdProvider implements IdProvider {
     private String remotePluginId;
     private String remotePluginsId;
     private String tasksId;
-    private String variableId;
 
     @Override
-    public String createTaskActionSetId(HubContext ctx, String id) {
+    public TemplatedId createTaskActionSetId(HubContext ctx, String id) {
         return null;
     }
 
     @Override
-    public String createTaskActionSetsId(HubContext ctx) {
+    public TemplatedId createTaskActionSetsId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createActionId(HubContext ctx, String actionId) {
+    public TemplatedId createActionId(HubContext ctx, String actionId) {
         return null;
     }
 
     @Override
-    public String createActionSetId(HubContext ctx, String actionSetId) {
+    public TemplatedId createActionSetId(HubContext ctx, String actionSetId) {
         return null;
     }
 
     @Override
-    public String createActionSetActionsId(HubContext ctx, String actionSetId) {
+    public TemplatedId createActionSetActionsId(HubContext ctx, String actionSetId) {
         return null;
     }
 
     @Override
-    public String createActionSetsId(HubContext ctx) {
+    public TemplatedId createActionSetsId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createActionPropertiesId(HubContext ctx, String actionId) {
+    public TemplatedId createActionPropertiesId(HubContext ctx, String actionId) {
         return null;
     }
 
     @Override
-    public String createActivityLogId(HubContext ctx) {
+    public TemplatedId createActivityLogId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createDataStreamsId() {
+    public TemplatedId createDataStreamsId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createDataStreamId(String dataStreamId) {
+    public TemplatedId createDataStreamId(HubContext ctx, String dataStreamId) {
         return null;
     }
 
     @Override
-    public String createDataStreamDataId(String dataStreamId) {
+    public TemplatedId createDataStreamDataId(HubContext ctx, String dataStreamId) {
         return null;
     }
 
     @Override
-    public String createDataStreamFieldsId(String dataStreamId) {
+    public TemplatedId createDataStreamFieldsId(HubContext ctx, String dataStreamId) {
         return null;
     }
 
     @Override
-    public String createDataStreamTagsId(String dataStreamId) {
+    public TemplatedId createDataStreamTagsId(HubContext ctx, String dataStreamId) {
         return null;
     }
 
     @Override
-    public String createDataStreamFieldId(String dataStreamId, String fieldId) {
+    public TemplatedId createDataStreamFieldId(HubContext ctx, String dataStreamId, String fieldId) {
         return null;
     }
 
     @Override
-    public String createDevicesId(HubContext ctx) {
-        return devicesId;
+    public TemplatedId createDevicesId(HubContext ctx) {
+        return new TemplatedId(devicesId, null);
     }
 
     @Override
@@ -129,137 +132,167 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createDeviceId(DeviceContext ctx) {
-        return deviceId;
-    }
-
-    @Override
-    public String createDevicePassportId(HubContext ctx, String deviceId) {
+    public TemplatedId createDeviceActionClassId(DeviceContext ctx, String actionClassId) {
         return null;
     }
 
     @Override
-    public String createDevicePassportsId(HubContext ctx) {
+    public TemplatedId createDeviceActionClassesId(DeviceContext ctx) {
         return null;
     }
 
     @Override
-    public String createDeviceConfigurationId(DeviceContext ctx) {
+    public TemplatedId createDeviceId(DeviceContext ctx) {
+        return new TemplatedId(deviceId, null);
+    }
+
+    @Override
+    public TemplatedId createDeviceConfigurationId(DeviceContext ctx) {
         return null;
     }
 
     @Override
-    public String createDeviceConfigurationClassId(DeviceContext ctx) {
+    public TemplatedId createDeviceNameId(DeviceContext ctx) {
         return null;
     }
 
     @Override
-    public String createDeviceVariablesId(DeviceContext ctx) {
-        return deviceVariablesId;
-    }
-
-    @Override
-    public String createGlobalVariableId(HubContext ctx, String name) {
+    public TemplatedId createDeviceVariableDescriptionId(DeviceVariableContext vctx) {
         return null;
     }
 
     @Override
-    public String createGlobalVariablesId(HubContext ctx) {
+    public TemplatedId createDeviceVariableId(DeviceVariableContext vctx) {
         return null;
     }
 
     @Override
-    public String createHubId(HubContext ctx) {
-        return hubId;
-    }
-
-    @Override
-    public String createHubConfigurationClassId(HubContext ctx) {
-        return configurationClassId;
-    }
-
-    @Override
-    public String createHubConfigurationId(HubContext ctx) {
-        return configurationId;
-    }
-
-    @Override
-    public String createHubLogId(HubContext ctx) {
-        return logId;
-    }
-
-    @Override
-    public String createHubPasswordId(HubContext ctx) {
+    public TemplatedId createDeviceConfigurationClassId(DeviceContext ctx) {
         return null;
     }
 
     @Override
-    public String createHubSerialPortsId(HubContext ctx) {
+    public TemplatedId createDeviceTagsId(DeviceContext ctx) {
         return null;
     }
 
     @Override
-    public String createHubSerialPortId(HubContext ctx, String name) {
+    public TemplatedId createPluginDeviceConfigurationClassesId(PluginContext ctx) {
         return null;
     }
 
     @Override
-    public String createUserHubsId(String userId) {
+    public TemplatedId createPluginDeviceConfigurationClassId(PluginContext pluginContext, String s) {
         return null;
     }
 
     @Override
-    public String createUsersId() {
+    public TemplatedId createDeviceVariablesId(DeviceContext ctx) {
+        return new TemplatedId(deviceVariablesId, null);
+    }
+
+    @Override
+    public TemplatedId createGlobalVariableId(GlobalVariableContext globalVariableContext) {
         return null;
     }
 
     @Override
-    public VariableContext createVariableContext(String variableId) {
+    public TemplatedId createGlobalVariablesId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createVariableId(VariableContext ctx) {
-        return variableId;
+    public TemplatedId createHubId(HubContext ctx) {
+        return new TemplatedId(hubId, null);
     }
 
     @Override
-    public String createHubUploadCredentialsId(HubContext ctx) {
+    public TemplatedId createHubConfigurationClassId(HubContext ctx) {
+        return new TemplatedId(configurationClassId, null);
+    }
+
+    @Override
+    public TemplatedId createHubConfigurationId(HubContext ctx) {
+        return new TemplatedId(configurationId, null);
+    }
+
+    @Override
+    public TemplatedId createHubLogId(HubContext ctx) {
+        return new TemplatedId(logId, null);
+    }
+
+    @Override
+    public TemplatedId createHubPasswordId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createLocalPluginConfigurationId(PluginContext ctx) {
-        return localPluginConfigurationId;
-    }
-
-    @Override
-    public String createLocalPluginConfigurationClassId(PluginContext ctx) {
-        return localPluginConfigurationClassId;
-    }
-
-    @Override
-    public String createLocalPluginId(PluginContext ctx) {
-        return localPluginId;
-    }
-
-    @Override
-    public String createLocalPluginIconId(PluginContext ctx) {
+    public TemplatedId createHubSerialPortsId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createLocalPluginReloadId(PluginContext ctx) {
+    public TemplatedId createHubSerialPortId(HubContext ctx, String name) {
         return null;
     }
 
     @Override
-    public String createLocalPluginsId(HubContext ctx) {
-        return localPluginsId;
+    public TemplatedId createUserHubsId(String userId) {
+        return null;
     }
 
     @Override
-    public String createPersonId(String userId) {
+    public TemplatedId createUsersId() {
+        return null;
+    }
+
+    @Override
+    public DeviceVariableContext createDeviceVariableContext(String variableId) {
+        return null;
+    }
+
+    @Override
+    public TemplatedId createJobId(HubContext ctx, String jobId) {
+        return null;
+    }
+
+    @Override
+    public TemplatedId createLocalPluginActionClassesId(PluginContext ctx) {
+        return null;
+    }
+
+    @Override
+    public TemplatedId createLocalPluginConfigurationId(PluginContext ctx) {
+        return new TemplatedId(localPluginConfigurationId, null);
+    }
+
+    @Override
+    public TemplatedId createLocalPluginConfigurationClassId(PluginContext ctx) {
+        return new TemplatedId(localPluginConfigurationClassId, null);
+    }
+
+    @Override
+    public TemplatedId createLocalPluginId(PluginContext ctx) {
+        return new TemplatedId(localPluginId, null);
+    }
+
+    @Override
+    public TemplatedId createLocalPluginIconId(PluginContext ctx) {
+        return new TemplatedId("", null);
+    }
+
+    @Override
+    public TemplatedId createLocalPluginReloadId(PluginContext ctx) {
+        return null;
+    }
+
+    @Override
+    public TemplatedId createLocalPluginsId(HubContext ctx) {
+        return new TemplatedId(localPluginsId, null);
+    }
+
+    @Override
+    public TemplatedId createPersonId(String userId) {
         return null;
     }
 
@@ -269,13 +302,13 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createPluginDevicesId(PluginContext pctx) {
+    public TemplatedId createPluginDevicesId(PluginContext pctx) {
         return null;
     }
 
     @Override
-    public String createPresenceEntitiesId(HubContext ctx) {
-        return presenceEntitiesId;
+    public TemplatedId createPresenceEntitiesId(HubContext ctx) {
+        return new TemplatedId(presenceEntitiesId, null);
     }
 
     @Override
@@ -284,12 +317,12 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createPresenceEntityId(PresenceEntityContext ctx) {
-        return presenceEntityId;
+    public TemplatedId createPresenceEntityId(PresenceEntityContext ctx) {
+        return new TemplatedId(presenceEntityId, null);
     }
 
     @Override
-    public String createPresenceLocationsId(HubContext ctx) {
+    public TemplatedId createPresenceLocationsId(HubContext ctx) {
         return null;
     }
 
@@ -299,118 +332,113 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
-    public String createPresenceLocationId(PresenceLocationContext ctx) {
-        return presenceLocationId;
+    public TemplatedId createPresenceLocationId(PresenceLocationContext ctx) {
+        return new TemplatedId(presenceLocationId, null);
     }
 
     @Override
-    public String createPropertyContainerId(String id, PropertyContainerClass pcc) {
-        return propertyContainerId;
+    public TemplatedId createPropertyContainerId(String id, PropertyContainerClass pcc) {
+        return new TemplatedId(propertyContainerId, null);
     }
 
     @Override
-    public String createPropertyContainerClassesId(PluginContext pctx) {
+    public TemplatedId createPropertyContainerClassesId(PluginContext pctx) {
+        return new TemplatedId(null, null);
+    }
+
+    @Override
+    public TemplatedId createPropertyContainerClassId(PropertyContainerClassContext pccc, PropertyContainerClassType type) {
+        return new TemplatedId(propertyContainerClassId, null);
+    }
+
+    @Override
+    public TemplatedId createRemotePluginId(HubContext ctx, String pluginId, String version) {
+        return new TemplatedId(remotePluginId, null);
+    }
+
+    @Override
+    public TemplatedId createRemotePluginInstallId(HubContext ctx, String pluginId, String version) {
+        return new TemplatedId(null, null);
+    }
+
+    @Override
+    public TemplatedId createRemotePluginsId(HubContext ctx) {
+        return new TemplatedId(remotePluginsId, null);
+    }
+
+    @Override
+    public TemplatedId createRepositoriesId(HubContext ctx) {
         return null;
     }
 
     @Override
-    public String createPropertyContainerClassId(PropertyContainerClassContext pccc, PropertyContainerClassType type) {
-        return propertyContainerClassId;
+    public TemplatedId createRepositoryId(HubContext ctx, String uri) {
+        return new TemplatedId(null, null);
     }
 
     @Override
-    public String createRemotePluginId(PluginContext ctx, String version) {
-        return remotePluginId;
+    public TemplatedId createSendTestEmailId(HubContext ctx) {
+        return new TemplatedId(null, null);
     }
 
     @Override
-    public String createRemotePluginInstallId(PluginContext ctx, String version) {
+    public TemplatedId createShutdownId(HubContext ctx) {
+        return new TemplatedId(null, null);
+    }
+
+    @Override
+    public TemplatedId createActionClassesId(HubContext ctx) {
+        return new TemplatedId(actionClassesId, null);
+    }
+
+    @Override
+    public TemplatedId createActionClassId(PropertyContainerClassContext ctx) {
         return null;
     }
 
     @Override
-    public String createRemotePluginsId(HubContext ctx) {
-        return remotePluginsId;
+    public TemplatedId createTaskConditionClassesId(HubContext ctx) {
+        return new TemplatedId(conditionClassesId, null);
     }
 
     @Override
-    public String createRepositoriesId(HubContext ctx) {
+    public TemplatedId createTaskConditionClassId(PropertyContainerClassContext ctx) {
         return null;
     }
 
     @Override
-    public String createRepositoryId(HubContext ctx, String uri) {
+    public TemplatedId createTaskConditionId(TaskContext ctx, String propertyContainerId) {
         return null;
     }
 
     @Override
-    public String createSendTestEmailId(HubContext ctx) {
+    public TemplatedId createTaskConditionPropertiesId(TaskContext ctx, String propertyContainerId) {
         return null;
     }
 
     @Override
-    public String createShutdownId(HubContext ctx) {
-        return null;
+    public TemplatedId createTaskConditionsId(TaskContext ctx) {
+        return new TemplatedId(null, null);
     }
 
     @Override
-    public String createTaskActionClassesId(HubContext ctx) {
-        return actionClassesId;
+    public TemplatedId createTaskId(TaskContext ctx) {
+        return new TemplatedId(null, null);
     }
 
     @Override
-    public String createTaskActionClassId(PropertyContainerClassContext ctx) {
-        return null;
+    public TemplatedId createTaskPropertiesId(TaskContext ctx) {
+        return new TemplatedId(null, null);
     }
 
     @Override
-    public String createTaskConditionClassesId(HubContext ctx) {
-        return conditionClassesId;
+    public TemplatedId createTasksId(HubContext ctx) {
+        return new TemplatedId(tasksId, null);
     }
 
     @Override
-    public String createTaskConditionClassId(PropertyContainerClassContext ctx) {
-        return null;
-    }
-
-    @Override
-    public String createTaskConditionId(TaskContext ctx, String propertyContainerId) {
-        return null;
-    }
-
-    @Override
-    public String createTaskConditionPropertiesId(TaskContext ctx, String propertyContainerId) {
-        return null;
-    }
-
-    @Override
-    public String createTaskConditionsId(TaskContext ctx) {
-        return null;
-    }
-
-    @Override
-    public String createTaskId(TaskContext ctx) {
-        return null;
-    }
-
-    @Override
-    public String createTaskPropertiesId(TaskContext ctx) {
-        return null;
-    }
-
-    @Override
-    public String createTasksId(HubContext ctx) {
-        return tasksId;
-    }
-
-    @Override
-    public String createUserId(String userId) {
-        return null;
-    }
-
-    @Override
-    public String createVariablesId(HubContext ctx) {
-        return null;
+    public TemplatedId createUserId(String userId) {
+        return new TemplatedId(null, null);
     }
 
     public String getDevicesId() {
@@ -551,9 +579,5 @@ public class MockIdProvider implements IdProvider {
 
     public void setPropertyContainerClassId(String propertyContainerClassId) {
         this.propertyContainerClassId = propertyContainerClassId;
-    }
-
-    public void setVariableId(String variableId) {
-        this.variableId = variableId;
     }
 }

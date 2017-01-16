@@ -8,13 +8,11 @@
 package com.whizzosoftware.hobson.dto.context;
 
 import com.whizzosoftware.hobson.api.device.DeviceContext;
-import com.whizzosoftware.hobson.api.variable.VariableContext;
-import com.whizzosoftware.hobson.api.variable.HobsonVariable;
-import com.whizzosoftware.hobson.api.variable.ImmutableHobsonVariable;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableDescriptor;
+import com.whizzosoftware.hobson.api.variable.DeviceVariableState;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * An implementation of DTOBuildContext that uses Hobson manager objects for data and masks any variable media URL
@@ -24,30 +22,20 @@ import java.util.List;
  */
 public class URLMaskingDTOBuildContext extends ManagerDTOBuildContext {
     @Override
-    public Collection<HobsonVariable> getDeviceVariables(DeviceContext dctx) {
-        List<HobsonVariable> results = new ArrayList<>();
-        for (HobsonVariable v : variableManager.getDeviceVariables(dctx)) {
-            results.add(createStubVariableIfNecessary(v));
-        }
-        return results;
+    public Collection<DeviceVariableDescriptor> getDeviceVariables(DeviceContext dctx) {
+        return deviceManager.getDevice(dctx).getVariables();
     }
 
     @Override
-    public HobsonVariable getDeviceVariable(DeviceContext dctx, String name) {
-        return createStubVariableIfNecessary(variableManager.getVariable(VariableContext.create(dctx, name)));
+    public DeviceVariableState getDeviceVariableState(DeviceVariableContext vctx) {
+        return createStubVariableIfNecessary(deviceManager.getDevice(vctx.getDeviceContext()).getVariable(vctx.getName()), deviceManager.getDeviceVariable(vctx));
     }
 
-    private HobsonVariable createStubVariableIfNecessary(HobsonVariable v) {
-        if (v != null && v.hasMediaType()) {
-            return new ImmutableHobsonVariable(
-                v.getContext(),
-                v.getMask(),
-                "MASKED",
-                v.getLastUpdate(),
-                v.getMediaType()
-            );
+    private DeviceVariableState createStubVariableIfNecessary(DeviceVariableDescriptor d, DeviceVariableState state) {
+        if (d != null && d.hasMediaType()) {
+            return new DeviceVariableState(state.getContext(), "MASKED", state.getLastUpdate());
         } else {
-            return v;
+            return state;
         }
     }
 

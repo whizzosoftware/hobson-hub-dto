@@ -7,19 +7,19 @@
  *******************************************************************************/
 package com.whizzosoftware.hobson.dto;
 
-import com.whizzosoftware.hobson.json.JSONProducer;
+import com.whizzosoftware.hobson.api.persist.TemplatedId;
+import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Base class for all other data transfer objects.
+ * Base class for named, described and linkable data transfer objects.
  *
  * @author Dan Noguerol
  */
-abstract public class ThingDTO implements JSONProducer {
-    private String id;
+abstract public class ThingDTO extends EntityDTO {
     private String name;
     private String description;
     private Map<String,String> links;
@@ -30,21 +30,17 @@ abstract public class ThingDTO implements JSONProducer {
         this(json.has("@id") ? json.getString("@id") : null, json.has("name") ? json.getString("name") : null);
     }
 
+    public ThingDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
+        super(ctx, id);
+    }
+
     public ThingDTO(String id) {
         this(id, null);
     }
 
     public ThingDTO(String id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -80,10 +76,7 @@ abstract public class ThingDTO implements JSONProducer {
 
     @Override
     public JSONObject toJSON() {
-        JSONObject json = new JSONObject();
-        if (id != null) {
-            json.put("@id", id);
-        }
+        JSONObject json = super.toJSON();
         if (name != null) {
             json.put("name", name);
         }
