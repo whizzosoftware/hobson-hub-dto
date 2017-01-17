@@ -113,7 +113,7 @@ public class HobsonTaskDTOTest {
         DTOBuildContext ctx = new ManagerDTOBuildContext.Builder().actionManager(am).expansionFields(expansions).idProvider(new ContextPathIdProvider()).build();
         TaskContext tctx = TaskContext.createLocal("task1");
         List<PropertyContainer> conditions = new ArrayList<>();
-        HobsonTask task = new HobsonTask(tctx, "Test", null, null, conditions, new PropertyContainerSet(actionSetId, actions));
+        HobsonTask task = new HobsonTask(tctx, "Test", null, true, null, conditions, new PropertyContainerSet(actionSetId, actions));
         HobsonTaskDTO dto = new HobsonTaskDTO.Builder(ctx, task, true).build();
         assertEquals("Test", dto.getName());
         assertTrue(dto.getActionSet().getId().startsWith("hubs:local:actionSets:"));

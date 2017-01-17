@@ -32,6 +32,7 @@ public class HobsonTaskDTO extends ThingDTO {
     private List<PropertyContainerDTO> conditions;
     private PropertyContainerSetDTO actionSet;
     private Map<String,Object> properties;
+    private boolean enabled;
 
     private HobsonTaskDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
         super(ctx, id);
@@ -62,6 +63,10 @@ public class HobsonTaskDTO extends ThingDTO {
                 }
             }).build();
         }
+
+        if (json.has(JSONAttributes.ENABLED)) {
+            this.enabled = json.getBoolean(JSONAttributes.ENABLED);
+        }
     }
 
     public List<PropertyContainerDTO> getConditions() {
@@ -74,6 +79,10 @@ public class HobsonTaskDTO extends ThingDTO {
 
     public Map<String, Object> getProperties() {
         return properties;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override
@@ -95,6 +104,8 @@ public class HobsonTaskDTO extends ThingDTO {
 
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
+
+        json.put(JSONAttributes.ENABLED, enabled);
 
         if (conditions != null) {
             JSONArray ja = new JSONArray();
@@ -133,6 +144,7 @@ public class HobsonTaskDTO extends ThingDTO {
             if (showDetails) {
                 dto.setName(task.getName());
                 dto.setDescription(task.getDescription());
+                dto.enabled = task.isEnabled();
 
                 if (task.hasConditions()) {
                     dto.conditions = new ArrayList<>();
@@ -204,6 +216,11 @@ public class HobsonTaskDTO extends ThingDTO {
 
         public Builder properties(Map<String,Object> properties) {
             dto.properties = properties;
+            return this;
+        }
+
+        public Builder setEnabled(boolean enabled) {
+            dto.enabled = enabled;
             return this;
         }
 
