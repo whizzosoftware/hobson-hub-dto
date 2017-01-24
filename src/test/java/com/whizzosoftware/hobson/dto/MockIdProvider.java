@@ -142,6 +142,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public TemplatedId createDeviceActionClassSupportedPropertiesId(DeviceContext dctx, String containerClassId) {
+        return null;
+    }
+
+    @Override
     public TemplatedId createDeviceId(DeviceContext ctx) {
         return new TemplatedId(deviceId, null);
     }

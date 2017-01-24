@@ -95,8 +95,6 @@ public class HobsonPluginDTOTest {
 
         // create configuration metadata
         PluginContext pctx = PluginContext.createLocal("plugin1");
-        PropertyContainerClassContext pccc = PropertyContainerClassContext.create(pctx, "configurationClass");
-        PropertyContainer config = new PropertyContainer(pccc, Collections.singletonMap("device", (Object) DeviceContext.createLocal("plugin3", "device1")));
 
         MockPluginManager pluginManager = new MockPluginManager();
         pluginManager.setConfigurationManager(new MockConfigurationManager());
@@ -105,7 +103,7 @@ public class HobsonPluginDTOTest {
         MockActionManager am = new MockActionManager();
         hp.setActionManager(am);
         pluginManager.addLocalPlugin(hp);
-        pluginManager.setLocalPluginConfiguration(pctx, config);
+        pluginManager.setLocalPluginConfiguration(pctx, Collections.singletonMap("device", (Object)DeviceContext.createLocal("plugin3", "device1")));
 
         MockIdProvider idProvider = new MockIdProvider();
         idProvider.setLocalPluginId("/api/v1/users/local/hubs/local/plugins/local/plugin1");

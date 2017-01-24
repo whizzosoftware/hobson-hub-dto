@@ -14,7 +14,6 @@ import com.whizzosoftware.hobson.api.event.MockEventManager;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
-import com.whizzosoftware.hobson.api.property.PropertyContainer;
 import com.whizzosoftware.hobson.api.variable.DeviceProxyVariable;
 import com.whizzosoftware.hobson.api.variable.DeviceVariableContext;
 import com.whizzosoftware.hobson.api.variable.VariableMask;
@@ -25,6 +24,9 @@ import io.netty.util.concurrent.Future;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.Test;
+
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 public class HobsonDeviceDTOTest {
@@ -96,7 +98,7 @@ public class HobsonDeviceDTOTest {
         final DeviceContext dctx = DeviceContext.create(plugin.getContext(), "device1");
         final DeviceVariableContext dvctx = DeviceVariableContext.create(dctx, "foo");
         MockDeviceProxy proxy = new MockDeviceProxy(plugin, dctx.getDeviceId(), DeviceType.LIGHTBULB) {
-            public void onStartup(String name, PropertyContainer config) {
+            public void onStartup(String name, Map<String,Object> config) {
                 publishVariables(new DeviceProxyVariable(dvctx, VariableMask.READ_WRITE));
             }
         };

@@ -15,10 +15,11 @@ import com.whizzosoftware.hobson.api.device.MockDeviceManager;
 import com.whizzosoftware.hobson.api.device.MockDeviceProxy;
 import com.whizzosoftware.hobson.api.event.MockEventManager;
 import com.whizzosoftware.hobson.api.plugin.MockHobsonPlugin;
-import com.whizzosoftware.hobson.api.property.PropertyContainer;
 import com.whizzosoftware.hobson.api.variable.*;
 import io.netty.util.concurrent.Future;
 import org.junit.Test;
+
+import java.util.Map;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +38,7 @@ public class URLMaskingDTOBuildContextTest {
         plugin.setEventManager(em);
         plugin.setDeviceManager(dm);
         MockDeviceProxy proxy = new MockDeviceProxy(plugin, "device1", DeviceType.LIGHTBULB) {
-            public void onStartup(String name, PropertyContainer config) {
+            public void onStartup(String name, Map<String,Object> config) {
                 publishVariables(new DeviceProxyVariable(vctx1, VariableMask.READ_ONLY),new DeviceProxyVariable(vctx2, VariableMask.READ_ONLY, VariableMediaType.IMAGE_JPG));
             }
         };

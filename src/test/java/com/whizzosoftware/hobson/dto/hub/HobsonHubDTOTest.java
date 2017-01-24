@@ -10,10 +10,7 @@
 package com.whizzosoftware.hobson.dto.hub;
 
 import com.whizzosoftware.hobson.api.device.*;
-import com.whizzosoftware.hobson.api.hub.HobsonHub;
-import com.whizzosoftware.hobson.api.hub.HubContext;
-import com.whizzosoftware.hobson.api.hub.HubManager;
-import com.whizzosoftware.hobson.api.hub.MockHubManager;
+import com.whizzosoftware.hobson.api.hub.*;
 import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.persist.IdProvider;
 import com.whizzosoftware.hobson.api.persist.TemplatedId;
@@ -55,7 +52,7 @@ public class HobsonHubDTOTest {
     @Test
     public void testHubConstructor() throws Exception {
         HubContext hctx = HubContext.createLocal();
-        final HobsonHub hub = new HobsonHub(hctx);
+        final HobsonHub hub = new HobsonHub.Builder(hctx).configurationClass(new HubConfigurationClass()).build();
         final HubManager hubManager = new MockHubManager();
         final PluginManager pluginManager = new MockPluginManager();
         final DeviceManager deviceManager = new MockDeviceManager();
