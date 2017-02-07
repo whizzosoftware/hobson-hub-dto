@@ -14,6 +14,7 @@ import com.whizzosoftware.hobson.api.config.MockConfigurationManager;
 import com.whizzosoftware.hobson.api.device.DeviceContext;
 import com.whizzosoftware.hobson.api.event.MockEventManager;
 import com.whizzosoftware.hobson.api.hub.HubContext;
+import com.whizzosoftware.hobson.api.persist.ContextPathIdProvider;
 import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.api.plugin.*;
 import com.whizzosoftware.hobson.api.property.*;
@@ -23,11 +24,14 @@ import com.whizzosoftware.hobson.dto.context.ManagerDTOBuildContext;
 import com.whizzosoftware.hobson.dto.device.HobsonDeviceDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerClassDTO;
 import com.whizzosoftware.hobson.dto.property.PropertyContainerDTO;
+import com.whizzosoftware.hobson.dto.property.TypedPropertyDTO;
 import com.whizzosoftware.hobson.json.JSONAttributes;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -152,5 +156,37 @@ public class HobsonPluginDTOTest {
         assertNotNull(dto.getConfiguration().getValues());
         HobsonDeviceDTO hdd = (HobsonDeviceDTO)dto.getConfiguration().getValues().get("device");
         assertEquals("/api/v1/users/local/hubs/local/plugins/plugin3/devices/device1", hdd.getId());
+    }
+
+    @Test
+    public void testConfigurationPropertyOrder() {
+        MockActionManager am = new MockActionManager();
+        MockConfigurationManager cm = new MockConfigurationManager();
+        MockPluginManager pluginManager = new MockPluginManager();
+
+        MockIdProvider idProvider = new MockIdProvider();
+
+        MockHobsonPlugin plugin = new MockHobsonPlugin("plugin1", "1.0.0", "Description") {
+            @Override
+            protected TypedProperty[] getConfigurationPropertyTypes() {
+                return new TypedProperty[] {
+                    new TypedProperty.Builder("c", "c", "description", TypedProperty.Type.STRING).build(),
+                    new TypedProperty.Builder("b", "b", "description", TypedProperty.Type.STRING).build(),
+                    new TypedProperty.Builder("a", "a", "description", TypedProperty.Type.STRING).build(),
+                    new TypedProperty.Builder("d", "d", "description", TypedProperty.Type.STRING).build()
+                };
+            }
+        };
+        pluginManager.addLocalPlugin(plugin);
+        pluginManager.setConfigurationManager(cm);
+        plugin.setActionManager(am);
+
+        HobsonPluginDTO dto = new HobsonPluginDTO.Builder(new ManagerDTOBuildContext.Builder().idProvider(idProvider).pluginManager(pluginManager).expansionFields(new ExpansionFields(JSONAttributes.CCLASS)).build(), HubContext.createLocal(), plugin.getDescriptor(), "Description", null, true).build();
+        List<TypedPropertyDTO> p = dto.getConfigurationClass().getSupportedProperties();
+        assertEquals("c", p.get(0).getId());
+        assertEquals("b", p.get(1).getId());
+        assertEquals("a", p.get(2).getId());
+        assertEquals("d", p.get(3).getId());
+
     }
 }
