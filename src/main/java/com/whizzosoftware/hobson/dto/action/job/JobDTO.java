@@ -11,6 +11,7 @@ package com.whizzosoftware.hobson.dto.action.job;
 
 import com.whizzosoftware.hobson.api.action.job.JobInfo;
 import com.whizzosoftware.hobson.api.action.job.JobStatus;
+import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.TemplatedId;
 import com.whizzosoftware.hobson.dto.MediaTypes;
 import com.whizzosoftware.hobson.dto.ThingDTO;
@@ -68,8 +69,8 @@ public class JobDTO extends ThingDTO {
             dto = new JobDTO(json);
         }
 
-        public Builder(final DTOBuildContext bctx, String jobId, JobInfo job, boolean showDetails) {
-            dto = new JobDTO(bctx, bctx.getIdProvider().createJobId(null, jobId));
+        public Builder(final DTOBuildContext bctx, HubContext hctx, String jobId, JobInfo job, boolean showDetails) {
+            dto = new JobDTO(bctx, bctx.getIdProvider().createJobId(hctx, jobId));
             if (showDetails) {
                 status(job.getStatus());
                 messages(job.getStatusMessages());
