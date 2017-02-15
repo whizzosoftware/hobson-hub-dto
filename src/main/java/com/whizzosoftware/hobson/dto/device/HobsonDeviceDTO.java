@@ -255,6 +255,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                 // configuration
                 PropertyContainer pc = bctx.getDeviceConfiguration(dd.getContext());
                 if (pc != null) {
+                    showDetails = expansions.has(JSONAttributes.CONFIGURATION);
                     expansions.pushContext(JSONAttributes.CONFIGURATION);
                     dto.configuration = new PropertyContainerDTO.Builder(
                             bctx,
@@ -266,7 +267,7 @@ public class HobsonDeviceDTO extends ThingDTO {
                                 }
                             },
                             PropertyContainerClassType.DEVICE_CONFIG,
-                            expansions.has(JSONAttributes.CONFIGURATION)
+                            showDetails
                     ).build();
                     expansions.popContext();
                 } else {
