@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 public class HobsonDeviceDTO extends ThingDTO {
     private ItemListDTO actionClasses;
@@ -47,7 +46,7 @@ public class HobsonDeviceDTO extends ThingDTO {
     private String modelName;
     private Long lastCheckIn;
     private HobsonVariableDTO preferredVariable;
-    private Set<String> tags;
+    private TagsDTO tags;
     private DeviceType type;
     private ItemListDTO variables;
 
@@ -175,7 +174,7 @@ public class HobsonDeviceDTO extends ThingDTO {
             json.put(JSONAttributes.ACTION_CLASSES, actionClasses.toJSON());
         }
         if (tags != null) {
-            json.put(JSONAttributes.TAGS, tags);
+            json.put(JSONAttributes.TAGS, tags.toJSON());
         }
         return json;
     }
@@ -291,9 +290,8 @@ public class HobsonDeviceDTO extends ThingDTO {
                     }
                 }
 
-                if (dd.hasTags()) {
-                    dto.tags = dd.getTags();
-                }
+                // tags
+                dto.tags = new TagsDTO(bctx, bctx.getIdProvider().createDeviceTagsId(dd.getContext()), dd.getTags());
             }
         }
 
@@ -367,7 +365,7 @@ public class HobsonDeviceDTO extends ThingDTO {
             return this;
         }
 
-        public Builder tags(Set<String> tags) {
+        public Builder tags(TagsDTO tags) {
             dto.tags = tags;
             return this;
         }
