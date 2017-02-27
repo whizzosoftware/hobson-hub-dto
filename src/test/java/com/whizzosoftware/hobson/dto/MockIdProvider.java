@@ -182,6 +182,11 @@ public class MockIdProvider implements IdProvider {
     }
 
     @Override
+    public TemplatedId createDeviceTagNameId(HubContext ctx, String tag) {
+        return null;
+    }
+
+    @Override
     public TemplatedId createPluginDeviceConfigurationClassesId(PluginContext ctx) {
         return null;
     }
