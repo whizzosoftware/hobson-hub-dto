@@ -12,8 +12,7 @@ package com.whizzosoftware.hobson.dto;
 import com.whizzosoftware.hobson.api.hub.HobsonHub;
 import com.whizzosoftware.hobson.api.hub.HubContext;
 import com.whizzosoftware.hobson.api.persist.TemplatedId;
-import com.whizzosoftware.hobson.api.user.HobsonRole;
-import com.whizzosoftware.hobson.api.user.HobsonUser;
+import com.whizzosoftware.hobson.api.security.HobsonUser;
 import com.whizzosoftware.hobson.dto.context.DTOBuildContext;
 import com.whizzosoftware.hobson.dto.context.TemplatedIdBuildContext;
 import com.whizzosoftware.hobson.dto.hub.HobsonHubDTO;
@@ -27,10 +26,9 @@ import java.util.Collection;
 public class HobsonUserDTO extends ThingDTO {
     private String userId;
     private String password;
-    private UserAccountDTO account;
     private String familyName;
     private String givenName;
-    private Collection<HobsonRole> roles;
+    private Collection<String> roles;
     private ItemListDTO hubs;
 
     private HobsonUserDTO(TemplatedIdBuildContext ctx, TemplatedId id) {
@@ -61,7 +59,7 @@ public class HobsonUserDTO extends ThingDTO {
         return familyName;
     }
 
-    public Collection<HobsonRole> getRoles() {
+    public Collection<String> getRoles() {
         return roles;
     }
 
@@ -85,13 +83,10 @@ public class HobsonUserDTO extends ThingDTO {
         if (hubs != null) {
             json.put(JSONAttributes.HUBS, hubs.toJSON());
         }
-        if (account != null) {
-            json.put(JSONAttributes.ACCOUNT, account.toJSON());
-        }
         if (roles != null) {
             JSONArray a = new JSONArray();
-            for (HobsonRole r : roles) {
-                a.put(r.name());
+            for (String r : roles) {
+                a.put(r);
             }
             json.put("roles", a);
         }
@@ -142,7 +137,7 @@ public class HobsonUserDTO extends ThingDTO {
                 dto.roles = new ArrayList<>();
                 JSONArray ja = json.getJSONArray(JSONAttributes.ROLES);
                 for (int i=0; i < ja.length(); i++) {
-                    dto.roles.add(HobsonRole.valueOf(ja.getString(i)));
+                    dto.roles.add(ja.getString(i));
                 }
             }
         }
@@ -168,12 +163,7 @@ public class HobsonUserDTO extends ThingDTO {
             return this;
         }
 
-        public Builder account(UserAccountDTO account) {
-            dto.account = account;
-            return this;
-        }
-
-        public Builder roles(Collection<HobsonRole> roles) {
+        public Builder roles(Collection<String> roles) {
             dto.roles = roles;
             return this;
         }
